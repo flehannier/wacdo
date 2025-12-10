@@ -1,0 +1,13 @@
+package com.learningcampus.wacdo;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class WacdoApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(WacdoApplication.class, args);
+	}
+
+}
