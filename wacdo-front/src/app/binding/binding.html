@@ -1,0 +1,16 @@
+
+<h2>interpollation</h2>
+{{titre}}
+
+<h2>Property binding</h2>
+<button [disabled]="status">cliquez ici</button>
+
+
+<h2>Event binding</h2>
+<button (click)="changeTitre()">changer titre</button>
+
+
+<h2>Tw way binding</h2>
+
+<input type="text" [(ngModel)]="nom">
+<h2>bonjour {{nom}}</h2>

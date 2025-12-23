@@ -1,0 +1,27 @@
+<div>
+    <app-restaurant-update [restaurant]="restaurantSelectionne" (restaurantUpdated)="onRestaurantUpdate($event)"></app-restaurant-update>
+</div>
+<table>
+@if (this.restaurants && this.restaurants.length > 0) {
+<thead>
+    <tr>
+        <td>index</td>
+        <td>Nom</td>
+    </tr>
+</thead>
+}
+@for (item of this.restaurants ; track $index; let nb=$count; let first=$first; let las=$last) {
+    <tbody>
+    <tr (click)="onCollaborateurSelectionne(item)">
+        <td>{{$index +1}}</td>
+        <td>{{item.nom}}</td>
+    </tr>
+       @if ($last) {
+            Nombre {{nb}}
+        }
+    </tbody>
+}
+@empty {
+    <h1>Aucun restaurant</h1>
+}
+</table>

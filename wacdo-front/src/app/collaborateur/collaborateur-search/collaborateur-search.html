@@ -1,0 +1,51 @@
+
+  <div class="mb-3">
+    <label for="exampleInputEmail1" class="form-label">Restaurant</label>
+    <select class="form-select" aria-label="Default select example" name="restaurant" (change)="onChange()" [(ngModel)]="restaurantId">
+    @for (item of restaurants; track $index;) {
+      <option [value]="item.id">{{item.nom}}</option>
+    }
+  </select>
+  
+<br>
+<form class="d-flex">
+    <div>
+    <span>search autocompletion</span>
+<input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" #searchItem (keyup)="onKeyUp(searchItem.value)" name="nomCollaborateur" [(ngModel)]="nomCollaborateur">
+    <button class="btn btn-primary" (click)="searchByNom()" >Rechercher</button>
+</div>
+<div>
+ <span>search filter pîpe</span>
+<input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" #nom name="searchTerm" [(ngModel)]="searchTerm">
+</div>
+</form>
+<table>
+<br>
+@if (listCollaborateur && listCollaborateur.length > 0) {
+<thead>
+    <tr>
+        <td>index</td>
+        <td>Nom</td>
+        <td>Date embauhe</td>
+        <td>Restaurant</td>
+        <td>administrateur</td>
+    </tr>
+</thead>
+}
+@for (item of listCollaborateur || [] | searchFilter: searchTerm; track $index; let nb=$count; let first=$first; let las=$last) {
+    <tbody>
+    <tr>
+        <td>{{$index +1}}</td>
+        <td>{{item.nom}}</td>
+        <td>{{item.datePremiereEmbauche | date: "dd/MM/yyy"}}</td>
+        <td>{{item.restaurant?.nom}}</td>
+        <td>{{item.administrateur}}</td> </tr>
+       @if ($last) {
+            Nombre {{nb}}
+        }
+    </tbody>
+}
+@empty {
+    <h1>Aucun collabtorateur</h1>
+}
+</table>

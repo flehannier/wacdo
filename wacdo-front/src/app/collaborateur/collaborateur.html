@@ -1,0 +1,33 @@
+<p>collaborateur works!</p>
+<table>
+@if (listCollaborateur && listCollaborateur.length > 0) {
+<thead>
+    <tr>
+        <td>index</td>
+        <td>Nom</td>
+        <td>Date embauhe</td>
+        <td>Restaurant</td>
+        <td>administrateur</td>
+    </tr>
+</thead>
+}
+@for (item of listCollaborateur ; track $index; let nb=$count; let first=$first; let las=$last) {
+    <tbody>
+    <tr>
+        <td>{{$index +1}}</td>
+        <td>{{item.nom}}</td>
+        <td>{{item.datePremiereEmbauche | date: "dd/MM/yyy"}}</td>
+        <td>{{item.restaurant?.nom}}</td>
+        <td>{{item.administrateur}}</td>
+        <td>  <button type="submit" class="btn btn-primary" (click)="deleteCollaborateur(item)">Supprimer</button></td>
+         <td>  <button    type="button"    class="btn btn-primary" [routerLink]="['/edit-collaborateur', item.id]">    Modifier  </button></td>
+    </tr>
+       @if ($last) {
+            Nombre {{nb}}
+        }
+    </tbody>
+}
+@empty {
+    <h1>Aucun collabtorateur</h1>
+}
+</table>

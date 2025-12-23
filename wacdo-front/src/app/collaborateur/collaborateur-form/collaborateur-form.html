@@ -1,0 +1,34 @@
+<form>
+  <div class="mb-3">
+    <label for="exampleInputPassword1" class="form-label">Nom</label>
+    <input type="text" class="form-control" [(ngModel)]="collaborateur.nom" name="nom">
+  </div>
+  <div class="mb-3">
+    <label for="exampleInputPassword1" class="form-label">Prenom</label>
+    <input type="text" class="form-control" [(ngModel)]="collaborateur.prenom" name="prenom">
+  </div>
+  <div class="mb-3">
+    <label for="exampleInputPassword1" class="form-label">Date embauche</label>
+    <input type="date" class="form-control" [(ngModel)]="collaborateur.datePremiereEmbauche" name="datePremiereEmbauche">
+  
+  </div>
+  <div class="mb-1">
+    <label for="exampleInputPassword1" class="form-label">Administrateur</label>
+    <input type="checkbox"  [(ngModel)]="collaborateur.administrateur" name="administrateur">
+  </div>
+  <div class="mb-3">
+    <label for="exampleInputEmail1" class="form-label">Email address</label>
+    <input type="email" class="form-control" [(ngModel)]="collaborateur.email" aria-describedby="emailHelp" name="email">
+    <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+  </div>
+  <div class="mb-3">
+    <label for="exampleInputEmail1" class="form-label">Restaurant</label>
+    <select class="form-select" aria-label="Default select example" name="restaurant" [(ngModel)]="restaurantId">
+    @for (item of restaurants; track $index;) {
+      <option [value]="item.id">{{item.nom}}</option>
+    }
+  </select>
+  </div>
+   <button class="btn btn-primary" (click)="submit()">Envoyer</button>
+  <h2>{{message}}</h2>
+</form>

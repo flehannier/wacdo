@@ -1,0 +1,15 @@
+<span>TEST @input</span>
+<form>
+  <div class="mb-3">
+    <label for="exampleInputPassword1" class="form-label">Id</label>
+    <input type="text" class="form-control" [(ngModel)]="restaurant()!.id" name="nom">
+  </div>
+  <div class="mb-3">
+    <label for="exampleInputPassword1" class="form-label">Nom</label>
+    <input type="text" class="form-control" [(ngModel)]="restaurant()!.nom" name="prenom">
+  </div>
+  <div class="mb-3">
+    <button type="submit" class="btn btn-primary" (click)="save()">Sauvegarder</button>
+  </div>
+
+</form>
