@@ -11,28 +11,16 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @RequiredArgsConstructor
-public class Restaurant {
+public class Fonction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NonNull  // pour que @RequiredArgsConstructor fonctionne
     @Column(nullable = false)
-    private String nom;
+    private String intitule;
 
-    @NonNull
-    @Column(nullable = false)
-    private String adresse;
-
-    @NonNull
-    @Column(nullable = false)
-    private String codePostal;
-
-    @NonNull
-    @Column(nullable = false)
-    private String ville;
-
-    @OneToMany(mappedBy = "restaurant")
+    @OneToMany(mappedBy = "fonction")
     @JsonIgnore //Evite de boucler
     private List<Affectation> affectations;
 }

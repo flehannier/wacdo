@@ -12,9 +12,9 @@ spring:
     name: wacdo
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/wacdo?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC
+    url: jdbc:mysql://localhost:3306/wacdov2?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC
     username: root
-    passwordc:
+    password:
     hikari:
       connection-test-query: SELECT 1
       test-while-idle: true
