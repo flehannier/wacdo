@@ -8,11 +8,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/collaborateur")
+@RequestMapping("/collaborateur")
 @CrossOrigin
 public class CollaborateurController {
 
-    //@Autowired
     private final CollaborateurService collaborateurService;
 
     public CollaborateurController(CollaborateurService collaborateurService) {
@@ -20,37 +19,32 @@ public class CollaborateurController {
     }
 
     @GetMapping()
-    public List<Collaborateur> getAllCollaborateurs(){
-        return collaborateurService.getAllCollaborateur();
+    public List<Collaborateur> getAll(){
+        return collaborateurService.getAll();
     }
 
     @GetMapping("/{id}")
-    public Collaborateur getCollaborateurById(@Nonnull @PathVariable("id") Long id){
-        return collaborateurService.getCollaborateur(id);
+    public Collaborateur getById(@Nonnull @PathVariable("id") Long id){
+        return collaborateurService.getById(id);
     }
 
     @PostMapping()
-    public Collaborateur createCollaborateur(@Nonnull @RequestBody Collaborateur collaborateur){
-        return collaborateurService.saveCollaborateur(collaborateur);
+    public Collaborateur create(@Nonnull @RequestBody Collaborateur collab){
+        return collaborateurService.save(collab);
     }
 
-    @PutMapping()
-    public Collaborateur updateCollaborateur(@Nonnull @RequestBody Collaborateur collaborateur){
-        return collaborateurService.updateCollaboreteur(collaborateur);
+    @PatchMapping()
+    public Collaborateur update(@Nonnull @RequestBody Collaborateur collab){
+        return collaborateurService.update(collab);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteCollaborateur(@Nonnull @PathVariable("id") Long id){
-        collaborateurService.deleteCollaborateur(id);
+    public void deleteById(@Nonnull @PathVariable("id") Long id){
+        collaborateurService.deleteById(id);
     }
 
-    @GetMapping("/restaurant/{id}")
-    public List<Collaborateur> getCollaborateurByRestaurantId(@Nonnull @PathVariable("id") Long id){
-        return collaborateurService.findByRestaurantId(id);
-    }
-
-    @GetMapping("/byName/{nom}")
-    public List<Collaborateur> fondByNomCollaborateur(@Nonnull @PathVariable("nom") String nom){
-        return collaborateurService.findByNomContains(nom);
+    @DeleteMapping()
+    public void delete(@Nonnull  @RequestBody Collaborateur collab){
+        collaborateurService.delete(collab);
     }
 }
