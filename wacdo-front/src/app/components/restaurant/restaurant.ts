@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { CollaborateurService } from '../services/collaborateur';
-import { RestaurantModel } from '../models/restaurant.model';
+import { CollaborateurService } from '../../services/collaborateur';
+import { RestaurantModel } from '../../models/restaurant.model';
 import { RestaurantUpdate } from "./restaurant-update/restaurant-update";
 
 @Component({

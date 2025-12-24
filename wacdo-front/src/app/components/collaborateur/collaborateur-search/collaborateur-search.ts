@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { CollaborateurService } from '../../services/collaborateur';
-import { CollaborateurModel } from '../../models/collaborateur.model';
-import { RestaurantModel } from '../../models/restaurant.model';
+import { CollaborateurService } from '../../../services/collaborateur';
+import { CollaborateurModel } from '../../../models/collaborateur.model';
+import { RestaurantModel } from '../../../models/restaurant.model';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { SearchFilterPipe } from '../../../search-filter-pipe';
+import { SearchFilterPipe } from '../../../../search-filter-pipe';
 
 @Component({
   selector: 'app-collaborateur-search',

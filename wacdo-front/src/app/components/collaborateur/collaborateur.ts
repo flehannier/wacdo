@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { CollaborateurModel } from '../models/collaborateur.model';
+import { CollaborateurModel } from '../../models/collaborateur.model';
 import { DatePipe } from '@angular/common';
-import { CollaborateurService } from '../services/collaborateur';
+import { CollaborateurService } from '../../services/collaborateur';
 import { Router, RouterLink } from '@angular/router';
 
 @Component({

@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { CollaborateurModel } from '../../models/collaborateur.model';
-import { CollaborateurService } from '../../services/collaborateur';
+import { CollaborateurModel } from '../../../models/collaborateur.model';
+import { CollaborateurService } from '../../../services/collaborateur';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Collaborateur } from '../collaborateur';
-import { RestaurantModel } from '../../models/restaurant.model';
+import { RestaurantModel } from '../../../models/restaurant.model';
 import { CommonModule } from '@angular/common';
 
 @Component({

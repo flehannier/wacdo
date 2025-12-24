@@ -1,8 +1,8 @@
 import { Routes } from '@angular/router';
-import { Collaborateur } from './collaborateur/collaborateur';
-import { CollaborateurForm } from './collaborateur/collaborateur-form/collaborateur-form';
-import { CollaborateurSearch } from './collaborateur/collaborateur-search/collaborateur-search';
-import { Restaurant } from './restaurant/restaurant';
+import { Collaborateur } from './pages/collaborateur/collaborateur';
+import { Restaurant } from './pages/restaurant/restaurant';
+import { CollaborateurForm } from './pages/collaborateur/collaborateur-form/collaborateur-form';
+import { CollaborateurSearch } from './pages/collaborateur/collaborateur-search/collaborateur-search';
 
 export const routes: Routes = [
     {path: "collaborateurs", component: Collaborateur},

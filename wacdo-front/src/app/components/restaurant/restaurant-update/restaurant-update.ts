@@ -1,5 +1,5 @@
 import { Component, input, OnInit, Output, output, signal } from '@angular/core';
-import { RestaurantModel } from '../../models/restaurant.model';
+import { RestaurantModel } from '../../../models/restaurant.model';
 import { FormsModule } from '@angular/forms';
 
 @Component({
