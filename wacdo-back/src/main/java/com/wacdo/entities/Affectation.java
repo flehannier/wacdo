@@ -8,13 +8,17 @@ import java.time.LocalDate;
 @Entity
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
+@RequiredArgsConstructor
+@Table(uniqueConstraints = {
+        @UniqueConstraint(name = "collaborateurRestaurantFonctionConstraint", columnNames = { "collaborateur", "restaurant", "fonction" })
+})
 public class Affectation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Nonnull
+    @Column(nullable = false)
     private LocalDate dateDebut;
 
     private LocalDate dateFin;

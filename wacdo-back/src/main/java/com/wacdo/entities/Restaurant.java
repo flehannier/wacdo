@@ -9,8 +9,10 @@ import java.util.List;
 @Entity
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 @RequiredArgsConstructor
+@Table(uniqueConstraints = {
+        @UniqueConstraint(name = "nomAddrCpVilleConstraint", columnNames = { "nom", "adresse", "codePostal", "ville"})
+})
 public class Restaurant {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

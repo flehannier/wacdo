@@ -9,7 +9,6 @@ import java.util.List;
 @Entity
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 @RequiredArgsConstructor
 public class Fonction {
     @Id
@@ -17,7 +16,7 @@ public class Fonction {
     private Long id;
 
     @NonNull  // pour que @RequiredArgsConstructor fonctionne
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String intitule;
 
     @OneToMany(mappedBy = "fonction")

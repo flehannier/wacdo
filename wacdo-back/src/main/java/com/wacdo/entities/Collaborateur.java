@@ -9,10 +9,12 @@ import java.util.Date;
 import java.util.List;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-@RequiredArgsConstructor
 @Entity
+@NoArgsConstructor
+@RequiredArgsConstructor
+@Table(uniqueConstraints = {
+        @UniqueConstraint(name = "nomPrenomEmailConstraint", columnNames = { "nom", "prenom", "email" }),
+        @UniqueConstraint(name = "emailConstraint", columnNames = { "email" })})
 public class Collaborateur {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,28 +25,25 @@ public class Collaborateur {
     @Column(nullable = false)
     private String nom;
 
-    @NonNull  // pour que @RequiredArgsConstructor fonctionne
+    @NonNull
     @Column(nullable = false)
     private String prenom;
 
-    @NonNull  // pour que @RequiredArgsConstructor fonctionne
+    @NonNull
+    @Column(nullable = false)
+    private String motDePasse;
+
+    @NonNull
     @Column(nullable = false)
     private String email;
 
     private Date datePremiereEmbauche;
+
+    @NonNull
     private boolean administrateur;
 
     @OneToMany(mappedBy = "collaborateur")
     @JsonIgnore //Evite de boucler
     private List<Affectation> affectations;
 
-    // constructeur personnalisé pour tests
-    public Collaborateur(String nom, String prenom, String email, Date dateEmbauche, boolean administrateur) {
-        this.nom = nom;
-        this.prenom = prenom;
-        this.email = email;
-        this.datePremiereEmbauche = dateEmbauche;
-        this.administrateur = administrateur;
-        this.affectations = new ArrayList<>();
-    }
 }

@@ -20,7 +20,7 @@ class CollaborateurnTests {
 
     @Test
     void testCreationCollaboration() {
-        Collaborateur collaborateur = new Collaborateur("John", "Doe", "j.doe@gmail.com", new Date(), false);
+        Collaborateur collaborateur = new Collaborateur("John", "Doe",  "123","j.doe@gmail.com", false);
         collaborateurRepository.save(collaborateur);
     }
 
@@ -87,15 +87,6 @@ class CollaborateurnTests {
         for (Collaborateur collaborateur : collaborateurs) {
             System.out.println(collaborateur);
         }*/
-    }
-
-    @Test
-    @Transactional
-    void testFindByRestaurantId(){
-        List<Collaborateur> collaborateurs = collaborateurRepository.findByRestaurantId(1L);
-        for (Collaborateur collaborateur : collaborateurs) {
-            System.out.println(collaborateur);
-        }
     }
 
     @Test
