@@ -13,17 +13,18 @@ import java.util.List;
 @Service
 public class AffectationServiceImpl implements AffectationService {
 
-    private final AffectationRepository affectationRepository;
-    private final CollaborateurService collaborateurService;
-    private final RestaurantService  restaurantService;
-    private final FonctionService fonctionService;
-
     public AffectationServiceImpl(AffectationRepository affectationRepository, CollaborateurService collaborateurService, RestaurantService restaurantService, FonctionService fonctionService) {
         this.affectationRepository = affectationRepository;
         this.collaborateurService = collaborateurService;
         this.restaurantService = restaurantService;
         this.fonctionService = fonctionService;
     }
+
+    private final AffectationRepository affectationRepository;
+    private final CollaborateurService collaborateurService;
+    private final RestaurantService  restaurantService;
+    private final FonctionService fonctionService;
+
 
     @Override
     public Affectation save(Affectation affectation) {
