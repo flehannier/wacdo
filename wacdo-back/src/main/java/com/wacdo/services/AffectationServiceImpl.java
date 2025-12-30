@@ -4,6 +4,7 @@ import com.wacdo.entities.Affectation;
 import com.wacdo.entities.Collaborateur;
 import com.wacdo.entities.Fonction;
 import com.wacdo.entities.Restaurant;
+import com.wacdo.exception.FunctionalException;
 import com.wacdo.repositories.AffectationRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +30,7 @@ public class AffectationServiceImpl implements AffectationService {
     }
 
     @Override
-    public Affectation save(Affectation affectation) throws EntityNotFoundException,Exception{
+    public Affectation save(Affectation affectation) throws EntityNotFoundException,FunctionalException{
         log.debug("Sauvegarde d'une affectation");
 
         Collaborateur collaborateur = collaborateurService.getById(affectation.getCollaborateur().getId());
@@ -65,10 +66,10 @@ public class AffectationServiceImpl implements AffectationService {
 
         // 2- Collaborateur affecté à un poste en cours pour un restaurant
 
-        // contrôle sur les date de début
+        // contrôl sur les date de début
         // Un collaborateur peut posté seulement si la date de l'affectation est supérieur à celle en cours
         if(affectationPosteEnCoursExist.getDateDebut().isAfter(affectation.getDateDebut())){
-            throw new Exception("Votre affectation souhaitée a une date de début antérieur a une affectation en cours");
+            throw new FunctionalException("Votre affectation souhaitée a une date de début antérieur a une affectation en cours");
         }
 
         // Si le restaurant est différent

@@ -2,6 +2,7 @@ package com.wacdo.controllers;
 
 import com.wacdo.entities.Affectation;
 import com.wacdo.entities.Restaurant;
+import com.wacdo.exception.FunctionalException;
 import com.wacdo.services.AffectationService;
 import com.wacdo.services.RestaurantService;
 import jakarta.annotation.Nonnull;
@@ -32,7 +33,7 @@ public class AffectationController {
     }
 
     @PostMapping()
-    public Affectation create(@Nonnull @RequestBody Affectation affectation) throws EntityNotFoundException, Exception {
+    public Affectation create(@Nonnull @RequestBody Affectation affectation) throws EntityNotFoundException, FunctionalException {
         return affectationService.save(affectation);
     }
 
