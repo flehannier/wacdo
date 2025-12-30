@@ -4,8 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.ArrayList;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @Data
@@ -37,9 +36,9 @@ public class Collaborateur {
     @Column(nullable = false)
     private String email;
 
-    private Date datePremiereEmbauche;
+    private LocalDate datePremiereEmbauche;
 
-    @NonNull
+    @Column(nullable = false)
     private boolean administrateur;
 
     @OneToMany(mappedBy = "collaborateur")

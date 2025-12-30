@@ -5,6 +5,7 @@ import com.wacdo.entities.Restaurant;
 import com.wacdo.services.AffectationService;
 import com.wacdo.services.RestaurantService;
 import jakarta.annotation.Nonnull;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,7 +32,7 @@ public class AffectationController {
     }
 
     @PostMapping()
-    public Affectation create(@Nonnull @RequestBody Affectation affectation){
+    public Affectation create(@Nonnull @RequestBody Affectation affectation) throws EntityNotFoundException, Exception {
         return affectationService.save(affectation);
     }
 
