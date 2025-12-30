@@ -82,6 +82,6 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiError> handlePropertyValueException(PropertyValueException ex) {
         return ResponseEntity
                 .badRequest()
-                .body(new ApiError(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Propriété erreur", ex.getMessage()));
+                .body(new ApiError(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Erreur sur une propriété", ex.getMessage()));
     }
 }
