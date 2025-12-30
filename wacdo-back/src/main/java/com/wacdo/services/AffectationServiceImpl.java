@@ -28,12 +28,6 @@ public class AffectationServiceImpl implements AffectationService {
         this.fonctionService = fonctionService;
     }
 
-    private final AffectationRepository affectationRepository;
-    private final CollaborateurService collaborateurService;
-    private final RestaurantService  restaurantService;
-    private final FonctionService fonctionService;
-
-
     @Override
     public Affectation save(Affectation affectation) throws EntityNotFoundException,Exception{
         log.debug("Sauvegarde d'une affectation");
