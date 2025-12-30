@@ -20,7 +20,8 @@ class CollaborateurnTests {
 
     @Test
     void testCreationCollaboration() {
-        Collaborateur collaborateur = new Collaborateur("John", "Doe",  "123","j.doe@gmail.com", false);
+        Collaborateur collaborateur = new Collaborateur("John", "Doe",  "123","j.doe@gmail.com");
+        collaborateur.setAdministrateur(true);
         collaborateurRepository.save(collaborateur);
     }
 

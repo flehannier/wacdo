@@ -9,9 +9,6 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 @RequiredArgsConstructor
-@Table(uniqueConstraints = {
-        @UniqueConstraint(name = "collaborateurRestaurantFonctionConstraint", columnNames = { "collaborateur_id", "restaurant_id", "fonction_id" })
-})
 public class Affectation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
