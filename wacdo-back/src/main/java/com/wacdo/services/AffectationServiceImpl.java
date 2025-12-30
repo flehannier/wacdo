@@ -68,16 +68,13 @@ public class AffectationServiceImpl implements AffectationService {
 
         // contrôl sur les date de début
         // Un collaborateur peut posté seulement si la date de l'affectation est supérieur à celle en cours
-        if(affectationPosteEnCoursExist.getDateDebut().isAfter(affectation.getDateDebut())){
+        if(affectationPosteEnCoursExist.getDateDebut().isAfter(affectation.getDateDebut()) || affectationPosteEnCoursExist.getDateDebut().equals(affectation.getDateDebut())){
             throw new FunctionalException("Votre affectation souhaitée a une date de début antérieur a une affectation en cours");
         }
 
-        // Si le restaurant est différent
-        if(!affectationPosteEnCoursExist.getRestaurant().getId().equals(restaurant.getId())) {
-            // On clôture l'affectation pour le poste en cours
-            affectationPosteEnCoursExist.setDateFin(LocalDate.now());
-            affectationRepository.save(affectationPosteEnCoursExist);
-        }
+        // On clôture l'affectation pour le poste en cours
+        affectationPosteEnCoursExist.setDateFin(LocalDate.now());
+        affectationRepository.save(affectationPosteEnCoursExist);
 
         affectation.setCollaborateur(collaborateur);
         affectation.setRestaurant(restaurant);

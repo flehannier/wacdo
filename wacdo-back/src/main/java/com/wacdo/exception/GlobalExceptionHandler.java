@@ -4,6 +4,7 @@ import com.wacdo.dto.ApiError;
 import jakarta.persistence.EntityNotFoundException;
 import jdk.jshell.spi.ExecutionControl;
 import org.apache.coyote.BadRequestException;
+import org.hibernate.PropertyValueException;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -75,5 +76,12 @@ public class GlobalExceptionHandler {
         );
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
+    @ExceptionHandler(PropertyValueException.class)
+    public ResponseEntity<ApiError> handlePropertyValueException(PropertyValueException ex) {
+        return ResponseEntity
+                .badRequest()
+                .body(new ApiError(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Propriété erreur", ex.getMessage()));
     }
 }
