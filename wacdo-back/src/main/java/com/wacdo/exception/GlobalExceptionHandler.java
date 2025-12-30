@@ -16,6 +16,17 @@ import java.util.NoSuchElementException;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ApiError> handleGenericException(Exception ex) {
+        ApiError error = new ApiError(
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                HttpStatus.NOT_FOUND.getReasonPhrase(),
+                ex.getMessage()
+        );
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
     @ExceptionHandler(NoSuchElementException.class)
     public ResponseEntity<ApiError> handleNoSuchElementException(NoSuchElementException ex) {
         return ResponseEntity
@@ -56,18 +67,6 @@ public class GlobalExceptionHandler {
 
         ApiError error = new ApiError(
                 HttpStatus.NOT_FOUND.value(),
-                HttpStatus.NOT_FOUND.getReasonPhrase(),
-                ex.getMessage()
-        );
-
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
-    }
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiError> handleGenericException(Exception ex) {
-
-        ApiError error = new ApiError(
-                HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 HttpStatus.NOT_FOUND.getReasonPhrase(),
                 ex.getMessage()
         );
