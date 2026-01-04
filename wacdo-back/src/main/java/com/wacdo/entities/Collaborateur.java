@@ -45,4 +45,9 @@ public class Collaborateur {
     @JsonIgnore //Evite de boucler
     private List<Affectation> affectations;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "role_id")
+    @ToString.Exclude       // Exclut du toString() pour éviter la boucle infinie
+    @EqualsAndHashCode.Exclude
+    private Role role;
 }

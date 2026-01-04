@@ -21,4 +21,7 @@ public interface CollaborateurRepository extends JpaRepository<Collaborateur, Lo
 
     @Query ("select c from Collaborateur c order by c.nom ASC, c.prenom DESC")
     List<Collaborateur> trierNomPrenom();
+
+    @Query("SELECT c FROM Collaborateur c WHERE c.email = :email")
+    Collaborateur findByEmail(@Param("email") String email);
 }

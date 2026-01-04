@@ -4,6 +4,7 @@ import com.wacdo.entities.Fonction;
 import com.wacdo.entities.Restaurant;
 import com.wacdo.services.FonctionService;
 import jakarta.annotation.Nonnull;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,11 +26,13 @@ public class FonctionController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     Fonction getById(@Nonnull @PathVariable("id" ) Long id ) {
         return fonctionService.getById(id);
     }
 
     @PostMapping()
+    @PreAuthorize("hasRole('ADMIN')")
     public Fonction save(@Nonnull @RequestBody Fonction fct){
         return fonctionService.save(fct);
     }

@@ -33,4 +33,9 @@ logging:
     org.hibernate.SQL: debug
     org.hibernate.orm.jdbc.bind: trace  # voir les valeurs bindées
 
+jwt:
+  security:
+    secret: "njfdohv9343542v1fd2"
+    expiration: 3600000
+
 

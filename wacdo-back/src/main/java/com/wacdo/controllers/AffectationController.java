@@ -7,6 +7,7 @@ import com.wacdo.services.AffectationService;
 import com.wacdo.services.RestaurantService;
 import jakarta.annotation.Nonnull;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,11 +34,13 @@ public class AffectationController {
     }
 
     @PostMapping()
+    @PreAuthorize("hasRole('ADMIN')")
     public Affectation create(@Nonnull @RequestBody Affectation affectation) throws EntityNotFoundException, FunctionalException {
         return affectationService.save(affectation);
     }
 
     @PatchMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public Affectation update(@Nonnull @RequestBody Affectation affectation){
         return affectationService.update(affectation);
     }
