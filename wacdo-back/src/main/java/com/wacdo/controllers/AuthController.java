@@ -29,6 +29,8 @@ public class AuthController {
     @PostMapping("/login")
     public AuthResponse login(@RequestBody AuthRequest request) throws RuntimeException{
         try {
+            // authenticationManager appelera authenticate du providerManager qui appelera le provider DaoAuthenticationProvider
+            // puis loadUserByUsername de CollaborateurService
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             request.getEmail(),

@@ -31,8 +31,6 @@ public class CollaborateurDetailsService implements UserDetailsService {
             throw new UsernameNotFoundException("Utilisateur non connu");
         }
 
-        log.info("LOGIN email={} / hash={}", collab.getEmail(), collab.getMotDePasse());
-
         GrantedAuthority authority = new SimpleGrantedAuthority(collab.getRole().getName());
         return new User(collab.getEmail(), collab.getMotDePasse(), Collections.singletonList(authority));
     }
