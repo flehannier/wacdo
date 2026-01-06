@@ -25,16 +25,16 @@ public class CollaborateurServiceImpl implements CollaborateurService {
     private final CollaborateurRepository collaborateurRepository;
     private final PasswordEncoder passwordEncoder;
 
-    // Pattern pour valider la force du mot de passe : au moins 8 caractères, une majuscule, une minuscule, un chiffre
+    // Pattern pour valider la force du mot de passe : au moins 8 caractères, une
+    // majuscule, une minuscule, un chiffre
     private static final Pattern PASSWORD_PATTERN = Pattern.compile("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{8,}$");
 
     public CollaborateurServiceImpl(RoleRepository roleRepository, CollaborateurRepository collaborateurRepository,
-                                    PasswordEncoder passwordEncoder) {
+            PasswordEncoder passwordEncoder) {
         this.roleRepository = roleRepository;
         this.collaborateurRepository = collaborateurRepository;
         this.passwordEncoder = passwordEncoder;
     }
-
 
     @Override
     public Collaborateur save(Collaborateur collab) throws RuntimeException {
@@ -62,19 +62,19 @@ public class CollaborateurServiceImpl implements CollaborateurService {
     private void validateAndEncodePassword(String password, Collaborateur collaborateur) {
         if (!isPasswordStrong(password)) {
             throw new RuntimeException(
-                    "Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule et un chiffre"
-            );
+                    "Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule et un chiffre");
         }
         collaborateur.setMotDePasse(passwordEncoder.encode(password));
     }
 
     /**
      * Valide la force du mot de passe
+     * 
      * @param password Le mot de passe à valider
      * @return true si le mot de passe est fort, false sinon
      */
     private boolean isPasswordStrong(String password) {
-        if (password == null || password.length() < 8) {
+        if (password == null) {
             return false;
         }
         return PASSWORD_PATTERN.matcher(password).matches();
@@ -92,7 +92,7 @@ public class CollaborateurServiceImpl implements CollaborateurService {
 
     @Override
     public Collaborateur getById(Long id) {
-       return collaborateurRepository.findById(id).get();
+        return collaborateurRepository.findById(id).get();
     }
 
     @Override
