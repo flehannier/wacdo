@@ -1,0 +1,22 @@
+package com.wacdo.controllers.services;
+
+import com.wacdo.controllers.entities.Role;
+import com.wacdo.controllers.repositories.RoleRepository;
+import lombok.NonNull;
+import org.springframework.stereotype.Service;
+
+@Service
+public class RoleServiceImpl implements RoleService {
+
+
+    private final RoleRepository roleRepository;
+
+    public RoleServiceImpl(RoleRepository roleRepository) {
+        this.roleRepository = roleRepository;
+    }
+
+    @Override
+    public Role save(@NonNull Role role) {
+        return roleRepository.save(role);
+    }
+}

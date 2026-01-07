@@ -1,0 +1,52 @@
+package com.wacdo.controllers.entities;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.time.LocalDate;
+import java.util.List;
+
+@Data
+@Entity
+@NoArgsConstructor
+@RequiredArgsConstructor
+@Table(uniqueConstraints = {
+        @UniqueConstraint(name = "nomPrenomEmailConstraint", columnNames = { "nom", "prenom", "email" }),
+        @UniqueConstraint(name = "emailConstraint", columnNames = { "email" })})
+public class Collaborateur {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Exclude
+    private Long id;
+
+    @NonNull  // pour que @RequiredArgsConstructor fonctionne
+    @Column(nullable = false)
+    private String nom;
+
+    @NonNull
+    @Column(nullable = false)
+    private String prenom;
+
+    @NonNull
+    @Column(nullable = false)
+    private String motDePasse;
+
+    @NonNull
+    @Column(nullable = false)
+    private String email;
+
+    private LocalDate datePremiereEmbauche;
+
+    @Column(nullable = false)
+    private boolean administrateur;
+
+    @OneToMany(mappedBy = "collaborateur")
+    @JsonIgnore
+    private List<Affectation> affectations;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "role_id")
+    @JsonIgnore
+    private Role role;
+}
