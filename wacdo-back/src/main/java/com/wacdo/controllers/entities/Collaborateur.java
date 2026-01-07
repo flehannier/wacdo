@@ -30,6 +30,7 @@ public class Collaborateur {
 
     @NonNull
     @Column(nullable = false)
+    @JsonIgnore
     private String motDePasse;
 
     @NonNull

@@ -1,6 +1,5 @@
 package com.wacdo.controllers;
 
-import com.jayway.jsonpath.JsonPath;
 import com.wacdo.controllers.controllers.AuthController;
 import com.wacdo.controllers.services.JwtService;
 import lombok.extern.slf4j.Slf4j;
@@ -17,17 +16,13 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-
-import java.util.List;
-
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(AuthController.class)
 @Slf4j
+@WebMvcTest(AuthController.class)
 @AutoConfigureMockMvc(addFilters = false)
 class AuthControllerTest {
 
@@ -67,17 +62,18 @@ class AuthControllerTest {
     @Test
     void loginShouldReturnJwt() throws Exception {
         String requestBody = String.format("{\"email\":\"%s\", \"motDePasse\":\"%s\"}", email, password);
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/api/auth/login")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(requestBody))
-            //    .andExpect(status().isOk())
-           //     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.token").value("mocked-jwt-token"))
+        mockMvc.perform(MockMvcRequestBuilders.post("/auth/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.accessToken").value("mocked-jwt-token"))
+                .andDo(response -> {
+                    String body = response.getResponse().getContentAsString();
+                    int status = response.getResponse().getStatus();
+                    log.info("HTTP STATUS = {}", status);
+                    log.info("RESPONSE BODY = {}", body);
+                })
                 .andReturn();
-
-
-        // Extraire et logger la valeur de "token"
-        String responseBody = result.getResponse().getContentAsString();
-        log.info("responseBody : {}", responseBody);
     }
 }
