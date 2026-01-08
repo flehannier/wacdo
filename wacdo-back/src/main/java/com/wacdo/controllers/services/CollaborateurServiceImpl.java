@@ -34,7 +34,7 @@ public class CollaborateurServiceImpl implements CollaborateurService {
 
     @Override
     public Collaborateur save(@NonNull Collaborateur collab) throws FunctionalException {
-        if ( collab.getId() != null) {
+        if (collab.getId() != null) {
             Collaborateur existing = collaborateurRepository.findById(collab.getId())
                     .orElseThrow(() -> new FunctionalException("Collaborateur introuvable"));
 
