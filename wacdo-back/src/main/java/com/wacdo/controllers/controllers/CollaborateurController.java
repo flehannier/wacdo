@@ -5,6 +5,7 @@ import com.wacdo.controllers.exception.FunctionalException;
 import com.wacdo.controllers.exception.TechnicalException;
 import com.wacdo.controllers.services.CollaborateurService;
 import jakarta.annotation.Nonnull;
+import jakarta.persistence.CascadeType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 

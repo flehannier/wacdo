@@ -6,6 +6,8 @@ import jakarta.annotation.Nonnull;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/role")
 @CrossOrigin
@@ -21,5 +23,11 @@ public class RoleController {
     @PreAuthorize("hasRole('ADMIN')")
     public Role save(@Nonnull @RequestBody Role role){
         return roleService.save(role);
+    }
+
+    @GetMapping()
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<Role> getAll(){
+        return roleService.getAll();
     }
 }

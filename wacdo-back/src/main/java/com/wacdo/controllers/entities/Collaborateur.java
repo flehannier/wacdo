@@ -3,6 +3,8 @@ package com.wacdo.controllers.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -43,6 +45,7 @@ public class Collaborateur {
     private boolean administrateur;
 
     @OneToMany(mappedBy = "collaborateur")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private List<Affectation> affectations;
 

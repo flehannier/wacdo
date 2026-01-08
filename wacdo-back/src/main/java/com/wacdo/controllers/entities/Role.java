@@ -22,7 +22,5 @@ public class Role {
     private String description;
 
     @OneToMany(mappedBy = "role", fetch = FetchType.LAZY)
-    @ToString.Exclude       // Exclut du toString() pour éviter la boucle infinie
-    @EqualsAndHashCode.Exclude // Exclut de equals()/hashCode()
     private List<Collaborateur> collaborateurs;
 }

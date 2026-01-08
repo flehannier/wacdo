@@ -1,6 +1,5 @@
 package com.wacdo.controllers;
 
-import com.wacdo.controllers.repositories.CollaborateurRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -14,22 +13,22 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc(addFilters = false)
-class CollaborateurTest {
+class CollaborateurControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
     @Test
     @WithMockUser(username="test", roles={"ADMIN"})
-    void shouldReturn200_withMockUser() throws Exception {
+    void shouldReturn200() throws Exception {
         mockMvc.perform(get("/collaborateur"))
                 .andExpect(status().isOk());
     }
 
     @Test
     @WithMockUser(username="test", roles={"USER"})
-    void shouldReturn400_withMockUser() throws Exception {
+    void shouldReturn401() throws Exception {
         mockMvc.perform(get("/collaborateur"))
-                .andExpect(status().is(HttpStatus.BAD_REQUEST.value()));
+                .andExpect(status().is(HttpStatus.UNAUTHORIZED.value()));
     }
 }

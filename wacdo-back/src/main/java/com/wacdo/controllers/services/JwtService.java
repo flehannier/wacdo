@@ -17,7 +17,7 @@ public class JwtService {
     private String secret;
 
     @Value("${jwt.security.expiration}")
-    private static final long expirationMillis = 24 * 60 * 60 * 1000; // 24h
+    private long expirationMillis = 24 * 60 * 60 * 1000; // 24h
 
     public String generateToken(@NonNull UserDetails user) {
         boolean isAdmin = user.getAuthorities().stream()

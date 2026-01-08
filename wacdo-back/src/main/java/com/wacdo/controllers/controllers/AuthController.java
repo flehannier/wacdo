@@ -31,29 +31,24 @@ public class AuthController {
 
     @PostMapping("/login")
     public AuthResponse login(@RequestBody AuthRequest request) throws RuntimeException{
-        try {
-            // authenticationManager appelera authenticate du providerManager qui appelera le provider DaoAuthenticationProvider
-            // puis loadUserByUsername de CollaborateurService
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            request.getEmail(),
-                            request.getMotDePasse()
-                    )
-            );
+        // authenticationManager appelera authenticate du providerManager qui appelera le provider DaoAuthenticationProvider
+        // puis loadUserByUsername de CollaborateurDetailsService
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        request.getEmail(),
+                        request.getMotDePasse()
+                )
+        );
 
-            UserDetails user = (UserDetails) authentication.getPrincipal();
-            String token = jwtService.generateToken(user);
+        UserDetails user = (UserDetails) authentication.getPrincipal();
+        String token = jwtService.generateToken(user);
 
-            ArrayList<String> grantedAuthorities = new ArrayList<>();
-            for(GrantedAuthority grantedAuthority : user.getAuthorities()){
-                grantedAuthorities.add(grantedAuthority.getAuthority());
-            }
-
-            return new AuthResponse(user.getUsername(), grantedAuthorities, token);
-
-        } catch (BadCredentialsException ex) {
-            throw new RuntimeException("Nom d'utilisateur, mot de passe incorrecte.");
+        ArrayList<String> grantedAuthorities = new ArrayList<>();
+        for(GrantedAuthority grantedAuthority : user.getAuthorities()){
+            grantedAuthorities.add(grantedAuthority.getAuthority());
         }
+
+        return new AuthResponse(user.getUsername(), grantedAuthorities, token);
     }
 
     @PostMapping("/logout")

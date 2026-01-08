@@ -7,6 +7,8 @@ import org.hibernate.PropertyValueException;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -20,36 +22,36 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(FunctionalException.class)
     public ResponseEntity<ApiError> handleFunctionalException(FunctionalException ex) {
             return ResponseEntity
-                    .badRequest()
+                    .status(HttpStatus.BAD_REQUEST)
                     .body(new ApiError(HttpStatus.BAD_REQUEST.value(), "Erreur fonctionnelle", ex.getMessage()));
     }
 
     @ExceptionHandler(TechnicalException.class)
     public ResponseEntity<ApiError> handleTechnicalException(TechnicalException ex) {
         return ResponseEntity
-                .badRequest()
+                .internalServerError()
                 .body(new ApiError(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Erreur technique", ex.getMessage()));
     }
 
     @ExceptionHandler(NoSuchElementException.class)
     public ResponseEntity<ApiError> handleNoSuchElementException(NoSuchElementException ex) {
         return ResponseEntity
-                .badRequest()
+                .internalServerError()
                 .body(new ApiError(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Aucun élément, entité retrouvé", ex.getMessage()));
     }
 
     @ExceptionHandler(InternalError.class)
     public ResponseEntity<ApiError> handleInternalError(InternalError ex) {
         return ResponseEntity
-                .badRequest()
+                .internalServerError()
                 .body(new ApiError(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Erreur interne", ex.getMessage()));
     }
 
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<ApiError> handleEntityNotFoundException(EntityNotFoundException ex) {
         return ResponseEntity
-                .badRequest()
-                .body(new ApiError(HttpStatus.BAD_REQUEST.value(), "Entité(s) non trouvée(s)", ex.getMessage()));
+                .status(HttpStatus.UNPROCESSABLE_ENTITY)
+                .body(new ApiError(HttpStatus.UNPROCESSABLE_ENTITY.value(), "Entité(s) non trouvée(s)", ex.getMessage()));
     }
 
     @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
@@ -64,6 +66,13 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .badRequest()
                 .body(new ApiError(HttpStatus.BAD_REQUEST.value(), "Mauvaise requête", ex.getMessage()));
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<ApiError> handleBadCredential(BadCredentialsException ex) {
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(new ApiError(HttpStatus.UNAUTHORIZED.value(),  "Authentification erreur", ex.getMessage()));
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
@@ -81,14 +90,22 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(PropertyValueException.class)
     public ResponseEntity<ApiError> handlePropertyValueException(PropertyValueException ex) {
         return ResponseEntity
-                .badRequest()
+                .internalServerError()
                 .body(new ApiError(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Erreur sur une propriété", ex.getMessage()));
     }
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<?> handle(RuntimeException ex) {
         return ResponseEntity
-                .badRequest()
-                .body(Map.of("error", ex.getMessage()));
+                .internalServerError()
+                .body(new ApiError(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Erreur interne", ex.getMessage()));
     }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<?> handleAccessDeniedException(AccessDeniedException ex) {
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(new ApiError(HttpStatus.UNAUTHORIZED.value(), "Accès interdit", ex.getMessage()));
+    }
+
 }

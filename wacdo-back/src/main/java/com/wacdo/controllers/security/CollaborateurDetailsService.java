@@ -28,7 +28,7 @@ public class CollaborateurDetailsService implements UserDetailsService {
 
         Collaborateur collab = collaborateurRepository.findByEmail(email);
         if (collab == null) {
-            throw new UsernameNotFoundException("Utilisateur non connu");
+            throw new UsernameNotFoundException("Utilisateur non trouvé");
         }
 
         GrantedAuthority authority = new SimpleGrantedAuthority(collab.getRole().getName());

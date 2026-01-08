@@ -50,14 +50,14 @@ public class CollaborateurServiceImpl implements CollaborateurService {
             return collaborateurRepository.save(existing);
         }
 
-        // CREATE
         validateAndEncodePassword(collab.getMotDePasse(), collab);
+
         return collaborateurRepository.save(collab);
     }
 
-    private void validateAndEncodePassword(@NonNull String password, @NonNull Collaborateur collaborateur) {
+    private void validateAndEncodePassword(@NonNull String password, @NonNull Collaborateur collaborateur) throws FunctionalException {
         if (!isPasswordStrong(password)) {
-            throw new RuntimeException(
+            throw new FunctionalException(
                     "Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule et un chiffre");
         }
         collaborateur.setMotDePasse(passwordEncoder.encode(password));
@@ -80,7 +80,7 @@ public class CollaborateurServiceImpl implements CollaborateurService {
 
     @Override
     public void delete(@NonNull Collaborateur collab) {
-        collaborateurRepository.delete(collab);
+        collaborateurRepository.deleteById(collab.getId());
     }
 
     @Override

@@ -20,6 +20,7 @@ public class Fonction {
     private String intitule;
 
     @OneToMany(mappedBy = "fonction")
+    @Column(nullable = true, unique = true)
     @JsonIgnore //Evite de boucler
     private List<Affectation> affectations;
 }
