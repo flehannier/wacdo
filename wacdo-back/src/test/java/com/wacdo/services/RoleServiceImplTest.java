@@ -1,22 +1,18 @@
 package com.wacdo.services;
 
 import com.wacdo.controllers.WacdoApplication;
-import com.wacdo.controllers.entities.Collaborateur;
-import com.wacdo.controllers.entities.Fonction;
 import com.wacdo.controllers.entities.Role;
 import com.wacdo.controllers.exception.FunctionalException;
-import com.wacdo.controllers.exception.TechnicalException;
 import com.wacdo.controllers.repositories.RoleRepository;
 import com.wacdo.controllers.services.RoleService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-
 import java.util.List;
 import java.util.Optional;
-
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatException;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -65,5 +61,15 @@ public class RoleServiceImplTest {
         List<Role> result = roleService.getAll();
 
         assertThat(result).hasSize(2);
+    }
+
+    @Test
+    void shouldThrowException_whenRoleNotFound() throws FunctionalException {
+        when(roleRepository.findById(1L))
+                .thenReturn(Optional.empty());
+
+        assertThatException().isThrownBy(() -> roleService.getById(1L))
+                .isInstanceOf(FunctionalException.class)
+                .withMessageContaining("Role introuvable");
     }
 }

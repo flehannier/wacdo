@@ -7,7 +7,6 @@ import com.wacdo.controllers.entities.Restaurant;
 import com.wacdo.controllers.exception.FunctionalException;
 import com.wacdo.controllers.exception.TechnicalException;
 import com.wacdo.controllers.repositories.AffectationRepository;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +31,13 @@ public class AffectationServiceImpl implements AffectationService {
         this.fonctionService = fonctionService;
     }
 
+    /**
+     * Creation ou mise à jours d'une affectation
+     * @param affectation
+     * @return Affectation
+     * @throws FunctionalException
+     * @throws TechnicalException
+     */
     @Override
     @Transactional
     public Affectation save(@NonNull Affectation affectation) throws FunctionalException, TechnicalException {
@@ -88,17 +94,17 @@ public class AffectationServiceImpl implements AffectationService {
     }
 
     @Override
-    public Affectation update(@NonNull Affectation affectation) {
-        return affectationRepository.save(affectation);
-    }
-
-    @Override
-    public Affectation getById(@NonNull Long id) {
-        return affectationRepository.findById(id).get();
+    public Affectation getById(@NonNull Long id) throws FunctionalException {
+        return affectationRepository.findById(id).orElseThrow(() -> new FunctionalException("Affectation introuvable"));
     }
 
     @Override
     public List<Affectation> getAll() {
         return affectationRepository.findAll();
+    }
+
+    @Override
+    public void deleteById(@NonNull Long id) {
+        affectationRepository.deleteById(id);
     }
 }

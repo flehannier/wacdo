@@ -1,6 +1,7 @@
 package com.wacdo.controllers.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
@@ -32,7 +33,7 @@ public class Collaborateur {
 
     @NonNull
     @Column(nullable = false)
-    @JsonIgnore
+    @JsonProperty(value = "motDePasse", access = JsonProperty.Access.WRITE_ONLY)
     private String motDePasse;
 
     @NonNull
@@ -46,11 +47,9 @@ public class Collaborateur {
 
     @OneToMany(mappedBy = "collaborateur")
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
     private List<Affectation> affectations;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id")
-    @JsonIgnore
     private Role role;
 }

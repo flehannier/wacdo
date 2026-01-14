@@ -1,15 +1,14 @@
 package com.wacdo.controllers.services;
 
 import com.wacdo.controllers.entities.Restaurant;
+import com.wacdo.controllers.exception.FunctionalException;
 import lombok.NonNull;
 
 import java.util.List;
 
 public interface RestaurantService {
     Restaurant save(@NonNull Restaurant resto);
-    Restaurant update(@NonNull Restaurant resto);
-    void deleteByID(@NonNull Long id);
-    void delete(@NonNull Restaurant resto);
-    Restaurant getById(@NonNull Long id);
+    void deleteById(@NonNull Long id);
+    Restaurant getById(@NonNull Long id) throws FunctionalException;
     List<Restaurant> getAll();
 }

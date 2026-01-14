@@ -30,19 +30,19 @@ public class AffectationController {
 
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    Affectation getById(@Nonnull @PathVariable("id" ) Long id ) {
+    Affectation getById(@Nonnull @PathVariable("id" ) Long id ) throws FunctionalException {
         return affectationService.getById(id);
     }
 
     @PostMapping()
     @PreAuthorize("hasRole('ADMIN')")
-    public Affectation create(@Nonnull @RequestBody Affectation affectation) throws FunctionalException, TechnicalException {
+    public Affectation createOrUpdate(@Nonnull @RequestBody Affectation affectation) throws FunctionalException, TechnicalException {
         return affectationService.save(affectation);
     }
 
-    @PatchMapping
+    @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public Affectation update(@Nonnull @RequestBody Affectation affectation){
-        return affectationService.update(affectation);
+    public void deleteById(@Nonnull @PathVariable("id") Long id){
+        affectationService.deleteById(id);
     }
 }

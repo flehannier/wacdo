@@ -50,7 +50,17 @@ public class AffectationServiceImplTest{
         assertThat(result).isNotNull();
         assertThat(result.getId()).isEqualTo(1L);
     }
-    
+
+    @Test
+    void shouldThrowException_whenAffectationNotFound() throws FunctionalException {
+        when(affectationRepository.findById(1L))
+                .thenReturn(Optional.empty());
+
+        assertThatException().isThrownBy(() -> affectationService.getById(1L))
+                .isInstanceOf(FunctionalException.class)
+                .withMessageContaining("Affectation introuvable");
+    }
+
     @Test
     void shouldReturnList() {
         when(affectationService.getAll())
@@ -96,7 +106,7 @@ public class AffectationServiceImplTest{
     }
 
     @Test
-    void shouldThrowAnException() throws TechnicalException, FunctionalException {
+    void shouldThrowAnException_whenDateError() throws TechnicalException, FunctionalException {
         Affectation affectationCollab = new Affectation();
         affectationCollab.setDateDebut(LocalDate.now());
 

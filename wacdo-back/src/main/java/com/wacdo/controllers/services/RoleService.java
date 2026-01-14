@@ -11,4 +11,5 @@ public interface RoleService {
     Role save(@NonNull Role role);
     List<Role> getAll();
     Role getById(@NonNull Long roleId) throws FunctionalException;
+    void deleteById(@NonNull Long id);
 }

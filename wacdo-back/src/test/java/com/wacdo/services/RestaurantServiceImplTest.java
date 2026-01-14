@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatException;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -61,5 +62,15 @@ public class RestaurantServiceImplTest {
         List<Restaurant> result = restaurantService.getAll();
 
         assertThat(result).hasSize(2);
+    }
+
+    @Test
+    void shouldThrowException_whenRestaurantNotFound() throws FunctionalException {
+        when(restaurantRepository.findById(1L))
+                .thenReturn(Optional.empty());
+
+        assertThatException().isThrownBy(() -> restaurantService.getById(1L))
+                .isInstanceOf(FunctionalException.class)
+                .withMessageContaining("Restaurant introuvable");
     }
 }

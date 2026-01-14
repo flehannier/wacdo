@@ -5,28 +5,28 @@ import { RestaurantUpdate } from "./restaurant-update/restaurant-update";
 
 @Component({
   selector: 'app-restaurant',
-  standalone: true, 
+  standalone: true,
   imports: [RestaurantUpdate],
   templateUrl: './restaurant.html',
   styleUrl: './restaurant.css',
 })
-export class Restaurant  implements OnInit{
+export class Restaurant implements OnInit {
   restaurants!: RestaurantModel[]
   restaurantSelectionne!: RestaurantModel;
 
-  constructor(private collaborateurService : CollaborateurService){
+  constructor(private collaborateurService: CollaborateurService) {
   }
 
   ngOnInit(): void {
-    this.collaborateurService.listRestaurants().subscribe(items =>  this.restaurants = items._embedded.restaurants)
+    this.collaborateurService.listRestaurants().subscribe()
   }
 
-  onCollaborateurSelectionne(item: RestaurantModel){
+  onCollaborateurSelectionne(item: RestaurantModel) {
     this.restaurantSelectionne = item;
   }
 
-  onRestaurantUpdate(restaurant:RestaurantModel){
+  onRestaurantUpdate(restaurant: RestaurantModel) {
     console.log(restaurant)
-    this.collaborateurService.addRestaurant(restaurant).subscribe( );
+    this.collaborateurService.addRestaurant(restaurant).subscribe();
   }
 }

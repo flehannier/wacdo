@@ -24,44 +24,45 @@ export class CollaborateurForm implements OnInit {
 
   constructor(private collaborateurService: CollaborateurService,
     private router: Router,
-    private route: ActivatedRoute){
+    private route: ActivatedRoute) {
   }
 
-  ngOnInit()  {
+  ngOnInit() {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     this.collaborateur = new CollaborateurModel();
 
     this.collaborateurService.listRestaurants().subscribe(item => {
-      this.restaurants = item._embedded.restaurants;
+      this.restaurants = item;
     });
 
     if (id) {
       this.isEditMode = true;
       this.collaborateurService.editCollaborateur(id).subscribe(collab => {
-      this.collaborateur = collab ?? new CollaborateurModel();  
-      this.restaurantId = this.collaborateur.restaurant?.id ?? 0
-    });
-      
-    return 
+        this.collaborateur = collab ?? new CollaborateurModel();
+        this.restaurantId = this.collaborateur.restaurant?.id ?? 0
+      });
+
+      return
     }
   }
- 
 
-submit(): void {
- /*   const restaurant: RestaurantModel | undefined = this.collaborateurService.editRestaurent(Number(this.restaurantId))
-      this.collaborateur.restaurant = restaurant;
-    */  
-    this.collaborateur.restaurant = this.restaurants.find( item => item.id == this.restaurantId)
+
+  submit(): void {
+    /*   const restaurant: RestaurantModel | undefined = this.collaborateurService.editRestaurent(Number(this.restaurantId))
+         this.collaborateur.restaurant = restaurant;
+       */
+    this.collaborateur.restaurant = this.restaurants.find(item => item.id == this.restaurantId)
 
     if (this.isEditMode) {
-      this.collaborateurService.updateCollaborateur( this.collaborateur).subscribe( col => {;
-          this.router.navigate(['collaborateurs']);
-        });
+      this.collaborateurService.updateCollaborateur(this.collaborateur).subscribe(col => {
+        ;
+        this.router.navigate(['collaborateurs']);
+      });
     } else {
-      this.collaborateurService.addCollaborateur(this.collaborateur).subscribe( col => {
-         this.router.navigate(['collaborateurs']);
+      this.collaborateurService.addCollaborateur(this.collaborateur).subscribe(col => {
+        this.router.navigate(['collaborateurs']);
       });
     }
-   
+
   }
 }

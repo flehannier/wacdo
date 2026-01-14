@@ -27,7 +27,7 @@ public class Affectation {
 
     @ManyToOne()
     @JoinColumn(name = "collaborateur_id")
-    @ToString.Exclude
+    @JsonIgnore
     private Collaborateur collaborateur;
 
     @ManyToOne()

@@ -12,37 +12,37 @@ import { SearchFilterPipe } from '../../../../search-filter-pipe';
   templateUrl: './collaborateur-search.html',
   styleUrl: './collaborateur-search.css',
 })
-export class CollaborateurSearch implements OnInit{
-    public listCollaborateur? : CollaborateurModel[]
-    public restaurants!: RestaurantModel[];
-    public restaurantId!: number
-    public nomCollaborateur!: string
-    public searchTerm!: string;
-  
-  constructor(private collaborateurService : CollaborateurService,){
+export class CollaborateurSearch implements OnInit {
+  public listCollaborateur?: CollaborateurModel[]
+  public restaurants!: RestaurantModel[];
+  public restaurantId!: number
+  public nomCollaborateur!: string
+  public searchTerm!: string;
+
+  constructor(private collaborateurService: CollaborateurService,) {
   }
 
   ngOnInit(): void {
-    
-     this.collaborateurService.listCollaborateur().subscribe(item => {
+
+    this.collaborateurService.listCollaborateur().subscribe(item => {
       this.listCollaborateur = item ?? []
     });
 
-     this.collaborateurService.listRestaurants().subscribe(item => {
-      this.restaurants = item._embedded.restaurants;
+    this.collaborateurService.listRestaurants().subscribe(item => {
+      this.restaurants = item;
     });
   }
 
-  onChange(){
-   return this.collaborateurService.searchByRestaurant(this.restaurantId).subscribe(
-    col => {
-      this.listCollaborateur = col
-    }
-   )
+  onChange() {
+    return this.collaborateurService.searchByRestaurant(this.restaurantId).subscribe(
+      col => {
+        this.listCollaborateur = col
+      }
+    )
   }
 
-  searchByNom(){
-    if(this.nomCollaborateur){
+  searchByNom() {
+    if (this.nomCollaborateur) {
       return this.collaborateurService.searchByNom(this.nomCollaborateur).subscribe(
         col => {
           this.listCollaborateur = col
@@ -51,8 +51,8 @@ export class CollaborateurSearch implements OnInit{
     return this.collaborateurService.listCollaborateur().subscribe(item => this.listCollaborateur = item ?? []);
   }
 
-  onKeyUp(search: string){
+  onKeyUp(search: string) {
     console.log(search)
-      this.listCollaborateur = this.listCollaborateur?.filter(col => col.nom?.toLowerCase().includes(search.toLowerCase()));
-    }
+    this.listCollaborateur = this.listCollaborateur?.filter(col => col.nom?.toLowerCase().includes(search.toLowerCase()));
+  }
 }

@@ -1,7 +1,9 @@
 package com.wacdo.controllers.services;
 
 import com.wacdo.controllers.entities.Restaurant;
+import com.wacdo.controllers.exception.FunctionalException;
 import com.wacdo.controllers.repositories.RestaurantRepository;
+import jakarta.transaction.Transactional;
 import lombok.NonNull;
 import org.springframework.stereotype.Service;
 
@@ -17,28 +19,19 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     @Override
+    @Transactional
     public Restaurant save(@NonNull Restaurant resto) {
         return restaurantRepository.save(resto);
     }
 
     @Override
-    public Restaurant update(@NonNull Restaurant resto) {
-        return restaurantRepository.save(resto);
-    }
-
-    @Override
-    public void deleteByID(@NonNull Long id) {
+    public void deleteById(@NonNull Long id) {
         restaurantRepository.deleteById(id);
     }
 
     @Override
-    public void delete(@NonNull Restaurant resto) {
-        restaurantRepository.delete(resto);
-    }
-
-    @Override
-    public Restaurant getById(@NonNull Long id) {
-        return restaurantRepository.findById(id).get();
+    public Restaurant getById(@NonNull Long id) throws FunctionalException {
+        return restaurantRepository.findById(id).orElseThrow(() -> new FunctionalException("Restaurant introuvable"));
     }
 
     @Override

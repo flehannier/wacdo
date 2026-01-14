@@ -21,7 +21,7 @@ public class RoleController {
 
     @PostMapping()
     @PreAuthorize("hasRole('ADMIN')")
-    public Role save(@Nonnull @RequestBody Role role){
+    public Role createOrUpdate(@Nonnull @RequestBody Role role){
         return roleService.save(role);
     }
 
@@ -29,5 +29,11 @@ public class RoleController {
     @PreAuthorize("hasRole('ADMIN')")
     public List<Role> getAll(){
         return roleService.getAll();
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public void deleteById(@Nonnull @PathVariable("id") Long id){
+        roleService.deleteById(id);
     }
 }

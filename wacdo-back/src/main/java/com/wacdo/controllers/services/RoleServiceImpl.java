@@ -32,4 +32,9 @@ public class RoleServiceImpl implements RoleService {
     public Role getById(@NonNull Long roleId) throws FunctionalException {
         return roleRepository.findById(roleId).orElseThrow(() -> new FunctionalException("Role introuvable"));
     }
+
+    @Override
+    public void deleteById(@NonNull Long id) {
+        roleRepository.deleteById(id);
+    }
 }

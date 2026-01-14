@@ -5,109 +5,87 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { RestaurantWrapper } from '../models/RestaurantWrapper.model';
-const httpOption = {
-  headers: new HttpHeaders({'Content-type': 'application/json'})
-}
+import { AuthService } from './auth-service';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CollaborateurService {
-  public collaborateurs!: CollaborateurModel[];
-  public restaurants!: RestaurantModel[];
+  private collaborateurs!: CollaborateurModel[];
+  private restaurants!: RestaurantModel[];
 
-  constructor(private http: HttpClient){
-  /*  this.restaurants = [{ 
-        id: 1,
-        adress: "",
-        codePostal: 35470,
-        nom: "resto",
-        ville: ""
-      },{ 
-        id: 2,
-        adress: "",
-        codePostal: 35470,
-        nom: "resto 2",
-        ville: ""
-      }];
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    private authService: AuthService
+  ) { }
 
-    this.collaborateurs = [{
-      id: 1, 
-      nom: 'Test', 
-      prenom :'test', 
-      email :'', 
-      datePremiereEmbauche: new Date(), 
-      estAdmin : true,
-      restaurant: this.restaurants[1]
-    },{
-      id: 2, 
-      nom: 'Test 2', 
-      prenom :'test 2', 
-      email :'', 
-      datePremiereEmbauche: new Date(), 
-      estAdmin : true,
-      restaurant: this.restaurants[2]    
-      }]*/
+  private authHeaders(): HttpHeaders {
+    if (!this.authService.getToken()) {
+      this.router.navigate(["/login"]);
+    }
+    return new HttpHeaders({
+      Authorization: 'Bearer ' + this.authService.getToken()
+    });
   }
 
-  listCollaborateur(): Observable<CollaborateurModel[]>{
-    return this.http.get<CollaborateurModel[]>(environment.apiUrl + "/collaborateur");
-   //  return this.collaborateurs;
+  listCollaborateur(): Observable<CollaborateurModel[]> {
+    return this.http.get<CollaborateurModel[]>(environment.apiUrl + "/collaborateur", { headers: this.authHeaders() });
+    //  return this.collaborateurs;
   }
-  
-  listRestaurants():  Observable<RestaurantWrapper>{
-    return this.http.get<RestaurantWrapper>(environment.restUrl+'/restaurant');
-  }
-  
- deleteCollaborateur(collaborateur: CollaborateurModel){
-  let conf = confirm("est vous sur ?")
-  if (!conf) return;
-  
-    return this.http.delete<CollaborateurModel>(`${environment.apiUrl}/collaborateur/${collaborateur.id}`, httpOption);
-  /*const index = this.collaborateurs.indexOf(collaborateur, 0);
-     if (index > -1){
-      this.collaborateurs.splice(index, 1);
-     }*/
- }
 
- editCollaborateur(id: number): Observable<CollaborateurModel | undefined> {
-  return this.listCollaborateur().pipe(
-    map(collaborateurs =>
-      collaborateurs.find(c => c.id === id)
-    )
-  );
-}
+  listRestaurants(): Observable<RestaurantModel[]> {
+    return this.http.get<RestaurantModel[]>(environment.apiUrl + '/restaurant', { headers: this.authHeaders() });
+  }
 
-  addCollaborateur(collaborateur: CollaborateurModel): Observable<CollaborateurModel>{
-   // this.collaborateurs.push(collaborateur)
-    return this.http.post<CollaborateurModel>(environment.apiUrl + "/collaborateur", collaborateur, httpOption);
+  deleteCollaborateur(collaborateur: CollaborateurModel) {
+    let conf = confirm("est vous sur ?")
+    if (!conf) return;
+
+    return this.http.delete<CollaborateurModel>(`${environment.apiUrl}/collaborateur/${collaborateur.id}`, { headers: this.authHeaders() });
+    /*const index = this.collaborateurs.indexOf(collaborateur, 0);
+       if (index > -1){
+        this.collaborateurs.splice(index, 1);
+       }*/
   }
-  
-  updateCollaborateur(collaborateur: CollaborateurModel): Observable<CollaborateurModel>{
-  /*const index = this.collaborateurs.indexOf(collaborateur, 0);
-     if (index > -1){
-      this.collaborateurs.splice(index, 1);
-      this.collaborateurs.splice(index, 0, collaborateur);
-     }*/
-console.log(collaborateur)
-    return this.http.put<CollaborateurModel>(environment.apiUrl + "/collaborateur", collaborateur, httpOption);
+
+  editCollaborateur(id: number): Observable<CollaborateurModel | undefined> {
+    return this.listCollaborateur().pipe(
+      map(collaborateurs =>
+        collaborateurs.find(c => c.id === id)
+      )
+    );
   }
-  
- editRestaurent(id: number): RestaurantModel | undefined{
-  return this.restaurants.find(c => c.id === id) ;
- }
-  
-  searchByRestaurant(id: number): Observable<RestaurantModel[]>
-  {
+
+  addCollaborateur(collaborateur: CollaborateurModel): Observable<CollaborateurModel> {
+    // this.collaborateurs.push(collaborateur)
+    return this.http.post<CollaborateurModel>(environment.apiUrl + "/collaborateur", collaborateur, { headers: this.authHeaders() });
+  }
+
+  updateCollaborateur(collaborateur: CollaborateurModel): Observable<CollaborateurModel> {
+    /*const index = this.collaborateurs.indexOf(collaborateur, 0);
+       if (index > -1){
+        this.collaborateurs.splice(index, 1);
+        this.collaborateurs.splice(index, 0, collaborateur);
+       }*/
+    console.log(collaborateur)
+    return this.http.put<CollaborateurModel>(environment.apiUrl + "/collaborateur", collaborateur, { headers: this.authHeaders() });
+  }
+
+  editRestaurent(id: number): RestaurantModel | undefined {
+    return this.restaurants.find(c => c.id === id);
+  }
+
+  searchByRestaurant(id: number): Observable<RestaurantModel[]> {
     return this.http.get<RestaurantModel[]>(environment.apiUrl + "/collaborateur/restaurant/" + id);
   }
-  
-  searchByNom(nom: string): Observable<RestaurantModel[]>
-  {
+
+  searchByNom(nom: string): Observable<RestaurantModel[]> {
     return this.http.get<RestaurantModel[]>(environment.apiUrl + "/collaborateur/byName/" + nom);
   }
 
-   addRestaurant(restaurant: RestaurantModel): Observable<RestaurantModel>{
-    return this.http.post<RestaurantModel>(environment.apiUrlRestaurant, restaurant, httpOption);
+  addRestaurant(restaurant: RestaurantModel): Observable<RestaurantModel> {
+    return this.http.post<RestaurantModel>(environment.apiUrlRestaurant, restaurant, { headers: this.authHeaders() });
   }
 }

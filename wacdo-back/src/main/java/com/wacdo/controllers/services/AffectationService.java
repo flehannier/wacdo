@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface AffectationService {
     Affectation save(@NonNull Affectation affectation) throws FunctionalException, TechnicalException;
-    Affectation update(@NonNull Affectation affectation);
-    Affectation getById(@NonNull Long id);
+    Affectation getById(@NonNull Long id) throws FunctionalException;
     List<Affectation> getAll();
+    void deleteById(@NonNull Long id);
 }

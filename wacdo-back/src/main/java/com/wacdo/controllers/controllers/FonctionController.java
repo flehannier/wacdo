@@ -1,6 +1,7 @@
 package com.wacdo.controllers.controllers;
 
 import com.wacdo.controllers.entities.Fonction;
+import com.wacdo.controllers.exception.FunctionalException;
 import com.wacdo.controllers.services.FonctionService;
 import jakarta.annotation.Nonnull;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -27,7 +28,7 @@ public class FonctionController {
 
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    Fonction getById(@Nonnull @PathVariable("id" ) Long id ) {
+    Fonction getById(@Nonnull @PathVariable("id" ) Long id ) throws FunctionalException {
         return fonctionService.getById(id);
     }
 
@@ -35,5 +36,11 @@ public class FonctionController {
     @PreAuthorize("hasRole('ADMIN')")
     public Fonction save(@Nonnull @RequestBody Fonction fct){
         return fonctionService.save(fct);
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public void deleteById(@Nonnull @PathVariable("id") Long id){
+        fonctionService.deleteById(id);
     }
 }
