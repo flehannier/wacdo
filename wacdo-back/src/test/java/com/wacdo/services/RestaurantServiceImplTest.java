@@ -1,10 +1,9 @@
 package com.wacdo.services;
 
-import com.wacdo.controllers.WacdoApplication;
-import com.wacdo.controllers.entities.Restaurant;
-import com.wacdo.controllers.exception.FunctionalException;
-import com.wacdo.controllers.repositories.RestaurantRepository;
-import com.wacdo.controllers.services.RestaurantService;
+import com.wacdo.WacdoApplication;
+import com.wacdo.entities.Restaurant;
+import com.wacdo.exception.FunctionalException;
+import com.wacdo.repositories.RestaurantRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

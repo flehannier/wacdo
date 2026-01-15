@@ -1,14 +1,13 @@
 package com.wacdo.services;
 
-import com.wacdo.controllers.WacdoApplication;
-import com.wacdo.controllers.entities.*;
-import com.wacdo.controllers.exception.FunctionalException;
-import com.wacdo.controllers.exception.TechnicalException;
-import com.wacdo.controllers.repositories.AffectationRepository;
-import com.wacdo.controllers.services.AffectationService;
-import com.wacdo.controllers.services.CollaborateurService;
-import com.wacdo.controllers.services.FonctionService;
-import com.wacdo.controllers.services.RestaurantService;
+import com.wacdo.WacdoApplication;
+import com.wacdo.entities.Affectation;
+import com.wacdo.entities.Collaborateur;
+import com.wacdo.entities.Fonction;
+import com.wacdo.entities.Restaurant;
+import com.wacdo.exception.FunctionalException;
+import com.wacdo.exception.TechnicalException;
+import com.wacdo.repositories.AffectationRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -1,8 +1,7 @@
 package com.wacdo.services;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.wacdo.controllers.WacdoApplication;
-import com.wacdo.controllers.services.JwtService;
+import com.wacdo.WacdoApplication;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

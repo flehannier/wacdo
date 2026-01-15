@@ -1,10 +1,9 @@
 package com.wacdo.services;
 
-import com.wacdo.controllers.WacdoApplication;
-import com.wacdo.controllers.entities.Role;
-import com.wacdo.controllers.exception.FunctionalException;
-import com.wacdo.controllers.repositories.RoleRepository;
-import com.wacdo.controllers.services.RoleService;
+import com.wacdo.WacdoApplication;
+import com.wacdo.entities.Role;
+import com.wacdo.exception.FunctionalException;
+import com.wacdo.repositories.RoleRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

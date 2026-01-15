@@ -1,33 +1,47 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { User } from '../models/user.model';
+import { UserModel, UserWithoutRoleAndToken } from '../models/user-model';
 import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private isLoggedIn = false;
+  userIsLogged: boolean;
+
   constructor(private router: Router, private http: HttpClient) {
+    this.userIsLogged = !!this.getToken() && !!this.getRole();
   }
 
-  login(user: User) {
-    return this.http.post<User>(environment.apiUrl + "/auth/login", user, { observe: 'response' });
+  login(user: UserWithoutRoleAndToken) {
+    return this.http.post<UserWithoutRoleAndToken>(environment.apiUrl + "/auth/login", user, { observe: 'response' });
   }
 
-  saveToken(token: string) {
+  saveToken(token: string, role?: string) {
+    if(!role || !token) {
+     this.userIsLogged = false;
+      return;
+    }
+
     localStorage.setItem("token", token);
-    this.isLoggedIn = true;
+    localStorage.setItem("role", role);
+     this.userIsLogged = true;
   }
 
   getToken() {
     return localStorage.getItem("token") || null;
   }
 
+  getRole() {
+    return localStorage.getItem("role") || null;
+  }
+
   logout() {
     localStorage.removeItem("token");
-    this.isLoggedIn = false;
+    localStorage.removeItem("role");
+     this.userIsLogged = false;
+
     this.router.navigate(["/login"]);
   }
 }

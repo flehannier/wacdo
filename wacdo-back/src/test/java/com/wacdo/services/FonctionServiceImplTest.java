@@ -1,11 +1,10 @@
 package com.wacdo.services;
 
-import com.wacdo.controllers.WacdoApplication;
-import com.wacdo.controllers.entities.Fonction;
-import com.wacdo.controllers.exception.FunctionalException;
-import com.wacdo.controllers.exception.TechnicalException;
-import com.wacdo.controllers.repositories.FonctionRepository;
-import com.wacdo.controllers.services.FonctionService;
+import com.wacdo.WacdoApplication;
+import com.wacdo.entities.Fonction;
+import com.wacdo.exception.FunctionalException;
+import com.wacdo.exception.TechnicalException;
+import com.wacdo.repositories.FonctionRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

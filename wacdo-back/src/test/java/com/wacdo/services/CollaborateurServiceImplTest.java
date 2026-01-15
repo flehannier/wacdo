@@ -1,13 +1,12 @@
 package com.wacdo.services;
 
-import com.wacdo.controllers.WacdoApplication;
-import com.wacdo.controllers.entities.Collaborateur;
-import com.wacdo.controllers.entities.Role;
-import com.wacdo.controllers.exception.FunctionalException;
-import com.wacdo.controllers.exception.TechnicalException;
-import com.wacdo.controllers.repositories.CollaborateurRepository;
-import com.wacdo.controllers.repositories.RoleRepository;
-import com.wacdo.controllers.services.CollaborateurService;
+import com.wacdo.WacdoApplication;
+import com.wacdo.entities.Collaborateur;
+import com.wacdo.entities.Role;
+import com.wacdo.exception.FunctionalException;
+import com.wacdo.exception.TechnicalException;
+import com.wacdo.repositories.CollaborateurRepository;
+import com.wacdo.repositories.RoleRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
