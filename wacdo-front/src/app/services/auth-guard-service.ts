@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AuthService } from './auth-service';
-import { ROLES } from '../components/constants/roles';
+import { Role } from '../components/constants/roles';
 import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from '@angular/router';
 
 @Injectable({
@@ -10,35 +10,36 @@ export class AuthGuard implements CanActivate {
 
   constructor(private auth: AuthService, private router: Router) {}
 
-  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-    const currentUrl = this.router.url;
+  canActivate(route: ActivatedRouteSnapshot): boolean {
     const token = this.auth.getToken(); 
     const role = this.auth.getRole();
 
     if (!token || !role) {
-      this.router.navigate(['/login']);
+      this.router.navigate(['/login'], { 
+          queryParams: {
+            error: 'forbidden'
+          }
+      });
       return false;
     }
-
    
-  // 2️⃣ Redirection selon le rôle
-  switch (role) {
-    case ROLES.USER:
-      // Bloque l'accès si l'utilisateur n'est pas admin
-      if (currentUrl !== '/login') {
+    switch (role) {
+      case Role.USER:
+        // Bloque l'accès si l'utilisateur n'est pas admin
         // On bloque les utilisateurs avec le rôle USER
         this.router.navigate(['/login'], { 
-          state: { error: "Votre rôle ne vous permet pas de poursuivre." } 
+          queryParams: {
+            error: 'unauthorize'
+          }
         });
-      }
       return false;
 
-    case ROLES.ADMIN:
+      case Role.ADMIN:
       return true;
 
-    default:
-      // Si rôle inconnu ou autre, on refuse l'accès
+      default:
+        // Si rôle inconnu ou autre, on refuse l'accès
       return false;
-  }
+    }
   }
 }

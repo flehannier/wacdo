@@ -1,2 +1,4 @@
-<app-navbar-component *ngIf="auth.userIsLogged"></app-navbar-component>
+@if(authService.userIsLogged && isAllowed()){
+    <app-navbar-component></app-navbar-component>   
+}
 <router-outlet></router-outlet>

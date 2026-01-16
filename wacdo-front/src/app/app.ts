@@ -3,6 +3,7 @@ import { RouterOutlet, RouterLink, Router } from '@angular/router';
 import { NavbarComponent } from './components/navbar-component/navbar-component';
 import { AuthService } from './services/auth-service';
 import { CommonModule } from '@angular/common';
+import { Role } from './components/constants/roles';
 
 @Component({
   selector: 'app-root',
@@ -15,6 +16,10 @@ export class App {
 
   protected readonly title = signal('wacdo-front');
 
-  constructor(public auth: AuthService) {
+  constructor(public authService: AuthService) {
+  }
+
+  isAllowed(){
+    return this.authService.getRole() === Role.ADMIN
   }
 }

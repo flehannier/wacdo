@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { UserModel, UserWithoutRoleAndToken } from '../models/user-model';
+import { UserWithoutRoleAndToken } from '../models/user-model';
 import { environment } from '../../environments/environment';
+import { Role} from '../components/constants/roles';
 
 @Injectable({
   providedIn: 'root',
@@ -11,7 +12,7 @@ export class AuthService {
   userIsLogged: boolean;
 
   constructor(private router: Router, private http: HttpClient) {
-    this.userIsLogged = !!this.getToken() && !!this.getRole();
+    this.userIsLogged = !!this.getToken() && this.getRole() === Role.ADMIN;
   }
 
   login(user: UserWithoutRoleAndToken) {
@@ -20,13 +21,14 @@ export class AuthService {
 
   saveToken(token: string, role?: string) {
     if(!role || !token) {
-     this.userIsLogged = false;
+      this.userIsLogged = false;
       return;
     }
 
     localStorage.setItem("token", token);
     localStorage.setItem("role", role);
-     this.userIsLogged = true;
+    
+    this.userIsLogged = true;
   }
 
   getToken() {
@@ -37,7 +39,7 @@ export class AuthService {
     return localStorage.getItem("role") || null;
   }
 
-  logout() {
+  logout() {    
     localStorage.removeItem("token");
     localStorage.removeItem("role");
      this.userIsLogged = false;

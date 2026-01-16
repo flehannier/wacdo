@@ -87,7 +87,7 @@ class AuthControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
                 .andExpect(status().isUnauthorized())
-                .andExpect(jsonPath("$.error").value("Authentification erreur"))
+                .andExpect(jsonPath("$.error").value("Email ou mot de passe incorrect."))
                 .andDo(response -> {
                     String body = response.getResponse().getContentAsString();
                     int status = response.getResponse().getStatus();

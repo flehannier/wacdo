@@ -71,7 +71,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiError> handleBadCredential(BadCredentialsException ex) {
         return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
-                .body(new ApiError(HttpStatus.UNAUTHORIZED.value(),  "Authentification erreur", ex.getMessage()));
+                .body(new ApiError(HttpStatus.UNAUTHORIZED.value(),  "Email ou mot de passe incorrect.", ex.getMessage()));
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
