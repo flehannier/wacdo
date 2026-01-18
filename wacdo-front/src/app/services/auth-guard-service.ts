@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AuthService } from './auth-service';
-import { Role } from '../components/constants/roles';
+import { Role } from '../constants/roles';
 import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from '@angular/router';
 
 @Injectable({
@@ -14,12 +14,7 @@ export class AuthGuard implements CanActivate {
     const token = this.auth.getToken(); 
     const role = this.auth.getRole();
 
-    if (!token || !role) {
-      this.router.navigate(['/login'], { 
-          queryParams: {
-            error: 'forbidden'
-          }
-      });
+    if (!token || !role) {      
       return false;
     }
    

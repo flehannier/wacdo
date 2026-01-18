@@ -1,6 +1,8 @@
 package com.wacdo.controllers;
 
+import com.wacdo.dto.AffectationMapper;
 import com.wacdo.dto.CollaborateurDto;
+import com.wacdo.dto.CollaborateurMapper;
 import com.wacdo.entities.Collaborateur;
 import com.wacdo.exception.FunctionalException;
 import com.wacdo.exception.TechnicalException;
@@ -26,21 +28,21 @@ public class CollaborateurController {
     @PreAuthorize("hasRole('ADMIN')")
     public List<CollaborateurDto> getAll(){
         return collaborateurService.getAll().stream()
-                .map(this::toDto)
+                .map(CollaborateurMapper::toDto)
                 .toList();
     }
 
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public CollaborateurDto getById(@Nonnull @PathVariable("id") Long id) throws FunctionalException {
-        return toDto(collaborateurService.getById(id));
+        return CollaborateurMapper.toDto(collaborateurService.getById(id));
 
     }
 
     @PostMapping()
     @PreAuthorize("hasRole('ADMIN')")
-    public Collaborateur createOrUpdate(@Nonnull @RequestBody Collaborateur collab) throws FunctionalException, TechnicalException {
-       return collaborateurService.save(collab);
+    public CollaborateurDto createOrUpdate(@Nonnull @RequestBody Collaborateur collab) throws FunctionalException, TechnicalException {
+       return CollaborateurMapper.toDto(collaborateurService.save(collab));
     }
 
     @DeleteMapping("/{id}")
@@ -56,20 +58,5 @@ public class CollaborateurController {
     }
 
 
-    /**
-     * retour un Colaborateur simplifié
-     * @param collaborateur
-     * @return CollaborateurDto
-     */
-    private CollaborateurDto toDto(Collaborateur collaborateur) {
-        return new CollaborateurDto(
-                collaborateur.getId(),
-                collaborateur.getNom(),
-                collaborateur.getPrenom(),
-                collaborateur.getEmail(),
-                collaborateur.isAdministrateur(),
-                collaborateur.getRole() != null ? collaborateur.getRole().getName() : null,
-                !collaborateur.getAffectations().isEmpty() ? collaborateur.getAffectations() :  null
-        );
-    }
+
 }

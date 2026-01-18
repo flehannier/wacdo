@@ -1,4 +1,6 @@
-import { AffectationModel } from "./AffectationModel"
+import { AffectationModel } from "./affectation-model"
+import { FonctionModel } from "./fonction-model"
+import { RestaurantModel } from "./restaurant-model"
 
 export type CollaborateurModel = {
     id: number
@@ -13,4 +15,9 @@ export type CollaborateurModel = {
 export type CollaborateurList = Omit <CollaborateurModel, 'affecctation'> & {
     fonction?: string
     restaurant?: string 
+}
+
+export type CollaborateurEdit = Omit <CollaborateurModel, 'affecctation'> & {
+    fonction?: FonctionModel
+    restaurant?: RestaurantModel 
 }

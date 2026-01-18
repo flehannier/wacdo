@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { GenericListComponent } from './generic-list-component';
+import { FonctionComponent } from './fonction-component';
 
-describe('GenericListComponent', () => {
-  let component: GenericListComponent;
-  let fixture: ComponentFixture<GenericListComponent>;
+describe('FonctionComponent', () => {
+  let component: FonctionComponent;
+  let fixture: ComponentFixture<FonctionComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [GenericListComponent]
+      imports: [FonctionComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(GenericListComponent);
+    fixture = TestBed.createComponent(FonctionComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

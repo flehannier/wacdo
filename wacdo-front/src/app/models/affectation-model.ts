@@ -3,6 +3,7 @@ import { FonctionModel } from "./fonction-model"
 import { RestaurantModel } from "./restaurant-model"
 
 export type AffectationModel = {
+ id: number,
  dateDebut: Date,
  dateFin: Date,
  collaborateur: CollaborateurModel,

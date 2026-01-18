@@ -1,10 +1,8 @@
 package com.wacdo.services;
 
 import com.wacdo.WacdoApplication;
-import com.wacdo.entities.Affectation;
-import com.wacdo.entities.Collaborateur;
-import com.wacdo.entities.Fonction;
-import com.wacdo.entities.Restaurant;
+import com.wacdo.dto.AffectationMapper;
+import com.wacdo.entities.*;
 import com.wacdo.exception.FunctionalException;
 import com.wacdo.exception.TechnicalException;
 import com.wacdo.repositories.AffectationRepository;
@@ -76,6 +74,7 @@ public class AffectationServiceImplTest{
         affectationCollab.setDateDebut(LocalDate.now().plusDays(1L));
         Collaborateur collaborateur = new Collaborateur();
         collaborateur.setId(1L);
+        collaborateur.setRole(new Role(1L, "ADMIN", "ADMIN", new ArrayList<>()));
         collaborateur.setAffectations(
                 List.of(affectationCollab)
         );
@@ -99,7 +98,7 @@ public class AffectationServiceImplTest{
         affectation.setFonction(fonction);
         affectation.setRestaurant(restaurant);
 
-        assertThatException().isThrownBy(() -> affectationService.save(affectation))
+        assertThatException().isThrownBy(() -> affectationService.save(AffectationMapper.toDto(affectation)))
                 .isInstanceOf(FunctionalException.class)
                 .withMessageContaining("Votre affectation souhaitée a une date de début égale ou antérieur");
     }
@@ -111,6 +110,7 @@ public class AffectationServiceImplTest{
 
         Collaborateur collaborateur = new Collaborateur();
         collaborateur.setId(1L);
+        collaborateur.setRole(new Role(1L, "ADMIN", "ADMIN", new ArrayList<>()));
         collaborateur.setAffectations(
                 List.of(affectationCollab)
         );
@@ -134,8 +134,8 @@ public class AffectationServiceImplTest{
         affectation.setFonction(fonction);
         affectation.setRestaurant(restaurant);
 
-        assertThatException().isThrownBy(() -> affectationService.save(affectation))
+        assertThatException().isThrownBy(() -> affectationService.save(AffectationMapper.toDto(affectation)))
                 .isInstanceOf(FunctionalException.class)
-                .withMessageContaining("Votre affectation souhaitée a une date de début égale ou antérieur");
+                .withMessageContaining("Votre affectation souhaitée a une date de début égale ou antérieur a une affectation en cours");
     }
 }

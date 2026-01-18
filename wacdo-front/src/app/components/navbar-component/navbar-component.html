@@ -5,10 +5,10 @@
         <div class="hidden sm:ml-6 sm:block">
           <div class="flex space-x-4">
             <!-- Current: "bg-gray-950/50 text-white", Default: "text-gray-300 hover:bg-white/5 hover:text-white" -->
-            <a aria-current="page" class="rounded-md bg-gray-950/50 px-3 py-2 text-sm font-medium text-white" routerLink="/accueil">Accueil</a>
-            <a class="rounded-md px-3 py-2 text-sm font-medium text-black-300 hover:bg-gray-950/5 hover:text-white" routerLink="/collaborateur">Collaborateurs</a>
-            <a class="rounded-md px-3 py-2 text-sm font-medium text-black-300 hover:bg-gray-950/5 hover:text-white" routerLink="/fonction">Fonction</a>
-            <a class="rounded-md px-3 py-2 text-sm font-medium text-black-300 hover:bg-gray-950/5 hover:text-white" routerLink="/affectation">Affectations</a>
+            <a aria-current="page" class="rounded-md  px-3 py-2 text-sm font-medium " routerLink="/accueil" [routerLinkActive]="['bg-gray-950/50', 'text-white']">Accueil</a>
+            <a class="rounded-md px-3 py-2 text-sm font-medium text-black-300 hover:bg-gray-950/5 hover:text-white" routerLink="/collaborateur" [routerLinkActive]="['bg-gray-950/50', 'text-white']">Collaborateurs</a>
+            <a class="rounded-md px-3 py-2 text-sm font-medium text-black-300 hover:bg-gray-950/5 hover:text-white" routerLink="/fonction" [routerLinkActive]="['bg-gray-950/50', 'text-white']">Fonction</a>
+            <a class="rounded-md px-3 py-2 text-sm font-medium text-black-300 hover:bg-gray-950/5 hover:text-white" routerLink="/affectation" [routerLinkActive]="['bg-gray-950/50', 'text-white']">Affectations</a>
           </div>
         </div>
       </div>

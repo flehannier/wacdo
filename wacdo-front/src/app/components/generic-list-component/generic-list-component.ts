@@ -1,11 +1,12 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { ListAction, ListColumn } from '../../models/list-model';
-import { SortModel } from '../../models/sort-model';
+import { FormsModule } from '@angular/forms';
+import { SortEnum } from '../../enums/sort-enum';
 
 @Component({
   selector: 'app-generic-list-component',
+  standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './generic-list-component.html',
   styleUrl: './generic-list-component.css',
@@ -33,21 +34,21 @@ export class GenericListComponent<T> {
   paginatedData: T[] = [];
   currentPage: number = 1;
   sortColumn: string = '';
-  sortDirection: SortModel = SortModel.ASC;
+  sortDirection: SortEnum = SortEnum.ASC;
 
   ngOnInit() {
-    this.filteredData = this.data || [];
+    this.filteredData = this.data;
     this.updatePagination();
   }
 
   ngOnChanges() {
-    this.filteredData = this.data || [];
+    this.filteredData = this.data;
     this.onSearch();
   }
 
   onSearch() {
     if (!this.searchTerm) {
-      this.filteredData = this.data || [];
+      this.filteredData = this.data;
     } else {
       this.filteredData = this.data.filter(item =>
         this.columns.some(column => {
@@ -62,19 +63,14 @@ export class GenericListComponent<T> {
   }
 
   onSort(columnKey: string) {
-    if (this.sortColumn === columnKey) {
-      this.sortDirection = this.sortDirection === SortModel.ASC ? SortModel.DESC : SortModel.ASC;
-    } else {
-      this.sortColumn = columnKey;
-      this.sortDirection = SortModel.ASC;
-    }
+    this.sortDirection = this.sortDirection === SortEnum.ASC ? SortEnum.DESC : SortEnum.ASC;
 
     this.filteredData.sort((a, b) => {
       const aValue = this.getNestedProperty(a, columnKey);
       const bValue = this.getNestedProperty(b, columnKey);
 
-      if (aValue < bValue) return this.sortDirection === 'asc' ? -1 : 1;
-      if (aValue > bValue) return this.sortDirection === 'asc' ? 1 : -1;
+      if (aValue < bValue) return this.sortDirection === SortEnum.ASC ? -1 : 1;
+      if (aValue > bValue) return this.sortDirection === SortEnum.ASC ? 1 : -1;
       return 0;
     });
 
@@ -87,17 +83,17 @@ export class GenericListComponent<T> {
 
   getNestedProperty(obj: any, path: string): any {
     return path.split('.').reduce((prev, curr) => {
-    if (prev === null || prev === undefined) {
-      return undefined;
-    }
-    
-    // Si prev est un tableau, prendre le dernier élément
-    if (Array.isArray(prev)) {
-      return prev.length > 0 ? prev[prev.length - 1]?.[curr] : undefined;
-    }
-    
-    return prev[curr];
-  }, obj);
+      if (prev === null || prev === undefined) {
+        return undefined;
+      }
+      
+      // Si prev est un tableau, prendre le dernier élément
+      if (Array.isArray(prev)) {
+        return prev.length > 0 ? prev[prev.length - 1]?.[curr] : undefined;
+      }
+      
+      return prev[curr];
+    }, obj);
   }
 
   getActionClass(color?: string): string {

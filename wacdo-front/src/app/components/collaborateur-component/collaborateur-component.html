@@ -8,4 +8,11 @@
       [pageSize]="10"
       (addClicked)="onAddCollaborateur()"
       (searchChanged)="onSearchChanged($event)"
-    />
+  />
+  <app-modal-component 
+    [(openModal)]="openModal"
+    [action]="actions[0]"
+    [fields]="fields"
+    [title]="modalTitle"
+    [item]="item"
+  />

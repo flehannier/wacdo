@@ -1,0 +1,11 @@
+ <app-generic-list-component
+      title="Fonction"
+      [data]="fonctions"
+      [columns]="columns"
+      [actions]="actions"
+      [searchable]="true"
+      [paginated]="true"
+      [pageSize]="10"
+      (addClicked)="onAddFonction()"
+      (searchChanged)="onSearchChanged($event)"
+    />

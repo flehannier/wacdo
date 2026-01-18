@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router} from '@angular/router';
 import { AuthService } from '../../services/auth-service';
 import { UserModel, UserWithoutRoleAndToken } from '../../models/user-model';
+import { Role } from '../../constants/roles';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Role } from '../constants/roles';
 
 @Component({
   standalone: true,

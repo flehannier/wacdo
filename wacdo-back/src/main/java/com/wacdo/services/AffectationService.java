@@ -1,5 +1,6 @@
 package com.wacdo.services;
 
+import com.wacdo.dto.AffectationDto;
 import com.wacdo.entities.Affectation;
 import com.wacdo.exception.FunctionalException;
 import com.wacdo.exception.TechnicalException;
@@ -8,7 +9,7 @@ import lombok.NonNull;
 import java.util.List;
 
 public interface AffectationService {
-    Affectation save(@NonNull Affectation affectation) throws FunctionalException, TechnicalException;
+    Affectation save(@NonNull AffectationDto affectation) throws FunctionalException, TechnicalException;
     Affectation getById(@NonNull Long id) throws FunctionalException;
     List<Affectation> getAll();
     void deleteById(@NonNull Long id);

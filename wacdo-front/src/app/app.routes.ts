@@ -3,10 +3,14 @@ import { LoginComponent } from './components/login/login-component';
 import { Routes } from '@angular/router';
 import { AuthGuard } from './services/auth-guard-service';
 import { CollaborateurComponent } from './components/collaborateur-component/collaborateur-component';
+import { FonctionComponent } from './components/fonction-component/fonction-component';
+import { AffectationComponent } from './components/affectation-component/affectation-component';
 
 export const routes: Routes = [
     { path: "login", component: LoginComponent },
-    { path: 'collaborateur', component: CollaborateurComponent, canActivate: [AuthGuard] },    
-    { path: '', component: AccueilComponent, canActivate: [AuthGuard] },    
-    { path: '**', redirectTo: '' }
+    { path: 'collaborateur', component: CollaborateurComponent, canActivate: [AuthGuard] },  
+    { path: 'fonction', component: FonctionComponent, canActivate: [AuthGuard] },     
+    { path: 'affectation', component: AffectationComponent, canActivate: [AuthGuard] },    
+    { path: 'accueil', component: AccueilComponent, canActivate: [AuthGuard] },    
+    { path: '**', redirectTo: 'accueil' }
 ];

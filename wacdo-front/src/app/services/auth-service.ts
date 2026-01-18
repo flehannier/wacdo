@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, signal } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { UserWithoutRoleAndToken } from '../models/user-model';
 import { environment } from '../../environments/environment';
-import { Role} from '../components/constants/roles';
+import { Role} from '../constants/roles';
 
 @Injectable({
   providedIn: 'root',

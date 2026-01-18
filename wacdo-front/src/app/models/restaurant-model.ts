@@ -1,7 +1,7 @@
 export type RestaurantModel = {
-    id?: number
-    adress?: string
-    codePostal?: number
-    nom?: string
-    ville?: string
+    id: number
+    adress: string
+    codePostal: number
+    nom: string
+    ville: string
 }

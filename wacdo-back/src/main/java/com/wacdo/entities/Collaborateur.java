@@ -47,6 +47,7 @@ public class Collaborateur {
 
     @OneToMany(mappedBy = "collaborateur")
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
     private List<Affectation> affectations;
 
     @OneToOne(fetch = FetchType.LAZY)

@@ -1,0 +1,131 @@
+
+@if(show){
+    <div class="fixed top-0 left-0 right-0 bottom-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-50">
+        <div class="relative p w-full max-w-xl md:max-w-2xl bg-white rounded-lg shadow  max-h-[90vh] overflow-y-auto mx-4 md:mx-0">
+        
+            <!-- Modal header -->
+            <div class="dark:bg-gray-700 sticky top-0 flex items-center justify-between p-4 border-b rounded-t bg-white dark:border-gray-600">
+                <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                {{title}}
+                </h3>
+                <button (click)="closeModal()"
+                class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 flex items-center justify-center dark:hover:bg-gray-600 dark:hover:text-white">
+                <!-- Close SVG -->
+                <svg class="w-6 h-6" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                </svg>
+                <span class="sr-only">Fermer</span>
+                </button>
+            </div>
+            @if(item){
+                <ng-container>
+                    <div class="mx-auto max-w-2xl space-y-6 rounded-xl bg-white p-8 ">
+                        <ng-container *ngFor="let field of fields">
+                            <div class="space-y-2">
+                                <label 
+                                [for]="field.key" 
+                                class="flex items-center text-sm font-semibold text-gray-700"
+                                >
+                                {{ field.label || field.key }}
+                                <span *ngIf="field.required" class="ml-1 text-red-600">*</span>
+                                </label>
+
+                                <ng-container [ngSwitch]="field.type">
+                                
+                                <!-- Input text -->
+                                <input 
+                                    *ngSwitchCase="FieldsFormTypeEnum.TEXT" 
+                                    [id]="field.key" 
+                                    type="text" 
+                                    [(ngModel)]="item[field.key]"
+                                    [required]="field.required"
+                                    [disabled]="field.disabled"
+                                    class="w-full rounded-lg border-2 px-4 py-3 text-gray-900 transition duration-200 
+                                        border-gray-200 bg-white
+                                        hover:border-gray-300
+                                        focus:border-sky-500 focus:outline-none focus:ring-4 focus:ring-sky-500/20
+                                        disabled:cursor-not-allowed disabled:bg-gray-100 disabled:text-gray-500"
+                                    [placeholder]="field.placeholder || ''"
+                                />
+
+                                <!-- Input text -->
+                                <input 
+                                    *ngSwitchCase="FieldsFormTypeEnum.EMAIL" 
+                                    [id]="field.key" 
+                                    type="email" 
+                                    [(ngModel)]="item[field.key]"
+                                    [required]="field.required"
+                                    [disabled]="field.disabled"
+                                    class="w-full rounded-lg border-2 px-4 py-3 text-gray-900 transition duration-200 
+                                        border-gray-200 bg-white
+                                        hover:border-gray-300
+                                        focus:border-sky-500 focus:outline-none focus:ring-4 focus:ring-sky-500/20
+                                        disabled:cursor-not-allowed disabled:bg-gray-100 disabled:text-gray-500"
+                                    [placeholder]="field.placeholder || ''"
+                                />
+
+                                <!-- Input date -->
+                                <input 
+                                    *ngSwitchCase="FieldsFormTypeEnum.DATE" 
+                                    [id]="field.key" 
+                                    type="date" 
+                                    [(ngModel)]="item[field.key]"
+                                    [required]="field.required"
+                                    [disabled]="field.disabled"
+                                    class="w-full rounded-lg border-2 px-4 py-3 text-gray-900 transition duration-200 
+                                        border-gray-200 bg-white
+                                        hover:border-gray-300
+                                        focus:border-sky-500 focus:outline-none focus:ring-4 focus:ring-sky-500/20
+                                        disabled:cursor-not-allowed disabled:bg-gray-100 disabled:text-gray-500"
+                                />
+
+                                <!-- Select -->
+                                <div class="relative">
+                                    <select  *ngSwitchCase="FieldsFormTypeEnum.SELECT"
+                                            [id]="field.key"
+                                            [(ngModel)]="item[field.key].id"
+                                            [disabled]="field.disabled"
+                                            class="block w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 focus:border-sky-500 focus:ring-sky-500"
+                                        >
+                                        <option *ngIf="field.placeholder" value="">{{ field.placeholder }}</option>
+                                        <option *ngFor="let option of field.options" [value]="option.value">
+                                        {{ option.label }}
+                                        </option>
+                                    </select>
+                                </div>
+                                </ng-container>
+                            </div>
+                        </ng-container>
+                    </div>
+                    
+                    <div class="sticky bottom-0 border-t border-gray-200 bg-gray-50 px-6 py-4 rounded-b-xl">
+                        <div class="flex items-center justify-end gap-3">
+                            <!-- Bouton Annuler -->
+                            <button
+                            (click)="closeModal()"
+                            type="button"
+                            class="rounded-lg border-2 border-gray-300 bg-white px-5 py-2.5 text-sm font-semibold text-gray-700 transition
+                                    hover:bg-gray-50 hover:border-gray-400
+                                    focus:outline-none focus:ring-4 focus:ring-gray-300/50"
+                            >
+                            Annuler
+                            </button>
+
+                            <!-- Bouton Action principale -->
+                            <button
+                            (click)="action.callback(item)"
+                            type="submit"
+                            [class]="getActionClass(action.color)"
+                            class="rounded-lg px-5 py-2.5 text-sm font-semibold text-white transition
+                                    focus:outline-none focus:ring-4"
+                            >
+                            {{ action.label }}
+                            </button>
+                        </div>
+                    </div>
+                </ng-container>
+            }
+        </div>
+    </div>
+}

@@ -11,5 +11,5 @@ public record CollaborateurDto(
         String email,
         boolean administrateur,
         String role,
-        List<Affectation> affectations
+        List<AffectationDto> affectations
 ) {}

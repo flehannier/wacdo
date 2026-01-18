@@ -15,7 +15,15 @@ export class CollaborateurService {
   constructor(private http: HttpClient){
   }
 
-  listCollaborateur(): Observable<CollaborateurModel[]>{
+  listCollaborateurs(): Observable<CollaborateurModel[]>{
     return this.http.get<CollaborateurModel[]>(environment.apiUrl + "/collaborateur");
+  }
+  
+  delete(id: number): Observable<CollaborateurModel> | undefined{
+      const isConfirmed = confirm("Est-vous certain de vouloir supprimer le collaborateur");
+      if(isConfirmed){
+       return this.http.delete<CollaborateurModel>(environment.apiUrl + "/collaborateur/" + id);
+      }
+      return
   }
 }

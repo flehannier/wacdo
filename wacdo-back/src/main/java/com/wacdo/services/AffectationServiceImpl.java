@@ -1,5 +1,6 @@
 package com.wacdo.services;
 
+import com.wacdo.dto.AffectationDto;
 import com.wacdo.entities.Affectation;
 import com.wacdo.entities.Collaborateur;
 import com.wacdo.entities.Fonction;
@@ -40,12 +41,12 @@ public class AffectationServiceImpl implements AffectationService {
      */
     @Override
     @Transactional
-    public Affectation save(@NonNull Affectation affectation) throws FunctionalException, TechnicalException {
+    public Affectation save(@NonNull AffectationDto affectation) throws FunctionalException, TechnicalException {
         log.debug("Sauvegarde d'une affectation");
 
-        Collaborateur collaborateur = collaborateurService.getById(affectation.getCollaborateur().getId());
-        Restaurant restaurant = restaurantService.getById(affectation.getRestaurant().getId());
-        Fonction fonction = fonctionService.getById(affectation.getFonction().getId());
+        Collaborateur collaborateur = collaborateurService.getById(affectation.collaborateur().id());
+        Restaurant restaurant = restaurantService.getById(affectation.restaurant().id());
+        Fonction fonction = fonctionService.getById(affectation.fonction().id());
 
         if (collaborateur == null  || restaurant == null || fonction == null) {
             log.error("Le collaborateur ou restaurant ou la fonction n'existe pas");
@@ -57,28 +58,31 @@ public class AffectationServiceImpl implements AffectationService {
                 .findFirst()
                 .orElse(null);
 
+        Affectation newAffectation = new Affectation();
+
         // 1- Aucun poste en cours dans un restaurant
         if(affectationPosteEnCoursExist == null){
 
             //Mise à jours de la date qui correspond à sa toute première embauche
            if(collaborateur.getAffectations().isEmpty()) {
                log.debug("Mise à jours de la date d'embauche");
-               collaborateur.setDatePremiereEmbauche(affectation.getDateDebut());
+               collaborateur.setDatePremiereEmbauche(affectation.dateDebut());
                collaborateurService.save(collaborateur);
            }
 
-            affectation.setCollaborateur(collaborateur);
-            affectation.setRestaurant(restaurant);
-            affectation.setFonction(fonction);
+            newAffectation.setDateDebut(affectation.dateDebut());
+            newAffectation.setCollaborateur(collaborateur);
+            newAffectation.setRestaurant(restaurant);
+            newAffectation.setFonction(fonction);
 
-            return affectationRepository.save(affectation);
+            return affectationRepository.save(newAffectation);
         }
 
         // 2- Collaborateur affecté à un poste en cours pour un restaurant
 
         // contrôl sur les date de début
         // Un collaborateur peut posté seulement si la date de l'affectation est supérieur à celle en cours
-        if(affectationPosteEnCoursExist.getDateDebut().isAfter(affectation.getDateDebut()) || affectationPosteEnCoursExist.getDateDebut().equals(affectation.getDateDebut())){
+        if(affectationPosteEnCoursExist.getDateDebut().isAfter(affectation.dateDebut()) || affectationPosteEnCoursExist.getDateDebut().equals(affectation.dateDebut())){
             throw new FunctionalException("Votre affectation souhaitée a une date de début égale ou antérieur a une affectation en cours");
         }
 
@@ -86,11 +90,12 @@ public class AffectationServiceImpl implements AffectationService {
         affectationPosteEnCoursExist.setDateFin(LocalDate.now());
         affectationRepository.save(affectationPosteEnCoursExist);
 
-        affectation.setCollaborateur(collaborateur);
-        affectation.setRestaurant(restaurant);
-        affectation.setFonction(fonction);
+        newAffectation.setDateDebut(affectation.dateDebut());
+        newAffectation.setCollaborateur(collaborateur);
+        newAffectation.setRestaurant(restaurant);
+        newAffectation.setFonction(fonction);
 
-        return affectationRepository.save(affectation);
+        return affectationRepository.save(newAffectation);
     }
 
     @Override

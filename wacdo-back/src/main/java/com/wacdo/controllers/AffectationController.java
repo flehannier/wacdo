@@ -1,9 +1,6 @@
 package com.wacdo.controllers;
 
-import com.wacdo.dto.AffectationDto;
-import com.wacdo.dto.CollaborateurDto;
-import com.wacdo.dto.FonctionDto;
-import com.wacdo.dto.RestaurantDto;
+import com.wacdo.dto.*;
 import com.wacdo.entities.Affectation;
 import com.wacdo.entities.Collaborateur;
 import com.wacdo.exception.FunctionalException;
@@ -30,50 +27,25 @@ public class AffectationController {
     @PreAuthorize("hasRole('ADMIN')")
     List<AffectationDto> getAll() {
         return affectationService.getAll().stream()
-                .map(this::toDto)
+                .map(AffectationMapper::toDto)
                 .toList();
     }
 
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    Affectation getById(@Nonnull @PathVariable("id" ) Long id ) throws FunctionalException {
-        return affectationService.getById(id);
+    AffectationDto getById(@Nonnull @PathVariable("id" ) Long id ) throws FunctionalException {
+        return AffectationMapper.toDto(affectationService.getById(id));
     }
 
     @PostMapping()
     @PreAuthorize("hasRole('ADMIN')")
-    public Affectation createOrUpdate(@Nonnull @RequestBody Affectation affectation) throws FunctionalException, TechnicalException {
-        return affectationService.save(affectation);
+    public AffectationDto createOrUpdate(@Nonnull @RequestBody AffectationDto affectation) throws FunctionalException, TechnicalException {
+        return AffectationMapper.toDto(affectationService.save(affectation));
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public void deleteById(@Nonnull @PathVariable("id") Long id){
         affectationService.deleteById(id);
-    }
-
-    public AffectationDto toDto(Affectation a) {
-        return new AffectationDto(
-                a.getId(),
-                a.getDateDebut(),
-                a.getDateFin(),
-                new CollaborateurDto(
-                        a.getCollaborateur().getId(),
-                        a.getCollaborateur().getNom(),
-                        a.getCollaborateur().getPrenom(),
-                        a.getCollaborateur().getEmail(),
-                        a.getCollaborateur().isAdministrateur(),
-                        null,
-                        null
-                ),
-                new RestaurantDto(
-                        a.getRestaurant().getId(),
-                        a.getRestaurant().getNom()
-                ),
-                new FonctionDto(
-                        a.getFonction().getId(),
-                        a.getFonction().getIntitule()
-                )
-        );
     }
 }

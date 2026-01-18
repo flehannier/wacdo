@@ -1,0 +1,11 @@
+ <app-generic-list-component
+      title="Affectations"
+      [data]="affectations"
+      [columns]="columns"
+      [actions]="actions"
+      [searchable]="true"
+      [paginated]="true"
+      [pageSize]="10"
+      (addClicked)="onAddAffectation()"
+      (searchChanged)="onSearchChanged($event)"
+    />

@@ -2,11 +2,10 @@ package com.wacdo.dto;
 
 import java.time.LocalDate;
 
-public record AffectationDto(
+public record AffectationSimpleDto(
         Long id,
         LocalDate dateDebut,
         LocalDate dateFin,
-        CollaborateurSimpleDto collaborateur,
         RestaurantDto restaurant,
         FonctionDto fonction
 ) {}
