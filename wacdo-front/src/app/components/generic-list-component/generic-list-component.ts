@@ -63,10 +63,10 @@ export class GenericListComponent<T> {
 
   onSort(columnKey: string) {
     if (this.sortColumn === columnKey) {
-      this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+      this.sortDirection = this.sortDirection === SortModel.ASC ? SortModel.DESC : SortModel.ASC;
     } else {
       this.sortColumn = columnKey;
-      this.sortDirection = 'asc';
+      this.sortDirection = SortModel.ASC;
     }
 
     this.filteredData.sort((a, b) => {
