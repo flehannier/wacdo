@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ListAction, ListColumn } from '../../models/list-model';
-import { SoertModel } from '../../models/sort-model';
+import { SortModel } from '../../models/sort-model';
 
 @Component({
   selector: 'app-generic-list-component',
@@ -33,7 +33,7 @@ export class GenericListComponent<T> {
   paginatedData: T[] = [];
   currentPage: number = 1;
   sortColumn: string = '';
-  sortDirection: SoertModel = 'asc';
+  sortDirection: SortModel = SortModel.ASC;
 
   ngOnInit() {
     this.filteredData = this.data || [];
