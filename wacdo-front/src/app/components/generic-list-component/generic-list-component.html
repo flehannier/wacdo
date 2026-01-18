@@ -1,0 +1,149 @@
+<div class="w-full my-5">
+      <!-- Header avec recherche et actions -->
+      <div class="mb-4 flex items-center justify-between">
+        <div class="flex items-center gap-4">
+          <h2 class="text-2xl font-bold text-gray-800">{{ title }}</h2>
+          <span *ngIf="showCount" class="rounded-full bg-sky-100 px-3 py-1 text-sm font-medium text-sky-600">
+            {{ filteredData.length }} éléments
+          </span>
+        </div>
+        
+        <div class="flex items-center gap-2">
+          @if(searchable){
+            <!-- Recherche -->
+            <input
+                type="text"
+                [(ngModel)]="searchTerm"
+                (ngModelChange)="onSearch()"
+                placeholder="Rechercher..."
+                class="rounded-md border border-gray-300 px-4 py-2 focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-500"
+            />
+          }
+          
+          @if(showAddButton){
+            <!-- Bouton d'ajout -->
+            <button
+                (click)="onAdd()"
+                class="rounded-md bg-sky-500 px-4 py-2 text-white hover:bg-sky-600 transition flex items-center gap-2"
+            >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+            </svg>
+            {{ addButtonLabel }}
+          </button>
+          }
+             
+        </div>
+      </div>
+
+      <!-- Table -->
+      <div class="overflow-hidden rounded-lg border border-gray-200 bg-white shadow">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th
+                *ngFor="let column of columns"
+                [style.width]="column.width"
+                class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+              >
+                <div class="flex items-center gap-2">
+                  {{ column.label }}
+                  @if(column.sortable){
+                    <button
+                        (click)="onSort(column.key)"
+                        class="hover:text-gray-700"
+                    >
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"/>
+                        </svg>
+                    </button>
+                  }
+                    
+                </div>
+              </th>
+               @if(actions.length > 0){
+                <th class="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500">
+                    Actions
+                </th>
+                }
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-200 bg-white">
+            <tr
+              *ngFor="let item of paginatedData; let i = index"
+              class="hover:bg-gray-50 transition"
+              [class.bg-gray-50]="i % 2 === 0 && striped"
+            >
+              <td
+                *ngFor="let column of columns"
+                class="whitespace-nowrap px-6 py-4 text-sm text-gray-900"
+              >
+                    <ng-container>
+                        {{ getNestedProperty(item, column.key) }}
+                    </ng-container>
+               
+              </td>
+              @if(actions.length > 0){
+                <td class="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
+                    <div class="flex items-center justify-end gap-2">
+                    <button
+                        *ngFor="let action of actions"
+                        (click)="action.callback(item)"
+                        [class]="getActionClass(action.color)"
+                        class="rounded-md px-3 py-1 text-sm transition"
+                    >
+                        {{ action.label }}
+                    </button>
+                    </div>
+                </td>
+              }
+              
+            </tr>   
+            @if(filteredData.length === 0) {
+                <!-- Message si vide -->
+                <tr>
+                <td [attr.colspan]="columns.length + (actions.length > 0 ? 1 : 0)" class="px-6 py-8 text-center text-gray-500">
+                    {{ emptyMessage }}
+                </td>
+                </tr>   
+            }      
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination -->
+       @if(paginated && filteredData.length > 0){
+        <div  class="mt-4 flex items-center justify-between">
+                <div class="text-sm text-gray-700">
+                Affichage de {{ startIndex + 1 }} à {{ endIndex }} sur {{ filteredData.length }} résultats
+                </div>
+                
+                <div class="flex items-center gap-2">
+                <button
+                    (click)="previousPage()"
+                    [disabled]="currentPage === 1"
+                    [class.opacity-50]="currentPage === 1"
+                    [class.cursor-not-allowed]="currentPage === 1"
+                    class="rounded-md border border-gray-300 px-3 py-1 text-sm hover:bg-gray-50 transition"
+                >
+                    Précédent
+                </button>
+                
+                <span class="text-sm text-gray-700">
+                    Page {{ currentPage }} sur {{ totalPages }}
+                </span>
+                
+                <button
+                    (click)="nextPage()"
+                    [disabled]="currentPage === totalPages"
+                    [class.opacity-50]="currentPage === totalPages"
+                    [class.cursor-not-allowed]="currentPage === totalPages"
+                    class="rounded-md border border-gray-300 px-3 py-1 text-sm hover:bg-gray-50 transition"
+                >
+                    Suivant
+                </button>
+                </div>
+            </div>
+       }
+      
+    </div>

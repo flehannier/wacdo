@@ -47,9 +47,9 @@ public class AffectationServiceImpl implements AffectationService {
         Restaurant restaurant = restaurantService.getById(affectation.getRestaurant().getId());
         Fonction fonction = fonctionService.getById(affectation.getFonction().getId());
 
-        if (restaurant == null || fonction == null) {
-            log.error("Le restaurant ou la fonction n'existe pas");
-            throw new FunctionalException("Le restaurant ou la fonction n'existe pas");
+        if (collaborateur == null  || restaurant == null || fonction == null) {
+            log.error("Le collaborateur ou restaurant ou la fonction n'existe pas");
+            throw new FunctionalException("Le collaborateur ou restaurant ou la fonction n'existe pas");
         }
 
         Affectation affectationPosteEnCoursExist = collaborateur.getAffectations().stream()

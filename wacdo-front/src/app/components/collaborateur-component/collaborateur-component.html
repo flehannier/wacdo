@@ -1,0 +1,11 @@
+ <app-generic-list-component
+      title="Collaborateurs"
+      [data]="collaborateurs"
+      [columns]="columns"
+      [actions]="actions"
+      [searchable]="true"
+      [paginated]="true"
+      [pageSize]="10"
+      (addClicked)="onAddCollaborateur()"
+      (searchChanged)="onSearchChanged($event)"
+    />

@@ -1,6 +1,11 @@
 package com.wacdo.controllers;
 
+import com.wacdo.dto.AffectationDto;
+import com.wacdo.dto.CollaborateurDto;
+import com.wacdo.dto.FonctionDto;
+import com.wacdo.dto.RestaurantDto;
 import com.wacdo.entities.Affectation;
+import com.wacdo.entities.Collaborateur;
 import com.wacdo.exception.FunctionalException;
 import com.wacdo.exception.TechnicalException;
 import com.wacdo.services.AffectationService;
@@ -23,8 +28,10 @@ public class AffectationController {
 
     @GetMapping()
     @PreAuthorize("hasRole('ADMIN')")
-    List<Affectation> getAll() {
-        return affectationService.getAll();
+    List<AffectationDto> getAll() {
+        return affectationService.getAll().stream()
+                .map(this::toDto)
+                .toList();
     }
 
     @GetMapping("/{id}")
@@ -43,5 +50,30 @@ public class AffectationController {
     @PreAuthorize("hasRole('ADMIN')")
     public void deleteById(@Nonnull @PathVariable("id") Long id){
         affectationService.deleteById(id);
+    }
+
+    public AffectationDto toDto(Affectation a) {
+        return new AffectationDto(
+                a.getId(),
+                a.getDateDebut(),
+                a.getDateFin(),
+                new CollaborateurDto(
+                        a.getCollaborateur().getId(),
+                        a.getCollaborateur().getNom(),
+                        a.getCollaborateur().getPrenom(),
+                        a.getCollaborateur().getEmail(),
+                        a.getCollaborateur().isAdministrateur(),
+                        null,
+                        null
+                ),
+                new RestaurantDto(
+                        a.getRestaurant().getId(),
+                        a.getRestaurant().getNom()
+                ),
+                new FonctionDto(
+                        a.getFonction().getId(),
+                        a.getFonction().getIntitule()
+                )
+        );
     }
 }

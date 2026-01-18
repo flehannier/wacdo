@@ -9,11 +9,39 @@
             <a class="rounded-md px-3 py-2 text-sm font-medium text-black-300 hover:bg-gray-950/5 hover:text-white" routerLink="/collaborateur">Collaborateurs</a>
             <a class="rounded-md px-3 py-2 text-sm font-medium text-black-300 hover:bg-gray-950/5 hover:text-white" routerLink="/fonction">Fonction</a>
             <a class="rounded-md px-3 py-2 text-sm font-medium text-black-300 hover:bg-gray-950/5 hover:text-white" routerLink="/affectation">Affectations</a>
-            <a class="rounded-md px-3 py-2 text-sm font-medium text-black-300 hover:bg-gray-950/5 hover:text-white" (click)="logout()">Se déconnecter</a>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Avatar Section -->
+      <div class="flex items-center">
+        <div class="relative group">
+          <button class="flex items-center gap-2 rounded-full bg-white/10 px-3 py-1.5 hover:bg-white/20 transition">
+            <div class="w-8 h-8 bg-gradient-to-br from-blue-400 to-cyan-600 rounded-full flex items-center justify-center">
+              <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+              </svg>
+            </div>
+            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </button>
+          
+          <!-- Dropdown Menu -->
+          <div class="absolute right-0 mt-2 w-48 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+            <div class="py-1">
+              <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer" (click)="logout()">
+                <div class="flex items-center gap-2">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                  </svg>
+                  Se déconnecter
+                </div>
+              </a>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-
 </nav>
