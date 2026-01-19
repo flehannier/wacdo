@@ -24,4 +24,8 @@ export class AffectationService {
     }
     return
   }
+  
+  save(item: AffectationModel): Observable<AffectationModel>{
+    return this.http.post<AffectationModel>(environment.apiUrl + "/affectation", item);
+  }
 }

@@ -2,10 +2,20 @@
       title="Affectations"
       [data]="affectations"
       [columns]="columns"
-      [actions]="actions"
+      [actions]="actionsList"
       [searchable]="true"
       [paginated]="true"
       [pageSize]="10"
       (addClicked)="onAddAffectation()"
       (searchChanged)="onSearchChanged($event)"
+    />
+    
+  <app-generic-modal-component 
+      [errors]="errors"
+      [show]="showModal"
+      [title]="modalTitle"
+      [fields]="formFields"
+      [item]="selectedItem"
+      [action]="modalAction"
+      (close)="closeModal()"
     />

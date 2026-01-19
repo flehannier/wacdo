@@ -1,0 +1,197 @@
+
+@if(show){
+  <div class="fixed top-0 left-0 right-0 bottom-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-50">
+    <div class="relative w-full max-w-xl md:max-w-2xl bg-white rounded-lg shadow max-h-[90vh] overflow-y-auto mx-4 md:mx-0">
+      <!-- Modal header -->
+      <div class="sticky top-0 flex items-center justify-between p-4 border-b rounded-t bg-white">
+        <h3 class="text-xl font-semibold text-gray-900">
+          {{title}}
+        </h3>
+        <button (click)="closeModal()"
+          class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 flex items-center justify-center">
+          <svg class="w-6 h-6" fill="none" viewBox="0 0 14 14">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+          </svg>
+          <span class="sr-only">Fermer</span>
+        </button>
+      </div>
+     @if(errors) {
+          <div class="bg-orange-100 border-l-4 border-orange-500 text-orange-700 p-2 mx-2" role="alert">
+              <p class="font-bold">{{errors}}</p>
+          </div>
+      }
+      <!-- Modal body avec FormGroup -->
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <div class="mx-auto max-w-2xl space-y-6 rounded-xl bg-white p-8">
+          <ng-container *ngFor="let field of fields">
+            <div class="space-y-2">
+              
+              <!-- Label -->
+              @if(field.type !== FieldsFormTypeEnum.HIDDEN){
+                <label 
+                  [for]="field.key" 
+                  class="flex items-center text-sm font-semibold text-gray-700">
+                  {{ field.label || field.key }}
+                  <span *ngIf="field.required" class="ml-1 text-red-600">*</span>
+                </label>
+              }
+              
+              <!-- Champs selon le type -->
+              <ng-container [ngSwitch]="field.type">
+                
+                <!-- Input TEXT -->
+                <input 
+                  *ngSwitchCase="FieldsFormTypeEnum.TEXT" 
+                  [id]="field.key" 
+                  type="text" 
+                  [formControlName]="field.key"
+                  [class.border-red-500]="hasError(field.key)"
+                  class="w-full rounded-lg border-2 px-4 py-3 text-gray-900 transition duration-200 
+                    border-gray-200 bg-white
+                    hover:border-gray-300
+                    focus:border-sky-500 focus:outline-none focus:ring-4 focus:ring-sky-500/20
+                    disabled:cursor-not-allowed disabled:bg-gray-100 disabled:text-gray-500"
+                  [placeholder]="field.placeholder || ''"
+                />
+
+                <!-- Input HIDDEN -->
+                <input 
+                  *ngSwitchCase="FieldsFormTypeEnum.HIDDEN" 
+                  [id]="field.key" 
+                  type="hidden" 
+                  [formControlName]="field.key"
+                />
+
+                <!-- Input EMAIL -->
+                <input 
+                  *ngSwitchCase="FieldsFormTypeEnum.EMAIL" 
+                  [id]="field.key" 
+                  type="email" 
+                  [formControlName]="field.key"
+                  [class.border-red-500]="hasError(field.key)"
+                  class="w-full rounded-lg border-2 px-4 py-3 text-gray-900 transition duration-200 
+                    border-gray-200 bg-white
+                    hover:border-gray-300
+                    focus:border-sky-500 focus:outline-none focus:ring-4 focus:ring-sky-500/20
+                    disabled:cursor-not-allowed disabled:bg-gray-100 disabled:text-gray-500"
+                  [placeholder]="field.placeholder || ''"
+                />
+
+                <!-- Input PASSWORD -->
+                <input 
+                  *ngSwitchCase="FieldsFormTypeEnum.PASSWORD" 
+                  [id]="field.key" 
+                  type="password" 
+                  [formControlName]="field.key"
+                  [class.border-red-500]="hasError(field.key)"
+                  class="w-full rounded-lg border-2 px-4 py-3 text-gray-900 transition duration-200 
+                    border-gray-200 bg-white
+                    hover:border-gray-300
+                    focus:border-sky-500 focus:outline-none focus:ring-4 focus:ring-sky-500/20
+                    disabled:cursor-not-allowed disabled:bg-gray-100 disabled:text-gray-500"
+                  [placeholder]="field.placeholder || ''"
+                />
+
+                <!-- Input DATE -->
+                <input 
+                  *ngSwitchCase="FieldsFormTypeEnum.DATE" 
+                  [id]="field.key" 
+                  type="date" 
+                  [formControlName]="field.key"
+                  [class.border-red-500]="hasError(field.key)"
+                  class="w-full rounded-lg border-2 px-4 py-3 text-gray-900 transition duration-200 
+                    border-gray-200 bg-white
+                    hover:border-gray-300
+                    focus:border-sky-500 focus:outline-none focus:ring-4 focus:ring-sky-500/20
+                    disabled:cursor-not-allowed disabled:bg-gray-100 disabled:text-gray-500"
+                />
+
+                <!-- Input NUMBER -->
+                <input 
+                  *ngSwitchCase="FieldsFormTypeEnum.NUMBER" 
+                  [id]="field.key" 
+                  type="number" 
+                  [formControlName]="field.key"
+                  [class.border-red-500]="hasError(field.key)"
+                  class="w-full rounded-lg border-2 px-4 py-3 text-gray-900 transition duration-200 
+                    border-gray-200 bg-white
+                    hover:border-gray-300
+                    focus:border-sky-500 focus:outline-none focus:ring-4 focus:ring-sky-500/20
+                    disabled:cursor-not-allowed disabled:bg-gray-100 disabled:text-gray-500"
+                  [placeholder]="field.placeholder || ''"
+                />
+
+                <!-- TEXTAREA -->
+                <textarea 
+                  *ngSwitchCase="FieldsFormTypeEnum.TEXTAREA" 
+                  [id]="field.key" 
+                  [formControlName]="field.key"
+                  [class.border-red-500]="hasError(field.key)"
+                  rows="4"
+                  class="w-full rounded-lg border-2 px-4 py-3 text-gray-900 transition duration-200 
+                    border-gray-200 bg-white
+                    hover:border-gray-300
+                    focus:border-sky-500 focus:outline-none focus:ring-4 focus:ring-sky-500/20
+                    disabled:cursor-not-allowed disabled:bg-gray-100 disabled:text-gray-500"
+                  [placeholder]="field.placeholder || ''"
+                ></textarea>
+
+                <!-- SELECT -->
+                <select 
+                  *ngSwitchCase="FieldsFormTypeEnum.SELECT"
+                  [id]="field.key"
+                  [formControlName]="field.key"
+                  [class.border-red-500]="hasError(field.key)"
+                  class="block w-full rounded-lg border-2 px-4 py-3 text-gray-900 transition duration-200 
+                    border-gray-200 bg-white
+                    hover:border-gray-300
+                    focus:border-sky-500 focus:outline-none focus:ring-4 focus:ring-sky-500/20
+                    disabled:cursor-not-allowed disabled:bg-gray-100 disabled:text-gray-500"
+                >
+                  <option *ngIf="field.placeholder" value="">{{ field.placeholder }}</option>
+                  <option *ngFor="let option of field.options" [value]="option.value">
+                    {{ option.label }}
+                  </option>
+                </select>
+
+              </ng-container>
+
+              <!-- Message d'erreur -->
+              <p *ngIf="hasError(field.key)" class="mt-1 text-sm text-red-600">
+                {{ getErrorMessage(field.key) }}
+              </p>
+            </div>
+          </ng-container>
+        </div>
+        
+        <!-- Footer avec boutons -->
+        <div class="sticky bottom-0 border-t border-gray-200 bg-gray-50 px-6 py-4 rounded-b-xl">
+          <div class="flex items-center justify-end gap-3">
+            <button
+              (click)="closeModal()"
+              type="button"
+              class="rounded-lg border-2 border-gray-300 bg-white px-5 py-2.5 text-sm font-semibold text-gray-700 transition
+                hover:bg-gray-50 hover:border-gray-400
+                focus:outline-none focus:ring-4 focus:ring-gray-300/50"
+            >
+              Annuler
+            </button>
+
+            <button
+              type="submit"
+              [disabled]="form.invalid"
+              [class]="getActionClass(action.color)"
+              [class.opacity-50]="form.invalid"
+              [class.cursor-not-allowed]="form.invalid"
+              class="rounded-lg px-5 py-2.5 text-sm font-semibold text-white transition
+                focus:outline-none focus:ring-4"
+            >
+              {{ action.label }}
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+}

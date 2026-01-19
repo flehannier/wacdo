@@ -3,15 +3,25 @@ import { GenericListComponent } from "../generic-list-component/generic-list-com
 import { FonctionModel } from '../../models/fonction-model';
 import { FonctionService } from '../../services/fonction-service';
 import { ListAction, ListColumn } from '../../models/list-model';
+import { FieldsFormTypeEnum, FormField } from '../../models/FieldsForm';
+import { GenericModalComponent } from '../generic-modal-component/generic-modal-component';
+import { Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-fonction-component',
-  imports: [GenericListComponent],
+  standalone: true,
+  imports: [GenericListComponent, GenericModalComponent],
   templateUrl: './fonction-component.html',
   styleUrl: './fonction-component.css',
 })
 export class FonctionComponent {
+  item?: FonctionModel;
+  modalTitle: string = 'Fonction';
+  formFields: FormField[] = []
+  showModal = false;
+  selectedItem: any = null;
   fonctions: FonctionModel[] = [];
+  errors: string = '';
 
   columns: ListColumn[] = [
     { key: 'id', label: 'Id', sortable: true },
@@ -26,34 +36,86 @@ export class FonctionComponent {
     }
   ];
 
+  modalAction: ListAction = 
+  {
+    label: 'Ajouter',
+    color: 'primary',
+    callback: (item) => this.createOrUpdate(item)
+  };
+
   constructor(private fonctionService: FonctionService){
 
   }
 
   ngOnInit(){
+    
+    this.formFields = [
+      { key: 'id', label: 'Id', type: FieldsFormTypeEnum.HIDDEN, disabled: true, required: true, placeholder: '', validators: [Validators.required] },
+      { key: 'intitule', label: 'Intitule', type: FieldsFormTypeEnum.TEXT, disabled: false, required: true, placeholder: '',  validators: [Validators.required]  },
+      ]
+    
+    this.load();
+  }
+
+  load(){
    this.fonctionService.listFonctions().subscribe({
       next: (data) => {
         this.fonctions = data
       },
-      error: (error) => {
-        console.error('Erreur:', error);
+      error: (err) => {
+        console.error('Erreur:', err);
+          this.errors = err.error.message;
       }
     });
   }
 
   onAddFonction() {
-    console.log('Ajouter un nouveau fonction');
+    this.showModal = true;
+    this.modalTitle = 'Ajouter une fonction';
+    this.modalAction = 
+    {
+      label: 'Ajouter',
+      color: 'primary',
+      callback: (data) => this.createOrUpdate(data)
+    };
   }
 
-  onEdit(item: any) {
-    console.log('Modifier:', item);
+  onEdit(item: any) { 
+    this.showModal = true;
+    this.modalTitle = 'Modifier une fonction';
+    this.modalAction = 
+    {
+      label: 'Modifier',
+      color: 'primary',
+      callback: (data) => this.createOrUpdate(data)
+    };
+    
+    this.selectedItem = this.fonctions.find((aff: FonctionModel) => aff.id === item.id) as FonctionModel; 
+    
+    console.log('Modifier:', this.selectedItem);
   }
 
   onDelete(item: any) {
     console.log('Supprimer:', item);
   }
 
+  createOrUpdate(item:any){
+    this.fonctionService.save(item).subscribe({
+       next: () => {
+          this.showModal = false;
+          this.load();
+        },
+        error: (err) => {
+          this.errors = err.error.message;
+        }
+    });
+  }
   onSearchChanged(term: string) {
     console.log('Recherche:', term);
+  }
+
+  closeModal() {
+    this.showModal = false;
+    this.selectedItem = null;
   }
 }

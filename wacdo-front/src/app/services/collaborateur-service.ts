@@ -15,6 +15,11 @@ export class CollaborateurService {
   constructor(private http: HttpClient){
   }
 
+  
+  save(item: CollaborateurModel): Observable<CollaborateurModel>{
+    return this.http.post<CollaborateurModel>(environment.apiUrl + "/collaborateur", item);
+  }
+
   listCollaborateurs(): Observable<CollaborateurModel[]>{
     return this.http.get<CollaborateurModel[]>(environment.apiUrl + "/collaborateur");
   }

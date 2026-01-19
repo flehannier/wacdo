@@ -17,4 +17,8 @@ export class FonctionService {
   listFonctions(): Observable<FonctionModel[]>{
     return this.http.get<FonctionModel[]>(environment.apiUrl + "/fonction");
   }
+  
+  save(item: FonctionModel): Observable<FonctionModel>{
+    return this.http.post<FonctionModel>(environment.apiUrl + "/fonction", item);
+  }
 }

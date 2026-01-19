@@ -9,3 +9,12 @@
       (addClicked)="onAddFonction()"
       (searchChanged)="onSearchChanged($event)"
     />
+    
+  <app-generic-modal-component 
+      [show]="showModal"
+      [title]="modalTitle"
+      [fields]="formFields"
+      [item]="selectedItem"
+      [action]="modalAction"
+      (close)="closeModal()"
+    />

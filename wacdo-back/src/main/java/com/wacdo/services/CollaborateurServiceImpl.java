@@ -45,14 +45,8 @@ public class CollaborateurServiceImpl implements CollaborateurService {
     @Override
     @Transactional
     public Collaborateur save(@NonNull Collaborateur collab) throws FunctionalException, TechnicalException {
-
-        // Vérification obligatoire du rôle
-        if (collab.getRole() == null) {
-            throw new FunctionalException("Role non défini");
-        }
-
         if (collab.getId() != null) {
-
+            ///Maj collaborateur
             Collaborateur existing = collaborateurRepository.findById(collab.getId())
                     .orElseThrow(() -> new FunctionalException("Collaborateur introuvable"));
 
@@ -60,29 +54,30 @@ public class CollaborateurServiceImpl implements CollaborateurService {
             existing.setPrenom(collab.getPrenom());
             existing.setEmail(collab.getEmail());
 
-            Role role = roleRepository.findById(collab.getRole().getId()).orElseThrow(() -> new FunctionalException("Role introuvable"));
-            if (ADMIN.equals(role.getName())) {
-                existing.setAdministrateur(true);
+            if (null != collab.getRole()){
+                if (ADMIN.equals(collab.getRole().getName())) {
+                    existing.setAdministrateur(true);
+                }
+                existing.setRole(collab.getRole());
             }
-            existing.setRole(role);
 
             // mot de passe seulement si fourni
-            if (!collab.getMotDePasse().isBlank()) {
+            if (null != collab.getMotDePasse() && !collab.getMotDePasse().isBlank()) {
                 validateAndEncodePassword(collab.getMotDePasse(), existing);
             }
 
             return collaborateurRepository.save(existing);
         }
 
+        //Ajout collaborateur
         Collaborateur collaborateur = collaborateurRepository.findByEmail(collab.getEmail());
         if(collaborateur != null){
             throw new FunctionalException("Email déjà connu");
         }
 
-        Role role = roleRepository.findById(collab.getRole().getId()).orElseThrow(() -> new FunctionalException("Role introuvable"));
-        if (role.getName().equals("ADMIN")){
-            collab.setAdministrateur(true);
-        }
+        //USER par defaut
+        Role role = roleRepository.findByNameIgnoreCase("USER");
+        collab.setAdministrateur(false);
         collab.setRole(role);
 
         validateAndEncodePassword(collab.getMotDePasse(), collab);

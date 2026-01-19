@@ -2,17 +2,20 @@
       title="Collaborateurs"
       [data]="collaborateurs"
       [columns]="columns"
-      [actions]="actions"
+      [actions]="actionsList"
       [searchable]="true"
       [paginated]="true"
       [pageSize]="10"
-      (addClicked)="onAddCollaborateur()"
+      [showAddButton]=" false"
       (searchChanged)="onSearchChanged($event)"
   />
-  <app-modal-component 
-    [(openModal)]="openModal"
-    [action]="actions[0]"
-    [fields]="fields"
-    [title]="modalTitle"
-    [item]="item"
-  />
+  
+  <app-generic-modal-component 
+      [errors]="errors"
+      [show]="showModal"
+      [title]="modalTitle"
+      [fields]="formFields"
+      [item]="selectedItem"
+      [action]="modalAction"
+      (close)="closeModal()"
+    />

@@ -7,6 +7,7 @@ export type CollaborateurModel = {
     nom: string
     prenom: string
     email: string
+    motDePasse?: string
     datePremiereEmbauche: Date
     administrateur: boolean 
     affectations?: AffectationModel[]
