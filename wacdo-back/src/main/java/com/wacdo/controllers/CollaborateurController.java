@@ -36,9 +36,13 @@ public class CollaborateurController {
     @PreAuthorize("hasRole('ADMIN')")
     public CollaborateurDto getById(@Nonnull @PathVariable("id") Long id) throws FunctionalException {
         return CollaborateurMapper.toDto(collaborateurService.getById(id));
-
     }
 
+    @GetMapping("/byUsername/{name}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public CollaborateurDto getByEmail(@Nonnull @PathVariable("name") String name) throws FunctionalException {
+        return CollaborateurMapper.toDto(collaborateurService.getByEmail(name));
+    }
     @PostMapping()
     @PreAuthorize("hasRole('ADMIN')")
     public CollaborateurDto createOrUpdate(@Nonnull @RequestBody Collaborateur collab) throws FunctionalException, TechnicalException {

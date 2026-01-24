@@ -19,12 +19,13 @@ export class AuthService {
     return this.http.post<UserWithoutRoleAndToken>(environment.apiUrl + "/auth/login", user, { observe: 'response' });
   }
 
-  saveToken(token: string, role?: string) {
-    if(!role || !token) {
+  saveToken(token: string, username: string, role?: string) {
+    if(!role || !token || !username) {
       this.userIsLogged = false;
       return;
     }
 
+    localStorage.setItem("username", username);
     localStorage.setItem("token", token);
     localStorage.setItem("role", role);
     
@@ -39,9 +40,14 @@ export class AuthService {
     return localStorage.getItem("role") || null;
   }
 
+  getUsername() {
+    return localStorage.getItem("username") || null;
+  }
+
   logout() {    
     localStorage.removeItem("token");
     localStorage.removeItem("role");
+    localStorage.removeItem("username");
      this.userIsLogged = false;
 
     this.router.navigate(["/login"]);

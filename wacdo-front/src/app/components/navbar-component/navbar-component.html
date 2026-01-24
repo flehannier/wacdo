@@ -30,6 +30,26 @@
           <!-- Dropdown Menu -->
           <div class="absolute right-0 mt-2 w-48 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
             <div class="py-1">
+              <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer" (click)="loadProfil()">
+                <div class="flex items-center gap-2">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                  </svg>
+                  Mon profil
+                </div>
+                            
+                <app-generic-modal-component 
+                    [errors]="errors"
+                    [show]="showModal"
+                    [title]="modalTitle"
+                    [fields]="formFields"
+                    [item]="selectedItem"
+                    [action]="modalAction"
+                    (close)="closeModal()"
+                  />
+              </a>
+            </div>
+             <div class="py-1">
               <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer" (click)="logout()">
                 <div class="flex items-center gap-2">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

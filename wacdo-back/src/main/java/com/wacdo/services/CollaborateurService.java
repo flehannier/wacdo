@@ -12,6 +12,7 @@ public interface CollaborateurService{
     void deleteById(@NonNull Long id);
     void delete(@NonNull Collaborateur collaborateur);
     Collaborateur getById(@NonNull Long id) throws FunctionalException;
+    Collaborateur getByEmail(@NonNull  String email) throws FunctionalException;
     List<Collaborateur> getAll();
     Collaborateur findByEmail(@NonNull String email) throws FunctionalException;
 }

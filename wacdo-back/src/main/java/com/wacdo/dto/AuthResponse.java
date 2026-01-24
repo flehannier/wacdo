@@ -2,9 +2,6 @@ package com.wacdo.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.hibernate.mapping.Collection;
-
-import java.util.List;
 
 @Data
 @AllArgsConstructor

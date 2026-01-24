@@ -16,7 +16,7 @@ export class LoginComponent implements OnInit {
   errors?: string;
 
   constructor(private authService: AuthService, private router: Router, private route: ActivatedRoute, private formBuilder: FormBuilder) {
- 
+
   }
 
   ngOnInit(): void {
@@ -26,7 +26,7 @@ export class LoginComponent implements OnInit {
     })
 
      this.route.queryParams.subscribe(params => {
-      if (params['error'] === 'unauthorize') {
+      if (params['error'] === 'unauthorized') {
         this.errors = 'Votre rôle ne vous permet pas de poursuivre.';
 
         // Nettoyage de l’URL
@@ -45,7 +45,7 @@ export class LoginComponent implements OnInit {
     }
     const formValue = this.loginForm.getRawValue();
     const user: UserWithoutRoleAndToken = {
-      email: formValue.email,
+      username: formValue.email,
       motDePasse: formValue.motDePasse
     };
 
@@ -55,7 +55,7 @@ export class LoginComponent implements OnInit {
         console.log('Token : ' + jwt);
 
         if (jwt) {
-          this.authService.saveToken(jwt, (data.body as UserModel).role);
+          this.authService.saveToken(jwt, (data.body as UserModel).username, (data.body as UserModel).role);
           this.router.navigate(["/"]);
         }
       },

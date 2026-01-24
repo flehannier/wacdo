@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CollaborateurModel } from '../models/collaborateur-model';
+import { CollaborateurEdit, CollaborateurModel } from '../models/collaborateur-model';
 import { RestaurantModel } from '../models/restaurant-model';
 import { map, Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
@@ -14,10 +14,19 @@ export class CollaborateurService {
 
   constructor(private http: HttpClient){
   }
-
   
   save(item: CollaborateurModel): Observable<CollaborateurModel>{
     return this.http.post<CollaborateurModel>(environment.apiUrl + "/collaborateur", item);
+  }
+
+  getById(item: CollaborateurEdit): Observable<CollaborateurModel>{
+    return this.http.get<CollaborateurModel>(environment.apiUrl + "/collaborateur/"+item.id);
+  }
+  
+  getByUsername(username: String | null): Observable<CollaborateurModel>{
+     if(null === username) throw new Error("Username null");
+   
+    return this.http.get<CollaborateurModel>(environment.apiUrl + "/collaborateur/byUsername/"+username);
   }
 
   listCollaborateurs(): Observable<CollaborateurModel[]>{

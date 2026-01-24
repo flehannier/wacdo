@@ -9,6 +9,7 @@ import { FonctionService } from '../../services/fonction-service';
 import { RestaurantService } from '../../services/restaurant-service';
 import { forkJoin } from 'rxjs';
 import { GenericModalComponent } from '../generic-modal-component/generic-modal-component';
+import { AuthService } from '../../services/auth-service';
 
 @Component({
   selector: 'app-collaborateur-component',
@@ -50,7 +51,7 @@ export class CollaborateurComponent implements OnInit{
 
   modalAction!: ListAction;
 
-  constructor(private collaborateurService: CollaborateurService, private fonctionService: FonctionService, private restaurantService: RestaurantService){
+  constructor(private authService: AuthService, private collaborateurService: CollaborateurService, private fonctionService: FonctionService, private restaurantService: RestaurantService){
   }
 
   ngOnInit(){
@@ -80,7 +81,10 @@ export class CollaborateurComponent implements OnInit{
   load(){
     this.collaborateurService.listCollaborateurs().subscribe({
       next: (data) => {
-        this.collaborateurs = data.map((collab: CollaborateurModel) => {
+        this.collaborateurs = data
+                              .filter((collab: CollaborateurModel) => collab.email != this.authService.getUsername() )
+                              .map((collab: CollaborateurModel) => {
+
           // Prendre la dernière affectation
           const lastAffectation = collab.affectations?.[collab.affectations.length - 1];
           

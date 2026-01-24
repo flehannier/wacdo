@@ -11,20 +11,20 @@ export class AuthGuard implements CanActivate {
   constructor(private auth: AuthService, private router: Router) {}
 
   canActivate(route: ActivatedRouteSnapshot): boolean {
-    const token = this.auth.getToken(); 
+    const token = this.auth.getToken();
     const role = this.auth.getRole();
 
-    if (!token || !role) {      
+    if (!token || !role) {
       return false;
     }
-   
+
     switch (role) {
       case Role.USER:
         // Bloque l'accès si l'utilisateur n'est pas admin
         // On bloque les utilisateurs avec le rôle USER
-        this.router.navigate(['/login'], { 
+        this.router.navigate(['/login'], {
           queryParams: {
-            error: 'unauthorize'
+            error: 'unauthorized'
           }
         });
       return false;

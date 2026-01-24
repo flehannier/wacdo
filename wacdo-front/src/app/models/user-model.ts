@@ -1,5 +1,5 @@
 export type UserModel = {
-    email: string
+    username: string
     motDePasse: string
     role: string
     accesToken: string

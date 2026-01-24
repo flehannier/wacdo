@@ -13,12 +13,12 @@ export type CollaborateurModel = {
     affectations?: AffectationModel[]
 }
 
-export type CollaborateurList = Omit <CollaborateurModel, 'affecctation'> & {
+export type CollaborateurList = Omit <CollaborateurModel, 'affectation'> & {
     fonction?: string
     restaurant?: string 
 }
 
-export type CollaborateurEdit = Omit <CollaborateurModel, 'affecctation'> & {
+export type CollaborateurEdit = Omit <CollaborateurModel, 'affectation'> & {
     fonction?: FonctionModel
     restaurant?: RestaurantModel 
 }

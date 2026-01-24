@@ -144,6 +144,16 @@ public class CollaborateurServiceImpl implements CollaborateurService {
     }
 
     /**
+     * Récupération d'un collaborateur par son email
+     * @param email identifiant du collaborateur
+     * @return Optional<Collaborateur>
+     */
+    @Override
+    public Collaborateur getByEmail(@NonNull String email) throws FunctionalException {
+        return collaborateurRepository.findByEmail(email);
+    }
+
+    /**
      * Retour la liste des collaborateurs
      * @return
      */
