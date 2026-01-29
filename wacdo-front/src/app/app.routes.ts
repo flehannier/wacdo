@@ -8,9 +8,9 @@ import { AffectationComponent } from './components/affectation-component/affecta
 
 export const routes: Routes = [
     { path: "login", component: LoginComponent },
-    { path: 'collaborateur', component: CollaborateurComponent, canActivate: [AuthGuard] },  
-    { path: 'fonction', component: FonctionComponent, canActivate: [AuthGuard] },     
-    { path: 'affectation', component: AffectationComponent, canActivate: [AuthGuard] },    
-    { path: 'accueil', component: AccueilComponent, canActivate: [AuthGuard] },    
+    { path: 'collaborateur', component: CollaborateurComponent, canActivate: [AuthGuard] },
+    { path: 'fonction', component: FonctionComponent, canActivate: [AuthGuard] },
+    { path: 'affectation', component: AffectationComponent, canActivate: [AuthGuard] },
+    { path: 'accueil', component: AccueilComponent, canActivate: [AuthGuard] },
     { path: '**', redirectTo: 'accueil' }
 ];

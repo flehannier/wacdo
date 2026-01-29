@@ -17,16 +17,26 @@ public class CorsConfig {
         CorsConfiguration config = new CorsConfiguration();
 
         config.setAllowedOrigins(List.of(
-                "http://localhost:4200"
+                "http://localhost:4200",
+                "https://wacdo.neofit.fr",
+                "http://wacdo.neofit.fr"
         ));
-        config.setAllowedMethods(List.of("*"));
+        // Méthodes HTTP autorisées
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+
+        // Tous les headers sont autorisés
         config.setAllowedHeaders(List.of("*"));
+
+        // Expose Authorization pour JWT par exemple
         config.setExposedHeaders(List.of("Authorization"));
 
-        UrlBasedCorsConfigurationSource source =
-                new UrlBasedCorsConfigurationSource();
+        // Autorise l'envoi de cookies et credentials
+        config.setAllowCredentials(true);
 
+        // Configuration source
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
+
         return source;
     }
 }

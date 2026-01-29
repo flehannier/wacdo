@@ -70,8 +70,8 @@ export class CollaborateurComponent implements OnInit{
         { key: 'prenom', label: 'Prénom', type: FieldsFormTypeEnum.TEXT, disabled: false, required: true, placeholder: '',  validators: [Validators.required]  },
         { key: 'email', label: 'Email',  type: FieldsFormTypeEnum.EMAIL, disabled: false, required: true, placeholder: '',  validators: [Validators.email, Validators.required] },
         { key: 'motDePasse', label: 'Mot de passe',  type: FieldsFormTypeEnum.PASSWORD, disabled: false, required: false, placeholder: '' },
-        { key: 'fonction', label: 'Fonction', type: FieldsFormTypeEnum.SELECT, options: optionsFonction ,disabled: false, required: true, placeholder: 'Choix d\'une fonction',  validators: [Validators.required]  },
-        { key: 'restaurant', label: 'Restaurant', type: FieldsFormTypeEnum.SELECT, options: optionsRestaurant, disabled: false, required: true, placeholder: 'Choix du restaurant',  validators: [Validators.required]  }
+        { key: 'fonction', label: 'Fonction', type: FieldsFormTypeEnum.HIDDEN, options: optionsFonction ,disabled: true, required: true, placeholder: 'Choix d\'une fonction',  validators: [Validators.required]  },
+        { key: 'restaurant', label: 'Restaurant', type: FieldsFormTypeEnum.HIDDEN, options: optionsRestaurant, disabled: true, required: true, placeholder: 'Choix du restaurant',  validators: [Validators.required]  }
         ]
       });
       
