@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { UserWithoutRoleAndToken } from '../models/user-model';
+import { AuthRequest, AuthResponse } from '../models/auth-model';
 import { environment } from '../../environments/environment';
 import { Role} from '../constants/roles';
 
@@ -15,8 +15,8 @@ export class AuthService {
     this.userIsLogged = !!this.getToken() && this.getRole() === Role.ADMIN;
   }
 
-  login(user: UserWithoutRoleAndToken) {
-    return this.http.post<UserWithoutRoleAndToken>(environment.apiUrl + "/auth/login", user, { observe: 'response' });
+  login(user: AuthRequest) {
+    return this.http.post<AuthResponse>(environment.apiUrl + "/auth/login", user, { observe: 'response' });
   }
 
   saveToken(token: string, username: string, role?: string) {

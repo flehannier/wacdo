@@ -37,124 +37,135 @@
                 </label>
               }
               
-              <!-- Champs selon le type -->
-              <ng-container [ngSwitch]="field.type">
+              <ng-container>
                 
-                <!-- Input TEXT -->
-                <input 
-                  *ngSwitchCase="FieldsFormTypeEnum.TEXT" 
-                  [id]="field.key" 
-                  type="text" 
-                  [formControlName]="field.key"
-                  [class.border-red-500]="hasError(field.key)"
-                  class="w-full rounded-lg border-2 px-4 py-3 text-gray-900 transition duration-200 
-                    border-gray-200 bg-white
-                    hover:border-gray-300
-                    focus:border-sky-500 focus:outline-none focus:ring-4 focus:ring-sky-500/20
-                    disabled:cursor-not-allowed disabled:bg-gray-100 disabled:text-gray-500"
-                  [placeholder]="field.placeholder || ''"
-                />
+                <!-- Champs selon le type -->
+                @switch (field.type) {
+                    <!-- Input TEXT -->
+                    @case (FieldsFormTypeEnum.TEXT) {
+                      <input 
+                        [id]="field.key" 
+                        type="text" 
+                        [formControlName]="field.key"
+                        [class.border-red-500]="hasError(field.key)"
+                        class="w-full rounded-lg border-2 px-4 py-3 text-gray-900 transition duration-200 
+                          border-gray-200 bg-white
+                          hover:border-gray-300
+                          focus:border-sky-500 focus:outline-none focus:ring-4 focus:ring-sky-500/20
+                          disabled:cursor-not-allowed disabled:bg-gray-100 disabled:text-gray-500"
+                        [placeholder]="field.placeholder || ''"
+                      />
+                    }
+                    @case (FieldsFormTypeEnum.HIDDEN) {
+                        <!-- Input HIDDEN -->
+                        <input 
+                          [id]="field.key" 
+                          type="hidden" 
+                          [formControlName]="field.key"
+                        />
+                    }
 
-                <!-- Input HIDDEN -->
-                <input 
-                  *ngSwitchCase="FieldsFormTypeEnum.HIDDEN" 
-                  [id]="field.key" 
-                  type="hidden" 
-                  [formControlName]="field.key"
-                />
+                    @case (FieldsFormTypeEnum.EMAIL) {
+                        <!-- Input EMAIL -->
+                        <input 
+                          [id]="field.key" 
+                          type="email" 
+                          [formControlName]="field.key"
+                          [class.border-red-500]="hasError(field.key)"
+                          class="w-full rounded-lg border-2 px-4 py-3 text-gray-900 transition duration-200 
+                            border-gray-200 bg-white
+                            hover:border-gray-300
+                            focus:border-sky-500 focus:outline-none focus:ring-4 focus:ring-sky-500/20
+                            disabled:cursor-not-allowed disabled:bg-gray-100 disabled:text-gray-500"
+                          [placeholder]="field.placeholder || ''"
+                        />
+                    }
 
-                <!-- Input EMAIL -->
-                <input 
-                  *ngSwitchCase="FieldsFormTypeEnum.EMAIL" 
-                  [id]="field.key" 
-                  type="email" 
-                  [formControlName]="field.key"
-                  [class.border-red-500]="hasError(field.key)"
-                  class="w-full rounded-lg border-2 px-4 py-3 text-gray-900 transition duration-200 
-                    border-gray-200 bg-white
-                    hover:border-gray-300
-                    focus:border-sky-500 focus:outline-none focus:ring-4 focus:ring-sky-500/20
-                    disabled:cursor-not-allowed disabled:bg-gray-100 disabled:text-gray-500"
-                  [placeholder]="field.placeholder || ''"
-                />
+                    @case (FieldsFormTypeEnum.PASSWORD) {
+                      <!-- Input PASSWORD -->
+                      <input 
+                        [id]="field.key" 
+                        type="password" 
+                        [formControlName]="field.key"
+                        [class.border-red-500]="hasError(field.key)"
+                        class="w-full rounded-lg border-2 px-4 py-3 text-gray-900 transition duration-200 
+                          border-gray-200 bg-white
+                          hover:border-gray-300
+                          focus:border-sky-500 focus:outline-none focus:ring-4 focus:ring-sky-500/20
+                          disabled:cursor-not-allowed disabled:bg-gray-100 disabled:text-gray-500"
+                        [placeholder]="field.placeholder || ''"
+                      />
+                    }
+                    
+                    @case (FieldsFormTypeEnum.DATE) {
+                        <!-- Input DATE -->
+                        <input 
+                          [id]="field.key" 
+                          type="date" 
+                          [formControlName]="field.key"
+                          [class.border-red-500]="hasError(field.key)"
+                          class="w-full rounded-lg border-2 px-4 py-3 text-gray-900 transition duration-200 
+                            border-gray-200 bg-white
+                            hover:border-gray-300
+                            focus:border-sky-500 focus:outline-none focus:ring-4 focus:ring-sky-500/20
+                            disabled:cursor-not-allowed disabled:bg-gray-100 disabled:text-gray-500"
+                        />
+                    }
+                    
+                    @case (FieldsFormTypeEnum.NUMBER) {
+                       <!-- Input NUMBER -->
+                      <input 
+                        [id]="field.key" 
+                        type="number" 
+                        [formControlName]="field.key"
+                        [class.border-red-500]="hasError(field.key)"
+                        class="w-full rounded-lg border-2 px-4 py-3 text-gray-900 transition duration-200 
+                          border-gray-200 bg-white
+                          hover:border-gray-300
+                          focus:border-sky-500 focus:outline-none focus:ring-4 focus:ring-sky-500/20
+                          disabled:cursor-not-allowed disabled:bg-gray-100 disabled:text-gray-500"
+                        [placeholder]="field.placeholder || ''"
+                      />
+                    }
+                
+              
+                    @case (FieldsFormTypeEnum.TEXTAREA) {
+                      <!-- TEXTAREA -->
+                      <textarea 
+                        [id]="field.key" 
+                        [formControlName]="field.key"
+                        [class.border-red-500]="hasError(field.key)"
+                        rows="4"
+                        class="w-full rounded-lg border-2 px-4 py-3 text-gray-900 transition duration-200 
+                          border-gray-200 bg-white
+                          hover:border-gray-300
+                          focus:border-sky-500 focus:outline-none focus:ring-4 focus:ring-sky-500/20
+                          disabled:cursor-not-allowed disabled:bg-gray-100 disabled:text-gray-500"
+                        [placeholder]="field.placeholder || ''"
+                      ></textarea>
+                    }
 
-                <!-- Input PASSWORD -->
-                <input 
-                  *ngSwitchCase="FieldsFormTypeEnum.PASSWORD" 
-                  [id]="field.key" 
-                  type="password" 
-                  [formControlName]="field.key"
-                  [class.border-red-500]="hasError(field.key)"
-                  class="w-full rounded-lg border-2 px-4 py-3 text-gray-900 transition duration-200 
-                    border-gray-200 bg-white
-                    hover:border-gray-300
-                    focus:border-sky-500 focus:outline-none focus:ring-4 focus:ring-sky-500/20
-                    disabled:cursor-not-allowed disabled:bg-gray-100 disabled:text-gray-500"
-                  [placeholder]="field.placeholder || ''"
-                />
-
-                <!-- Input DATE -->
-                <input 
-                  *ngSwitchCase="FieldsFormTypeEnum.DATE" 
-                  [id]="field.key" 
-                  type="date" 
-                  [formControlName]="field.key"
-                  [class.border-red-500]="hasError(field.key)"
-                  class="w-full rounded-lg border-2 px-4 py-3 text-gray-900 transition duration-200 
-                    border-gray-200 bg-white
-                    hover:border-gray-300
-                    focus:border-sky-500 focus:outline-none focus:ring-4 focus:ring-sky-500/20
-                    disabled:cursor-not-allowed disabled:bg-gray-100 disabled:text-gray-500"
-                />
-
-                <!-- Input NUMBER -->
-                <input 
-                  *ngSwitchCase="FieldsFormTypeEnum.NUMBER" 
-                  [id]="field.key" 
-                  type="number" 
-                  [formControlName]="field.key"
-                  [class.border-red-500]="hasError(field.key)"
-                  class="w-full rounded-lg border-2 px-4 py-3 text-gray-900 transition duration-200 
-                    border-gray-200 bg-white
-                    hover:border-gray-300
-                    focus:border-sky-500 focus:outline-none focus:ring-4 focus:ring-sky-500/20
-                    disabled:cursor-not-allowed disabled:bg-gray-100 disabled:text-gray-500"
-                  [placeholder]="field.placeholder || ''"
-                />
-
-                <!-- TEXTAREA -->
-                <textarea 
-                  *ngSwitchCase="FieldsFormTypeEnum.TEXTAREA" 
-                  [id]="field.key" 
-                  [formControlName]="field.key"
-                  [class.border-red-500]="hasError(field.key)"
-                  rows="4"
-                  class="w-full rounded-lg border-2 px-4 py-3 text-gray-900 transition duration-200 
-                    border-gray-200 bg-white
-                    hover:border-gray-300
-                    focus:border-sky-500 focus:outline-none focus:ring-4 focus:ring-sky-500/20
-                    disabled:cursor-not-allowed disabled:bg-gray-100 disabled:text-gray-500"
-                  [placeholder]="field.placeholder || ''"
-                ></textarea>
-
-                <!-- SELECT -->
-                <select 
-                  *ngSwitchCase="FieldsFormTypeEnum.SELECT"
-                  [id]="field.key"
-                  [formControlName]="field.key"
-                  [class.border-red-500]="hasError(field.key)"
-                  class="block w-full rounded-lg border-2 px-4 py-3 text-gray-900 transition duration-200 
-                    border-gray-200 bg-white
-                    hover:border-gray-300
-                    focus:border-sky-500 focus:outline-none focus:ring-4 focus:ring-sky-500/20
-                    disabled:cursor-not-allowed disabled:bg-gray-100 disabled:text-gray-500"
-                >
-                  <option *ngIf="field.placeholder" value="">{{ field.placeholder }}</option>
-                  <option *ngFor="let option of field.options" [value]="option.value">
-                    {{ option.label }}
-                  </option>
-                </select>
-
+                    
+                    @case (FieldsFormTypeEnum.SELECT) {
+                          <!-- SELECT -->
+                          <select 
+                            [id]="field.key"
+                            [formControlName]="field.key"
+                            [class.border-red-500]="hasError(field.key)"
+                            class="block w-full rounded-lg border-2 px-4 py-3 text-gray-900 transition duration-200 
+                              border-gray-200 bg-white
+                              hover:border-gray-300
+                              focus:border-sky-500 focus:outline-none focus:ring-4 focus:ring-sky-500/20
+                              disabled:cursor-not-allowed disabled:bg-gray-100 disabled:text-gray-500"
+                          >
+                            <option *ngIf="field.placeholder" value="">{{ field.placeholder }}</option>
+                            <option *ngFor="let option of field.options" [value]="option.value">
+                              {{ option.label }}
+                            </option>
+                          </select>
+                    }
+                }
+               
               </ng-container>
 
               <!-- Message d'erreur -->

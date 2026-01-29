@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth-service';
-import { UserModel, UserWithoutRoleAndToken } from '../../models/user-model';
+import { AuthRequest, AuthResponse } from '../../models/auth-model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
@@ -44,18 +44,18 @@ export class LoginComponent implements OnInit {
       return;
     }
     const formValue = this.loginForm.getRawValue();
-    const user: UserWithoutRoleAndToken = {
-      username: formValue.email,
+    const user: AuthRequest = {
+      email: formValue.email,
       motDePasse: formValue.motDePasse
     };
 
     this.authService.login(user).subscribe({
       next: (data) => {
-        let jwt = (data.body as UserModel).accesToken;
+        let jwt = (data.body as AuthResponse).accesToken;
         console.log('Token : ' + jwt);
 
         if (jwt) {
-          this.authService.saveToken(jwt, (data.body as UserModel).username, (data.body as UserModel).role);
+          this.authService.saveToken(jwt, (data.body as AuthResponse).username, (data.body as AuthResponse).role);
           this.router.navigate(["/"]);
         }
       },
