@@ -72,6 +72,5 @@ class RegisterServiceTest {
         assertThat(col.getRole().getName()).isEqualTo("USER");
         assertThat(col.isAdministrateur()).isFalse();
         assertThat(col.getMotDePasse()).isNotBlank(); // password encodé
-
     }
 }
