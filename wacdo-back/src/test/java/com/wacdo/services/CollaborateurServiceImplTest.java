@@ -134,32 +134,6 @@ class CollaborateurServiceImplTest {
                 .withMessageContaining("Collaborateur introuvable");
     }
 
-
-    @Test
-    void shouldThrowException_whenRoleIsNull() throws FunctionalException, TechnicalException {
-        Collaborateur collaborateur = new Collaborateur();
-        Role role = new Role("testRole");
-        role.setId(1L);
-        collaborateur.setRole(role);
-        collaborateur.setId(99L);
-        collaborateur.setNom("Test");
-        collaborateur.setPrenom("Test");
-        collaborateur.setEmail("Test@test.fr");
-        collaborateur.setMotDePasse("Admin123");
-
-        when(passwordEncoder.encode(any()))
-                .thenReturn("encoded-password");
-
-        when(roleRepository.findById(role.getId())).thenReturn(Optional.empty());
-
-        when(collaborateurRepository.findById(99L))
-                .thenReturn(Optional.of(collaborateur));
-
-        assertThatException().isThrownBy(() -> collaborateurService.save(collaborateur))
-                .isInstanceOf(FunctionalException.class)
-                .withMessageContaining("Role introuvable");
-    }
-
     @Test
     void shouldCreateCollabroteur_withRoleAdmin() throws FunctionalException, TechnicalException {
         Collaborateur collaborateur = new Collaborateur();

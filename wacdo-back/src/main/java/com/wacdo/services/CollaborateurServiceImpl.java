@@ -55,7 +55,7 @@ public class CollaborateurServiceImpl implements CollaborateurService {
             existing.setEmail(collab.getEmail());
 
             if (null != collab.getRole()){
-                if (ADMIN.equals(collab.getRole().getName())) {
+                if (collab.getRole().getName().equals(ADMIN)) {
                     existing.setAdministrateur(true);
                 }
                 existing.setRole(collab.getRole());

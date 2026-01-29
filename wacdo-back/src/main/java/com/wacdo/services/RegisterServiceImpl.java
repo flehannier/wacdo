@@ -29,12 +29,6 @@ public class RegisterServiceImpl implements RegisterService {
         collaborateur.setPrenom(request.getPrenom());
         collaborateur.setMotDePasse(request.getMotDePasse());
 
-        Role role = roleService.findByNameIgnoreCase("USER");
-        if(role == null){
-            throw new FunctionalException("Le role USER n'existe pas");
-        }
-        collaborateur.setRole(role);
-
         return collaborateurService.save(collaborateur);
     }
 }

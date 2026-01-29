@@ -54,6 +54,9 @@ class RegisterServiceTest {
         when(roleService.findByNameIgnoreCase("USER"))
                 .thenReturn(role);
 
+        when(roleRepository.findByNameIgnoreCase("USER"))
+                .thenReturn(role);
+
         when(collaborateurRepository.save(any(Collaborateur.class)))
                 .thenAnswer(invocation -> invocation.getArgument(0));
 
@@ -70,21 +73,5 @@ class RegisterServiceTest {
         assertThat(col.isAdministrateur()).isFalse();
         assertThat(col.getMotDePasse()).isNotBlank(); // password encodé
 
-    }
-
-    @Test
-    void shouldThrowAnException_roleIsNull() throws Exception {
-        when(roleService.findByNameIgnoreCase("USER"))
-                .thenReturn(null);
-
-        RegisterRequest registerRequest = new RegisterRequest();
-        registerRequest.setNom("Collaborateur");
-        registerRequest.setPrenom("Prenom");
-        registerRequest.setEmail("test@email.com");
-        registerRequest.setMotDePasse("MotDePasse1");
-
-        assertThatThrownBy(() -> registerService.register(registerRequest))
-                .isInstanceOf(FunctionalException.class)
-                .hasMessage("Le role USER n'existe pas");
     }
 }
