@@ -34,7 +34,7 @@ public class RestaurantController {
 
     @PostMapping()
     @PreAuthorize("hasRole('ADMIN')")
-    public Restaurant createOrUpdate(@Nonnull @RequestBody Restaurant resto){
+    public Restaurant createOrUpdate(@Nonnull @RequestBody Restaurant resto) throws FunctionalException {
         return restaurantService.save(resto);
     }
 

@@ -17,4 +17,8 @@ export class RestaurantService {
   listRestaurants(): Observable<RestaurantModel[]>{
     return this.http.get<RestaurantModel[]>(environment.apiUrl + "/restaurant");
   }
+  
+  save(item: RestaurantModel): Observable<RestaurantModel>{
+    return this.http.post<RestaurantModel>(environment.apiUrl + "/restaurant", item);
+  }
 }

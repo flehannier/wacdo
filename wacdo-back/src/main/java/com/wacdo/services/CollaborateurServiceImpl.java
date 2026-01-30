@@ -66,7 +66,8 @@ public class CollaborateurServiceImpl implements CollaborateurService {
                 validateAndEncodePassword(collab.getMotDePasse(), existing);
             }
 
-            return collaborateurRepository.save(existing);
+            //update fait à la fin de la transaction
+            return existing;
         }
 
         //Ajout collaborateur

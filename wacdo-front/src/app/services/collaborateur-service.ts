@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CollaborateurEdit, CollaborateurModel } from '../models/collaborateur-model';
+import { CollaborateurModel } from '../models/collaborateur-model';
 import { RestaurantModel } from '../models/restaurant-model';
 import { map, Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
@@ -19,8 +19,8 @@ export class CollaborateurService {
     return this.http.post<CollaborateurModel>(environment.apiUrl + "/collaborateur", item);
   }
 
-  getById(item: CollaborateurEdit): Observable<CollaborateurModel>{
-    return this.http.get<CollaborateurModel>(environment.apiUrl + "/collaborateur/"+item.id);
+  getById(id: number): Observable<CollaborateurModel>{
+    return this.http.get<CollaborateurModel>(environment.apiUrl + "/collaborateur/"+id);
   }
   
   getByUsername(username: String | null): Observable<CollaborateurModel>{

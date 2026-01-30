@@ -1,0 +1,22 @@
+ <app-generic-list-component
+      title="Restaurant"
+      [data]="restaurants"
+      [columns]="columns"
+      [actions]="actionsList"
+      [searchable]="true"
+      [paginated]="true"
+      [pageSize]="10"
+      [showAddButton]="true"
+      (addClicked)="onAddRestaurant()"
+      (searchChanged)="onSearchChanged($event)"
+  />
+  
+  <app-generic-modal-component 
+      [errors]="errors"
+      [show]="showModal"
+      [title]="modalTitle"
+      [fields]="formFields"
+      [item]="selectedItem"
+      [action]="modalAction"
+      (close)="closeModal()"
+    />

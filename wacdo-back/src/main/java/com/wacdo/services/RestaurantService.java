@@ -7,7 +7,7 @@ import lombok.NonNull;
 import java.util.List;
 
 public interface RestaurantService {
-    Restaurant save(@NonNull Restaurant resto);
+    Restaurant save(@NonNull Restaurant resto) throws FunctionalException;
     void deleteById(@NonNull Long id);
     Restaurant getById(@NonNull Long id) throws FunctionalException;
     List<Restaurant> getAll();

@@ -1,5 +1,6 @@
 package com.wacdo.services;
 
+import com.wacdo.entities.Collaborateur;
 import com.wacdo.entities.Restaurant;
 import com.wacdo.exception.FunctionalException;
 import com.wacdo.repositories.RestaurantRepository;
@@ -20,7 +21,20 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     @Override
     @Transactional
-    public Restaurant save(@NonNull Restaurant resto) {
+    public Restaurant save(@NonNull Restaurant resto) throws FunctionalException {
+        if (resto.getId() != null) {
+            Restaurant existing = restaurantRepository.findById(resto.getId())
+                    .orElseThrow(() -> new FunctionalException("Restaurant introuvable"));
+
+            existing.setNom(resto.getNom());
+            existing.setAdresse(resto.getAdresse());
+            existing.setCodePostal(resto.getCodePostal());
+            existing.setVille(resto.getVille());
+
+            //update fait à la fin de la transaction
+            return existing;
+        }
+
         return restaurantRepository.save(resto);
     }
 

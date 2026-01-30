@@ -18,7 +18,7 @@ public class CollaborateurMapper {
                 collaborateur.getPrenom(),
                 collaborateur.getEmail(),
                 collaborateur.isAdministrateur(),
-                collaborateur.getRole() != null ? collaborateur.getRole().getName() : null
+                collaborateur.getRole()
         );
     }
 }

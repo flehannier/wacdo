@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { GenericListComponent} from "../generic-list-component/generic-list-component";
-import { CollaborateurEdit, CollaborateurList, CollaborateurModel } from '../../models/collaborateur-model';
+import { CollaborateurList, CollaborateurModel } from '../../models/collaborateur-model';
 import { CollaborateurService } from '../../services/collaborateur-service';
 import { ListAction, ListColumn } from '../../models/list-model';
 import { FieldsFormTypeEnum, FormField, SelectOption } from '../../models/FieldsForm';
@@ -21,11 +21,11 @@ import { RoleService } from '../../services/role-service';
 })
 export class CollaborateurComponent implements OnInit{
   collaborateurs: CollaborateurList[] = [];
-  item?: CollaborateurEdit;
+  item?: CollaborateurModel;
   modalTitle: string = 'Collaborateur';
   formFields: FormField[] = []
   showModal = false;
-  selectedItem: any = null;
+  selectedItem?: CollaborateurModel;
   errors: string = '';
 
   columns: ListColumn[] = [
@@ -116,24 +116,16 @@ export class CollaborateurComponent implements OnInit{
       callback: (data) => this.createOrUpdate(data)
     };
     
-    this.item = this.collaborateurs.find((collab: CollaborateurModel) => collab.id === item.id) as CollaborateurEdit; 
-  
-    if (this.item) {
-      const lastAffectation = this.item.affectations?.[this.item.affectations.length - 1];
-      this.selectedItem = {
-        ...this.item,
-        fonction: lastAffectation?.fonction,
-        restaurant: lastAffectation?.restaurant
-      };
-    }
-  
+    this.selectedItem = this.collaborateurs.find((collab: CollaborateurModel) => collab.id === item.id); 
+    
+
     console.log('Modifier:', this.selectedItem);
   }
 
   onAddCollaborateur() {
     this.showModal = true;
     this.modalTitle = 'Ajouter un collaborateur';
-    this.selectedItem = null;
+    this.selectedItem = undefined;
     this.modalAction = 
     {
       label: 'Ajouter',
@@ -158,7 +150,7 @@ export class CollaborateurComponent implements OnInit{
     console.log('Recherche:', term);
   }
 
-  createOrUpdate(item:CollaborateurEdit){
+  createOrUpdate(item:CollaborateurModel){
       if(!item.motDePasse){
         delete item['motDePasse']
       }    
@@ -175,6 +167,6 @@ export class CollaborateurComponent implements OnInit{
 
   closeModal() {
     this.showModal = false;
-    this.selectedItem = null;
+    this.selectedItem = undefined;
   }
 }

@@ -27,16 +27,16 @@ public class RestaurantServiceImplTest {
     private RestaurantRepository restaurantRepository;
 
     @Test
-    void shouldCreateRestaurant() {
+    void shouldThrowAFunctionalException() {
         Restaurant restaurant = new Restaurant();
         restaurant.setNom("Dominos");
 
         when(restaurantRepository.save(any(Restaurant.class)))
                 .thenAnswer(invocation -> invocation.getArgument(0));
 
-        Restaurant result = restaurantService.save(restaurant);
-
-        assertThat(result.getNom()).isEqualTo("Dominos");
+        assertThatException().isThrownBy(() -> restaurantService.save(restaurant))
+                .isInstanceOf(FunctionalException.class)
+                .withMessageContaining("Restaurant introuvable");
     }
 
     @Test
