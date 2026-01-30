@@ -18,10 +18,7 @@ public class CollaborateurMapper {
                 collaborateur.getPrenom(),
                 collaborateur.getEmail(),
                 collaborateur.isAdministrateur(),
-                collaborateur.getRole() != null ? collaborateur.getRole().getName() : null,
-                collaborateur.getAffectations().stream()
-                        .map(AffectationMapper::toDto)
-                        .toList()
+                collaborateur.getRole() != null ? collaborateur.getRole().getName() : null
         );
     }
 }
