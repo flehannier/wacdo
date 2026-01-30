@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { GenericListComponent} from "../generic-list-component/generic-list-component";
-import { CollaborateurList, CollaborateurModel } from '../../models/collaborateur-model';
+import { CollaborateurList, CollaborateurModel, CollaborateurRequest } from '../../models/collaborateur-model';
 import { CollaborateurService } from '../../services/collaborateur-service';
 import { ListAction, ListColumn } from '../../models/list-model';
 import { FieldsFormTypeEnum, FormField, SelectOption } from '../../models/FieldsForm';
@@ -57,29 +57,21 @@ export class CollaborateurComponent implements OnInit{
 
   ngOnInit(){
     
-    forkJoin({
-      fonctions: this.fonctionService.listFonctions(),
-      restaurants: this.restaurantService.listRestaurants(),
-      roles: this.roleService.listRoles()
-    }).subscribe(({ fonctions, restaurants, roles }) => {
-
-      const optionsRole: SelectOption[] = roles.map(r => ({ value: r.id, label: r.name }));
-      const optionsFonction: SelectOption[] = fonctions.map(f => ({ value: f.id, label: f.intitule }));
-      const optionsRestaurant: SelectOption[] = restaurants.map(r => ({ value: r.id, label: r.nom }));
-
-      this.formFields = [
-        { key: 'id', label: 'Id', type: FieldsFormTypeEnum.HIDDEN, disabled: true, required: true, placeholder: '', validators: [Validators.required] },
-        { key: 'nom', label: 'Nom', type: FieldsFormTypeEnum.TEXT, disabled: false, required: true, placeholder: '', validators: [Validators.required] },
-        { key: 'prenom', label: 'Prénom', type: FieldsFormTypeEnum.TEXT, disabled: false, required: true, placeholder: '',  validators: [Validators.required]  },
-        { key: 'email', label: 'Email',  type: FieldsFormTypeEnum.EMAIL, disabled: false, required: true, placeholder: '',  validators: [Validators.email, Validators.required] },
-        { key: 'motDePasse', label: 'Mot de passe',  type: FieldsFormTypeEnum.PASSWORD, disabled: false, required: false, placeholder: '' },
-        { key: 'role', label: 'Role', type: FieldsFormTypeEnum.SELECT, options: optionsRole ,disabled: false, required: true, placeholder: 'Choix d\'un role',  validators: [Validators.required]  },
-        { key: 'fonction', label: 'Fonction', type: FieldsFormTypeEnum.HIDDEN, options: optionsFonction ,disabled: true, required: true, placeholder: 'Choix d\'une fonction',  validators: [Validators.required]  },
-        { key: 'restaurant', label: 'Restaurant', type: FieldsFormTypeEnum.HIDDEN, options: optionsRestaurant, disabled: true, required: true, placeholder: 'Choix du restaurant',  validators: [Validators.required]  }
-        ]
-      });
-      
     this.load();
+    
+    this.roleService.listRoles().subscribe((roles ) => {
+    const optionsRole: SelectOption[] = roles.map(r => ({ value: r.id, label: r.name }));
+
+    this.formFields = [
+      { key: 'id', label: 'Id', type: FieldsFormTypeEnum.HIDDEN, disabled: true, required: true, placeholder: '', validators: [Validators.required] },
+      { key: 'nom', label: 'Nom', type: FieldsFormTypeEnum.TEXT, disabled: false, required: true, placeholder: '', validators: [Validators.required] },
+      { key: 'prenom', label: 'Prénom', type: FieldsFormTypeEnum.TEXT, disabled: false, required: true, placeholder: '',  validators: [Validators.required]  },
+      { key: 'email', label: 'Email',  type: FieldsFormTypeEnum.EMAIL, disabled: false, required: true, placeholder: '',  validators: [Validators.email, Validators.required] },
+      { key: 'motDePasse', label: 'Mot de passe',  type: FieldsFormTypeEnum.PASSWORD, disabled: false, required: false, placeholder: '' },
+      { key: 'role', label: 'Role', type: FieldsFormTypeEnum.SELECT, options: optionsRole ,disabled: false, required: true, placeholder: 'Choix d\'un role',  validators: [Validators.required]  },
+      ]
+    });
+      
   }
 
   load(){
@@ -154,7 +146,18 @@ export class CollaborateurComponent implements OnInit{
       if(!item.motDePasse){
         delete item['motDePasse']
       }    
-      this.collaborateurService.save(item).subscribe({
+
+      const request: CollaborateurRequest = {
+        id: item.id,
+        nom : item.nom,
+        prenom: item.prenom,  
+        email: item.email,
+        motDePasse: item.motDePasse,          
+        administrateur: item.administrateur,                     
+        roleName : item.role?.name
+      }
+
+      this.collaborateurService.save(request).subscribe({
         next: () => {
           this.showModal = false;
           this.load();

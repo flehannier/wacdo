@@ -1,12 +1,11 @@
 package com.wacdo.dto;
 
-import com.wacdo.entities.Role;
-
 public record CollaborateurDto(
         Long id,
         String nom,
         String prenom,
         String email,
+        String motDePasse,
         boolean administrateur,
-        Role role
+        String roleName
 ) {}

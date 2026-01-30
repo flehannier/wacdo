@@ -23,6 +23,7 @@ public class CollaborateurServiceImpl implements CollaborateurService {
     private final CollaborateurRepository collaborateurRepository;
     private final PasswordEncoder passwordEncoder;
     private final String ADMIN = "ADMIN";
+    private final String USER = "USER";
 
     // Pattern pour valider la force du mot de passe : au moins 8 caractères, une
     // majuscule, une minuscule, un chiffre
@@ -45,45 +46,38 @@ public class CollaborateurServiceImpl implements CollaborateurService {
     @Override
     @Transactional
     public Collaborateur save(@NonNull Collaborateur collab) throws FunctionalException, TechnicalException {
+        Collaborateur entity;
+
         if (collab.getId() != null) {
-            ///Maj collaborateur
-            Collaborateur existing = collaborateurRepository.findById(collab.getId())
+            // --- UPDATE ---
+            entity = collaborateurRepository.findById(collab.getId())
                     .orElseThrow(() -> new FunctionalException("Collaborateur introuvable"));
 
-            existing.setNom(collab.getNom());
-            existing.setPrenom(collab.getPrenom());
-            existing.setEmail(collab.getEmail());
-
-            if (null != collab.getRole()){
-                if (collab.getRole().getName().equals(ADMIN)) {
-                    existing.setAdministrateur(true);
-                }
-                existing.setRole(collab.getRole());
+        } else {
+            // --- CREATE ---
+            if (collaborateurRepository.findByEmail(collab.getEmail()) != null) {
+                throw new FunctionalException("Email déjà connu");
             }
-
-            // mot de passe seulement si fourni
-            if (null != collab.getMotDePasse() && !collab.getMotDePasse().isBlank()) {
-                validateAndEncodePassword(collab.getMotDePasse(), existing);
-            }
-
-            //update fait à la fin de la transaction
-            return existing;
+            entity = new Collaborateur();
         }
 
-        //Ajout collaborateur
-        Collaborateur collaborateur = collaborateurRepository.findByEmail(collab.getEmail());
-        if(collaborateur != null){
-            throw new FunctionalException("Email déjà connu");
+        // Copier les champs
+        entity.setNom(collab.getNom());
+        entity.setPrenom(collab.getPrenom());
+        entity.setEmail(collab.getEmail());
+
+        boolean isAdmin = collab.getRole() != null && ADMIN.equals(collab.getRole().getName());
+        Role role = roleRepository.findByNameIgnoreCase(isAdmin ? ADMIN : USER);
+        if (role == null) throw new FunctionalException("Rôle introuvable");
+
+        entity.setAdministrateur(isAdmin);
+        entity.setRole(role);
+
+        if (collab.getMotDePasse() != null && !collab.getMotDePasse().isBlank()) {
+            validateAndEncodePassword(collab.getMotDePasse(), entity);
         }
 
-        //USER par defaut
-        Role role = roleRepository.findByNameIgnoreCase("USER");
-        collab.setAdministrateur(false);
-        collab.setRole(role);
-
-        validateAndEncodePassword(collab.getMotDePasse(), collab);
-
-        return collaborateurRepository.save(collab);
+        return collaborateurRepository.save(entity);
     }
 
     /**

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CollaborateurModel } from '../models/collaborateur-model';
+import { CollaborateurModel, CollaborateurRequest, CollaborateurResponse } from '../models/collaborateur-model';
 import { RestaurantModel } from '../models/restaurant-model';
 import { map, Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
@@ -15,8 +15,9 @@ export class CollaborateurService {
   constructor(private http: HttpClient){
   }
   
-  save(item: CollaborateurModel): Observable<CollaborateurModel>{
-    return this.http.post<CollaborateurModel>(environment.apiUrl + "/collaborateur", item);
+  save(item: CollaborateurRequest): Observable<CollaborateurResponse>{
+    console.log('save vcollab ' + JSON.stringify(item));
+    return this.http.post<CollaborateurRequest>(environment.apiUrl + "/collaborateur", item);
   }
 
   getById(id: number): Observable<CollaborateurModel>{

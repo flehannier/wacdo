@@ -3,10 +3,12 @@ package com.wacdo.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-
 import java.time.LocalDate;
 import java.util.List;
 
@@ -15,8 +17,8 @@ import java.util.List;
 @NoArgsConstructor
 @RequiredArgsConstructor
 @Table(uniqueConstraints = {
-        @UniqueConstraint(name = "nomPrenomEmailConstraint", columnNames = { "nom", "prenom", "email" }),
         @UniqueConstraint(name = "emailConstraint", columnNames = { "email" })})
+@ToString(exclude = {"motDePasse", "affectations"}) // Exclure données sensibles
 public class Collaborateur {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,19 +27,25 @@ public class Collaborateur {
 
     @NonNull  // pour que @RequiredArgsConstructor fonctionne
     @Column(nullable = false)
+    @Size(min = 2, max = 50, message = "Le nom doit contenir entre 2 et 50 caractères")
     private String nom;
 
     @NonNull
     @Column(nullable = false)
+    @Size(min = 2, max = 50, message = "Le prénom doit contenir entre 2 et 50 caractères")
     private String prenom;
 
     @NonNull
-    @Column(nullable = false)
-    @JsonProperty(value = "motDePasse", access = JsonProperty.Access.WRITE_ONLY)
+    @NotBlank(message = "Le mot de passe ne peut pas être vide")
+    @Size(min = 8, message = "Le mot de passe doit contenir au moins 8 caractères")
+    @Column(nullable = false, length = 255)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String motDePasse;
 
     @NonNull
     @Column(nullable = false)
+    @NotBlank(message = "L'email ne peut pas être vide")
+    @Email(message = "L'email doit être valide")
     private String email;
 
     private LocalDate datePremiereEmbauche;
@@ -45,12 +53,17 @@ public class Collaborateur {
     @Column(nullable = false)
     private boolean administrateur;
 
-    @OneToMany(mappedBy = "collaborateur")
+    @OneToMany(
+            mappedBy = "collaborateur",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
+    )
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private List<Affectation> affectations;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "role_id")
     private Role role;
 }

@@ -12,10 +12,16 @@ export type CollaborateurModel = {
     datePremiereEmbauche: Date
     administrateur: boolean 
     affectations?: AffectationModel[]
-    role?: RoleModel
+    role: RoleModel
 }
 
 export type CollaborateurList = Omit <CollaborateurModel, 'affectation'> & {
     fonction?: string
     restaurant?: string 
 }
+
+export type CollaborateurRequest = Omit<CollaborateurModel, "affectations" | "role" | "datePremiereEmbauche"> & {
+    roleName: string
+}
+
+export type CollaborateurResponse = CollaborateurRequest;
