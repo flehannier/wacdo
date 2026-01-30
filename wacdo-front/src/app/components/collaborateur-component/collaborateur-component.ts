@@ -10,6 +10,7 @@ import { RestaurantService } from '../../services/restaurant-service';
 import { forkJoin } from 'rxjs';
 import { GenericModalComponent } from '../generic-modal-component/generic-modal-component';
 import { AuthService } from '../../services/auth-service';
+import { RoleService } from '../../services/role-service';
 
 @Component({
   selector: 'app-collaborateur-component',
@@ -51,16 +52,18 @@ export class CollaborateurComponent implements OnInit{
 
   modalAction!: ListAction;
 
-  constructor(private authService: AuthService, private collaborateurService: CollaborateurService, private fonctionService: FonctionService, private restaurantService: RestaurantService){
+  constructor(private authService: AuthService, private roleService: RoleService, private collaborateurService: CollaborateurService, private fonctionService: FonctionService, private restaurantService: RestaurantService){
   }
 
   ngOnInit(){
     
     forkJoin({
       fonctions: this.fonctionService.listFonctions(),
-      restaurants: this.restaurantService.listRestaurants()
-    }).subscribe(({ fonctions, restaurants }) => {
+      restaurants: this.restaurantService.listRestaurants(),
+      roles: this.roleService.listRoles()
+    }).subscribe(({ fonctions, restaurants, roles }) => {
 
+      const optionsRole: SelectOption[] = roles.map(r => ({ value: r.id, label: r.name }));
       const optionsFonction: SelectOption[] = fonctions.map(f => ({ value: f.id, label: f.intitule }));
       const optionsRestaurant: SelectOption[] = restaurants.map(r => ({ value: r.id, label: r.nom }));
 
@@ -70,6 +73,7 @@ export class CollaborateurComponent implements OnInit{
         { key: 'prenom', label: 'Prénom', type: FieldsFormTypeEnum.TEXT, disabled: false, required: true, placeholder: '',  validators: [Validators.required]  },
         { key: 'email', label: 'Email',  type: FieldsFormTypeEnum.EMAIL, disabled: false, required: true, placeholder: '',  validators: [Validators.email, Validators.required] },
         { key: 'motDePasse', label: 'Mot de passe',  type: FieldsFormTypeEnum.PASSWORD, disabled: false, required: false, placeholder: '' },
+        { key: 'role', label: 'Role', type: FieldsFormTypeEnum.SELECT, options: optionsRole ,disabled: false, required: true, placeholder: 'Choix d\'un role',  validators: [Validators.required]  },
         { key: 'fonction', label: 'Fonction', type: FieldsFormTypeEnum.HIDDEN, options: optionsFonction ,disabled: true, required: true, placeholder: 'Choix d\'une fonction',  validators: [Validators.required]  },
         { key: 'restaurant', label: 'Restaurant', type: FieldsFormTypeEnum.HIDDEN, options: optionsRestaurant, disabled: true, required: true, placeholder: 'Choix du restaurant',  validators: [Validators.required]  }
         ]
@@ -126,6 +130,17 @@ export class CollaborateurComponent implements OnInit{
     console.log('Modifier:', this.selectedItem);
   }
 
+  onAddCollaborateur() {
+    this.showModal = true;
+    this.modalTitle = 'Ajouter un collaborateur';
+    this.selectedItem = null;
+    this.modalAction = 
+    {
+      label: 'Ajouter',
+      color: 'primary',
+      callback: (data) => this.createOrUpdate(data)
+    };
+  }
 
   onDelete(item: CollaborateurModel) {
    this.collaborateurService.delete(item.id)?.subscribe({

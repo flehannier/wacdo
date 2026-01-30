@@ -6,7 +6,8 @@
       [searchable]="true"
       [paginated]="true"
       [pageSize]="10"
-      [showAddButton]=" false"
+      [showAddButton]="true"
+      (addClicked)="onAddCollaborateur()"
       (searchChanged)="onSearchChanged($event)"
   />
   
