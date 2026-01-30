@@ -59,17 +59,23 @@ export class CollaborateurComponent implements OnInit{
     
     this.load();
     
-    this.roleService.listRoles().subscribe((roles ) => {
-    const optionsRole: SelectOption[] = roles.map(r => ({ value: r.id, label: r.name }));
+    forkJoin({
+          fonctions: this.fonctionService.listFonctions(),
+          restaurants: this.restaurantService.listRestaurants()
+        }).subscribe(({ fonctions, restaurants }) => {
+    
+      this.roleService.listRoles().subscribe((roles ) => {
+      const optionsRole: SelectOption[] = roles.map(r => ({ value: r.id, label: r.name }));
 
-    this.formFields = [
-      { key: 'id', label: 'Id', type: FieldsFormTypeEnum.HIDDEN, disabled: true, required: true, placeholder: '', validators: [Validators.required] },
-      { key: 'nom', label: 'Nom', type: FieldsFormTypeEnum.TEXT, disabled: false, required: true, placeholder: '', validators: [Validators.required] },
-      { key: 'prenom', label: 'Prénom', type: FieldsFormTypeEnum.TEXT, disabled: false, required: true, placeholder: '',  validators: [Validators.required]  },
-      { key: 'email', label: 'Email',  type: FieldsFormTypeEnum.EMAIL, disabled: false, required: true, placeholder: '',  validators: [Validators.email, Validators.required] },
-      { key: 'motDePasse', label: 'Mot de passe',  type: FieldsFormTypeEnum.PASSWORD, disabled: false, required: false, placeholder: '' },
-      { key: 'role', label: 'Role', type: FieldsFormTypeEnum.SELECT, options: optionsRole ,disabled: false, required: true, placeholder: 'Choix d\'un role',  validators: [Validators.required]  },
-      ]
+      this.formFields = [
+          { key: 'id', label: 'Id', type: FieldsFormTypeEnum.HIDDEN, disabled: true, required: true, placeholder: '', validators: [Validators.required] },
+          { key: 'nom', label: 'Nom', type: FieldsFormTypeEnum.TEXT, disabled: false, required: true, placeholder: '', validators: [Validators.required] },
+          { key: 'prenom', label: 'Prénom', type: FieldsFormTypeEnum.TEXT, disabled: false, required: true, placeholder: '',  validators: [Validators.required]  },
+          { key: 'email', label: 'Email',  type: FieldsFormTypeEnum.EMAIL, disabled: false, required: true, placeholder: '',  validators: [Validators.email, Validators.required] },
+          { key: 'motDePasse', label: 'Mot de passe',  type: FieldsFormTypeEnum.PASSWORD, disabled: false, required: false, placeholder: '' },
+          { key: 'role', label: 'Role', type: FieldsFormTypeEnum.SELECT, options: optionsRole ,disabled: false, required: true, placeholder: 'Choix d\'un role',  validators: [Validators.required]  },
+        ]
+      });
     });
       
   }
@@ -78,16 +84,21 @@ export class CollaborateurComponent implements OnInit{
     this.collaborateurService.listCollaborateurs().subscribe({
       next: (data) => {
         this.collaborateurs = data
-                              .filter((collab: CollaborateurModel) => collab.email != this.authService.getUsername() )
-                              .map((collab: CollaborateurModel) => {
+                              .filter((collab: CollaborateurList) => collab.email != this.authService.getUsername() )
+                              .map((collab: CollaborateurList) => {
 
           // Prendre la dernière affectation
           const lastAffectation = collab.affectations?.[collab.affectations.length - 1];
           
+          console.log(JSON.stringify( {
+            ...collab,
+            fonction: lastAffectation?.fonction?.intitule,
+            restaurant: lastAffectation?.restaurant?.nom
+          }))
           return {
             ...collab,
-            fonction: lastAffectation?.fonction?.intitule || 'Non affecté',
-            restaurant: lastAffectation?.restaurant?.nom || 'Non affecté'
+            fonction: lastAffectation?.fonction?.intitule,
+            restaurant: lastAffectation?.restaurant?.nom
           };
         });
       },

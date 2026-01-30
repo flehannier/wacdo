@@ -7,5 +7,7 @@ public record CollaborateurDto(
         String email,
         String motDePasse,
         boolean administrateur,
-        String roleName
+        String roleName,
+        String fonction,
+        String restaurant
 ) {}

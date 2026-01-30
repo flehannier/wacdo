@@ -1,5 +1,6 @@
 package com.wacdo.services;
 
+import com.wacdo.entities.Affectation;
 import com.wacdo.entities.Collaborateur;
 import com.wacdo.entities.Role;
 import com.wacdo.exception.FunctionalException;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
