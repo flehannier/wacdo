@@ -81,7 +81,7 @@
                 class="whitespace-nowrap px-6 py-4 text-sm text-gray-900"
               >
                 <ng-container>
-                    {{ getNestedProperty(item, column.key) }}
+                    {{ getNestedProperty(item, column.key) || "--" }}
                 </ng-container>
                
               </td>
