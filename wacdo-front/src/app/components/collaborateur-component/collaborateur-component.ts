@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { GenericListComponent} from "../generic-list-component/generic-list-component";
-import { CollaborateurList, CollaborateurModel, CollaborateurRequest } from '../../models/collaborateur-model';
+import { CollaborateurModel, CollaborateurRequest} from '../../models/collaborateur-model';
 import { CollaborateurService } from '../../services/collaborateur-service';
 import { ListAction, ListColumn } from '../../models/list-model';
 import { FieldsFormTypeEnum, FormField, SelectOption } from '../../models/FieldsForm';
@@ -20,7 +20,7 @@ import { RoleService } from '../../services/role-service';
   styleUrl: './collaborateur-component.css',
 })
 export class CollaborateurComponent implements OnInit{
-  collaborateurs: CollaborateurList[] = [];
+  collaborateurs: CollaborateurModel[] = [];
   item?: CollaborateurModel;
   modalTitle: string = 'Collaborateur';
   formFields: FormField[] = []
@@ -33,8 +33,9 @@ export class CollaborateurComponent implements OnInit{
     { key: 'nom', label: 'Nom', sortable: true },
     { key: 'prenom', label: 'Prénom', sortable: true },
     { key: 'email', label: 'Email', sortable: true, width: '250px' },
-    { key: 'affectations.fonction.nom', label: 'Fonction', sortable: true },
-    { key: 'affectations.restaurant.nom', label: 'Restaurant', sortable: true }
+    { key: 'fonction.nom', label: 'Fonction', sortable: true },
+    { key: 'restaurant.nom', label: 'Restaurant', sortable: true },
+    { key: 'role.nom', label: 'Role', sortable: true }
   ];
 
   actionsList: ListAction[] = [
@@ -59,46 +60,36 @@ export class CollaborateurComponent implements OnInit{
     
     this.load();
     
-    forkJoin({
-          fonctions: this.fonctionService.listFonctions(),
-          restaurants: this.restaurantService.listRestaurants()
-        }).subscribe(({ fonctions, restaurants }) => {
-    
-      this.roleService.listRoles().subscribe((roles ) => {
+    this.roleService.listRoles().subscribe((roles ) => {
       const optionsRole: SelectOption[] = roles.map(r => ({ value: r.id, label: r.name }));
-
       this.formFields = [
           { key: 'id', label: 'Id', type: FieldsFormTypeEnum.HIDDEN, disabled: true, required: true, placeholder: '', validators: [Validators.required] },
           { key: 'nom', label: 'Nom', type: FieldsFormTypeEnum.TEXT, disabled: false, required: true, placeholder: '', validators: [Validators.required] },
           { key: 'prenom', label: 'Prénom', type: FieldsFormTypeEnum.TEXT, disabled: false, required: true, placeholder: '',  validators: [Validators.required]  },
           { key: 'email', label: 'Email',  type: FieldsFormTypeEnum.EMAIL, disabled: false, required: true, placeholder: '',  validators: [Validators.email, Validators.required] },
           { key: 'motDePasse', label: 'Mot de passe',  type: FieldsFormTypeEnum.PASSWORD, disabled: false, required: false, placeholder: '' },
-          { key: 'role', label: 'Role', type: FieldsFormTypeEnum.SELECT, options: optionsRole ,disabled: false, required: true, placeholder: 'Choix d\'un role',  validators: [Validators.required]  },
+          { key: 'role.id', label: 'Role', type: FieldsFormTypeEnum.SELECT, options: optionsRole ,disabled: false, required: true, placeholder: 'Choix d\'un role',  validators: [Validators.required]  },
         ]
-      });
     });
-      
   }
 
   load(){
     this.collaborateurService.listCollaborateurs().subscribe({
-      next: (data) => {
+      next: (data: CollaborateurModel[]) => {
         this.collaborateurs = data
-                              .filter((collab: CollaborateurList) => collab.email != this.authService.getUsername() )
-                              .map((collab: CollaborateurList) => {
+                              .filter((collab: CollaborateurModel) => collab.email != this.authService.getUsername() )
+                              .map((collab: CollaborateurModel) => {
 
-          // Prendre la dernière affectation
-          const lastAffectation = collab.affectations?.[collab.affectations.length - 1];
-          
-          console.log(JSON.stringify( {
+          console.log('LISTE = '+ JSON.stringify( {
             ...collab,
-            fonction: lastAffectation?.fonction?.intitule,
-            restaurant: lastAffectation?.restaurant?.nom
-          }))
+            fonction: collab?.fonction,
+            restaurant: collab?.restaurant
+          }));
+          
           return {
             ...collab,
-            fonction: lastAffectation?.fonction?.intitule,
-            restaurant: lastAffectation?.restaurant?.nom
+            fonction: collab?.fonction,
+            restaurant: collab?.restaurant
           };
         });
       },
@@ -153,7 +144,7 @@ export class CollaborateurComponent implements OnInit{
     console.log('Recherche:', term);
   }
 
-  createOrUpdate(item:CollaborateurModel){
+  createOrUpdate(item:any){
       if(!item.motDePasse){
         delete item['motDePasse']
       }    
@@ -163,9 +154,10 @@ export class CollaborateurComponent implements OnInit{
         nom : item.nom,
         prenom: item.prenom,  
         email: item.email,
-        motDePasse: item.motDePasse,          
-        administrateur: item.administrateur,                     
-        roleName : item.role?.name
+        motDePasse: item.motDePasse, 
+        datePremiereEmbauche: item.datePremiereEmbauche,         
+        administrateur: item.administrateur,  
+        roleId: item['role.id']?.id                   
       }
 
       this.collaborateurService.save(request).subscribe({

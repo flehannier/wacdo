@@ -1,68 +1,113 @@
-<nav class="relative bg-sky-500/100 after:pointer-events-none after:absolute after:inset-x-0 after:bottom-0 after:h-px after:bg-white/10">
+<nav class="relative bg-sky-500 after:pointer-events-none after:absolute after:inset-x-0 after:bottom-0 after:h-px after:bg-white/10">
   <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
     <div class="relative flex h-16 items-center justify-between">
-      <div class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
-        <div class="hidden sm:ml-6 sm:block">
+
+      <!-- LEFT -->
+      <div class="flex items-center">
+
+        <!-- Hamburger mobile -->
+        <button
+          class="sm:hidden mr-2 p-2 rounded-md text-white hover:bg-white/10"
+          (click)="openMobileMenu()"
+        >
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+
+        <!-- Desktop menu -->
+        <div class="hidden sm:block">
           <div class="flex space-x-4">
-            <!-- Current: "bg-gray-950/50 text-white", Default: "text-gray-300 hover:bg-white/5 hover:text-white" -->
-            <a aria-current="page" class="rounded-md  px-3 py-2 text-sm font-medium " routerLink="/accueil" [routerLinkActive]="['bg-gray-950/50', 'text-white']">Accueil</a>
-            <a class="rounded-md px-3 py-2 text-sm font-medium text-black-300 hover:bg-gray-950/5 hover:text-white" routerLink="/collaborateur" [routerLinkActive]="['bg-gray-950/50', 'text-white']">Collaborateurs</a>
-            <a class="rounded-md px-3 py-2 text-sm font-medium text-black-300 hover:bg-gray-950/5 hover:text-white" routerLink="/restaurant" [routerLinkActive]="['bg-gray-950/50', 'text-white']">Restaurants</a>
-            <a class="rounded-md px-3 py-2 text-sm font-medium text-black-300 hover:bg-gray-950/5 hover:text-white" routerLink="/fonction" [routerLinkActive]="['bg-gray-950/50', 'text-white']">Fonctions</a>
-            <a class="rounded-md px-3 py-2 text-sm font-medium text-black-300 hover:bg-gray-950/5 hover:text-white" routerLink="/affectation" [routerLinkActive]="['bg-gray-950/50', 'text-white']">Affectations</a>
+            <a routerLink="/accueil" routerLinkActive="bg-gray-950/50 text-white"
+              class="rounded-md px-3 py-2 text-sm font-medium hover:bg-white/10">
+              Accueil
+            </a>
+            <a routerLink="/collaborateur" routerLinkActive="bg-gray-950/50 text-white"
+              class="rounded-md px-3 py-2 text-sm font-medium hover:bg-white/10">
+              Collaborateurs
+            </a>
+            <a routerLink="/restaurant" routerLinkActive="bg-gray-950/50 text-white"
+              class="rounded-md px-3 py-2 text-sm font-medium hover:bg-white/10">
+              Restaurants
+            </a>
+            <a routerLink="/fonction" routerLinkActive="bg-gray-950/50 text-white"
+              class="rounded-md px-3 py-2 text-sm font-medium hover:bg-white/10">
+              Fonctions
+            </a>
+            <a routerLink="/affectation" routerLinkActive="bg-gray-950/50 text-white"
+              class="rounded-md px-3 py-2 text-sm font-medium hover:bg-white/10">
+              Affectations
+            </a>
           </div>
         </div>
       </div>
-      
-      <!-- Avatar Section -->
+
+      <!-- RIGHT : Avatar -->
       <div class="flex items-center">
         <div class="relative group">
           <button class="flex items-center gap-2 rounded-full bg-white/10 px-3 py-1.5 hover:bg-white/20 transition">
             <div class="w-8 h-8 bg-gradient-to-br from-blue-400 to-cyan-600 rounded-full flex items-center justify-center">
               <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
               </svg>
             </div>
             <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M19 9l-7 7-7-7"/>
             </svg>
           </button>
-          
-          <!-- Dropdown Menu -->
-          <div class="absolute right-0 mt-2 w-48 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-            <div class="py-1">
-              <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer" (click)="loadProfil()">
-                <div class="flex items-center gap-2">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
-                  </svg>
-                  Mon profil
-                </div>
-                            
-                <app-generic-modal-component 
-                    [errors]="errors"
-                    [show]="showModal"
-                    [title]="modalTitle"
-                    [fields]="formFields"
-                    [item]="selectedItem"
-                    [action]="modalAction"
-                    (close)="closeModal()"
-                  />
-              </a>
-            </div>
-             <div class="py-1">
-              <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer" (click)="logout()">
-                <div class="flex items-center gap-2">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
-                  </svg>
-                  Se déconnecter
-                </div>
-              </a>
-            </div>
-          </div>
+
+          <!-- Dropdown avatar -->
+          <div class="absolute right-0 mt-2 w-48 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5
+                      opacity-0 invisible group-hover:opacity-100 group-hover:visible transition">
+            <a class="block px-4 py-2 text-sm hover:bg-gray-100 cursor-pointer" (click)="loadProfil()">
+              Mon profil
+              <app-generic-modal-component 
+                [errors]="errors"
+                [show]="showModal"
+                [title]="modalTitle"
+                [fields]="formFields"
+                [item]="selectedItem"
+                [action]="modalAction"
+                (close)="closeModal()"
+            />
+            </a>
+            <a class="block px-4 py-2 text-sm hover:bg-gray-100 cursor-pointer" (click)="logout()">
+              Se déconnecter
+            </a>
         </div>
       </div>
+
     </div>
   </div>
-</nav>
+
+<!-- ✅ MOBILE FULLSCREEN MENU (EN DEHORS DU NAV) -->
+@if (isMobileMenuOpen) {
+  <div class="fixed inset-0 z-50 sm:hidden">
+
+    <div
+      class="absolute inset-0 bg-black/40 backdrop-blur-sm"
+      (click)="closeMobileMenu()"
+    ></div>
+
+    <div class="absolute inset-0 bg-sky-600 text-white flex flex-col animate-slide-down">
+
+      <div class="flex items-center justify-between px-4 h-16 border-b border-white/10">
+        <span class="text-lg font-semibold">Menu</span>
+        <button (click)="closeMobileMenu()" class="p-2 rounded-full hover:bg-white/10">
+          ✕
+        </button>
+      </div>
+
+      <nav class="flex-1 px-4 py-6 space-y-3 text-lg">
+        <a routerLink="/accueil" (click)="closeMobileMenu()" class="block rounded-xl px-4 py-3 hover:bg-white/10">Accueil</a>
+        <a routerLink="/collaborateur" (click)="closeMobileMenu()" class="block rounded-xl px-4 py-3 hover:bg-white/10">Collaborateurs</a>
+        <a routerLink="/restaurant" (click)="closeMobileMenu()" class="block rounded-xl px-4 py-3 hover:bg-white/10">Restaurants</a>
+        <a routerLink="/fonction" (click)="closeMobileMenu()" class="block rounded-xl px-4 py-3 hover:bg-white/10">Fonctions</a>
+        <a routerLink="/affectation" (click)="closeMobileMenu()" class="block rounded-xl px-4 py-3 hover:bg-white/10">Affectations</a>
+      </nav>
+    </div>
+  </div>
+}

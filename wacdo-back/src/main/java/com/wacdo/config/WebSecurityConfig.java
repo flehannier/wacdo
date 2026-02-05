@@ -55,15 +55,20 @@ public class WebSecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**", "/register").permitAll()
+                        .requestMatchers(
+                                "/auth/**", 
+                                "/register",
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**",
+                                "/swagger-ui.html")
+                        .permitAll()
                         .anyRequest().authenticated()
                 )
                 .logout(logout -> logout
                         .logoutUrl("/auth/logout")
-                        .logoutSuccessHandler((request, response, authentication) -> response.setStatus(200))
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID"))
-                .authenticationProvider(authenticationProvider()) // Création du token
+                .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class); // Autorisation traité avant les contrôles Spring
 
         return http.build();

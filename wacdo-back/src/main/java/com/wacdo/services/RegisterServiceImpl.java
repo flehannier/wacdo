@@ -1,5 +1,6 @@
 package com.wacdo.services;
 
+import com.wacdo.dto.CollaborateurRequest;
 import com.wacdo.dto.RegisterRequest;
 import com.wacdo.entities.Collaborateur;
 import com.wacdo.entities.Role;
@@ -29,6 +30,15 @@ public class RegisterServiceImpl implements RegisterService {
         collaborateur.setPrenom(request.getPrenom());
         collaborateur.setMotDePasse(request.getMotDePasse());
 
-        return collaborateurService.save(collaborateur);
+        CollaborateurRequest collab = new CollaborateurRequest(
+            collaborateur.getId(),
+            collaborateur.getNom(),
+            collaborateur.getPrenom(),
+            collaborateur.getEmail(),
+            collaborateur.getMotDePasse(),
+            collaborateur.isAdministrateur(),
+            collaborateur.getRole().getId()
+        );
+        return collaborateurService.save(collab);
     }
 }

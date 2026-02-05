@@ -57,13 +57,11 @@ public class Collaborateur {
             mappedBy = "collaborateur",
             cascade = CascadeType.ALL,
             orphanRemoval = true,
-            fetch = FetchType.LAZY
+            fetch = FetchType.EAGER
     )
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
     private List<Affectation> affectations;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "role_id")
     private Role role;
 }

@@ -11,17 +11,11 @@ export type CollaborateurModel = {
     motDePasse?: string
     datePremiereEmbauche: Date
     administrateur: boolean 
-    affectations?: AffectationModel[]
+    fonction: FonctionModel
+    restaurant: RestaurantModel
     role: RoleModel
 }
 
-export type CollaborateurList = Omit <CollaborateurModel, 'affectation'> & {
-    fonction?: string
-    restaurant?: string 
-}
-
-export type CollaborateurRequest = Omit<CollaborateurModel, "affectations" | "role" | "datePremiereEmbauche"> & {
-    roleName: string
-}
-
-export type CollaborateurResponse = CollaborateurRequest;
+export type CollaborateurRequest = Omit<CollaborateurModel, "restaurant" | "fonction" | "role"> & {
+    roleId: number
+};

@@ -40,3 +40,8 @@ jwt:
     expiration: 3600000
 
 
+# SPRINGDOC (Swagger/OpenAPI)
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    url: /v3/api-docs

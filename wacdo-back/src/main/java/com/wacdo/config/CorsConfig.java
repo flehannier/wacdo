@@ -19,7 +19,9 @@ public class CorsConfig {
         config.setAllowedOrigins(List.of(
                 "http://localhost:4200",
                 "https://wacdo.neofit.fr",
-                "http://wacdo.neofit.fr"
+                "http://wacdo.neofit.fr",
+                "/v3/api-docs/**",
+                "/swagger-ui/**"
         ));
         // Méthodes HTTP autorisées
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));

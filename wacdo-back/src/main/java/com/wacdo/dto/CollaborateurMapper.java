@@ -1,13 +1,7 @@
 package com.wacdo.dto;
 
-import com.wacdo.entities.Affectation;
 import com.wacdo.entities.Collaborateur;
-
-import java.util.stream.Collectors;
-
 public class CollaborateurMapper {
-    private CollaborateurMapper() {
-    }
 
     /**
      * retour un Colaborateur simplifié
@@ -22,18 +16,19 @@ public class CollaborateurMapper {
                 collaborateur.getEmail(),
                 "",
                 collaborateur.isAdministrateur(),
-                collaborateur.getRole().getName(),
+                RoleMapper.toDto(collaborateur.getRole()),
                 collaborateur.getAffectations()
-                        .stream()
-                        .map(affectation -> affectation.getFonction().getIntitule())
-                        .findFirst()
-                        .orElse(null)
-                ,
+                    .stream()
+                    .map(affectation -> affectation.getFonction())
+                    .findFirst()
+                    .map(FonctionMapper::toDto)
+                    .orElse(null), // Returns null if the list was empty,
                 collaborateur.getAffectations()
-                        .stream()
-                        .map(affectation -> affectation.getRestaurant().getNom())
-                        .findFirst()
-                        .orElse(null)
+                    .stream()
+                    .map(affectation -> affectation.getRestaurant())
+                    .findFirst()
+                    .map(RestaurantMapper::toDto)
+                    .orElse(null)
 
         );
     }

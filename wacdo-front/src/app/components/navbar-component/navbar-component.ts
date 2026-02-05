@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, HostListener, Input } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../services/auth-service';
 import { FieldsFormTypeEnum, FormField, ModalAction, SelectOption } from '../../models/FieldsForm';
@@ -18,6 +18,7 @@ import { Validators } from '@angular/forms';
   styleUrl: './navbar-component.css',
 })
 export class NavbarComponent {
+  isMobileMenuOpen =  false;
   item?: CollaborateurModel;
   modalTitle: string = 'Collaborateur';
   formFields: FormField[] = []
@@ -33,7 +34,7 @@ export class NavbarComponent {
   };
   constructor(private fonctionService: FonctionService, private restaurantService: RestaurantService,private collaborateurService: CollaborateurService, private authService: AuthService, private router: Router){
   }
-  
+
   loadProfil(){
     forkJoin({
       fonctions: this.fonctionService.listFonctions(),
@@ -70,9 +71,19 @@ export class NavbarComponent {
     this.authService.logout();
     this.router.navigate(["/login"]);
   }
-  
+
   closeModal() {
     this.showModal = false;
     this.selectedItem = null;
+  }
+  
+  openMobileMenu() {
+    this.isMobileMenuOpen = true;
+    document.body.classList.add('overflow-hidden');
+  }
+
+  closeMobileMenu() {
+    this.isMobileMenuOpen = false;
+    document.body.classList.remove('overflow-hidden');
   }
 }

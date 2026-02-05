@@ -1,6 +1,8 @@
 package com.wacdo.services;
 
 import com.wacdo.dto.AffectationDto;
+import com.wacdo.dto.AffectationRequest;
+import com.wacdo.dto.CollaborateurRequest;
 import com.wacdo.entities.Affectation;
 import com.wacdo.entities.Collaborateur;
 import com.wacdo.entities.Fonction;
@@ -31,9 +33,9 @@ public class AffectationServiceImpl implements AffectationService {
         this.restaurantService = restaurantService;
         this.fonctionService = fonctionService;
     }
-
+ 
     /**
-     * Creation ou mise à jours d'une affectation
+     * Mise à jours d'une affectation
      * @param affectation
      * @return Affectation
      * @throws FunctionalException
@@ -41,12 +43,49 @@ public class AffectationServiceImpl implements AffectationService {
      */
     @Override
     @Transactional
-    public Affectation save(@NonNull AffectationDto affectation) throws FunctionalException, TechnicalException {
+    public Affectation update(@NonNull AffectationRequest affectation) throws FunctionalException, TechnicalException {
+/*
+        Affectation affectationPosteEnCoursExist = affectationRepository.findByCollaborateurId(affectation.collaborateurId()).stream()
+                .filter(a -> a.getDateFin() == null)
+                .findFirst()
+                .orElse(null);
+ */        
+        Collaborateur collaborateur = collaborateurService.getById(affectation.collaborateurId());
+        Restaurant restaurant = restaurantService.getById(affectation.restaurantId());
+        Fonction fonction = fonctionService.getById(affectation.fonctionId());
+
+        Affectation  aff = affectationRepository.findById(affectation.id()).get();
+        if ( !aff.getDateDebut().equals(affectation.dateDebut()) && affectation.dateDebut().isAfter(affectation.dateDebut()) ) {
+            throw new FunctionalException("Votre affectation souhaitée a une date de début égale ou antérieur a une affectation en cours");
+        }
+        if ( !affectation.dateFin().isBefore(affectation.dateDebut()) ) {
+            throw new FunctionalException("Votre affectation souhaitée a une date de fin antérieur à la date de début");
+        }
+
+        aff.setId(affectation.id());
+        aff.setCollaborateur(collaborateur);
+        aff.setRestaurant(restaurant);
+        aff.setFonction(fonction);
+        aff.setDateDebut(affectation.dateDebut());
+        aff.setDateFin(affectation.dateFin());
+
+        return affectationRepository.save(aff);
+    }
+    /**
+     * Creation à jours d'une affectation
+     * @param affectation
+     * @return Affectation
+     * @throws FunctionalException
+     * @throws TechnicalException
+     */
+    @Override
+    @Transactional
+    public Affectation create(@NonNull AffectationRequest affectation) throws FunctionalException, TechnicalException {
         log.debug("Sauvegarde d'une affectation");
 
-        Collaborateur collaborateur = collaborateurService.getById(affectation.collaborateur().id());
-        Restaurant restaurant = restaurantService.getById(affectation.restaurant().id());
-        Fonction fonction = fonctionService.getById(affectation.fonction().id());
+        Collaborateur collaborateur = collaborateurService.getById(affectation.collaborateurId());
+        Restaurant restaurant = restaurantService.getById(affectation.restaurantId());
+        Fonction fonction = fonctionService.getById(affectation.fonctionId());
 
         if (collaborateur == null  || restaurant == null || fonction == null) {
             log.error("Le collaborateur ou restaurant ou la fonction n'existe pas");
@@ -67,7 +106,17 @@ public class AffectationServiceImpl implements AffectationService {
            if(collaborateur.getAffectations().isEmpty()) {
                log.debug("Mise à jours de la date d'embauche");
                collaborateur.setDatePremiereEmbauche(affectation.dateDebut());
-               collaborateurService.save(collaborateur);
+
+               CollaborateurRequest collab = new CollaborateurRequest(
+                  collaborateur.getId(),
+                  collaborateur.getNom(),
+                  collaborateur.getPrenom(),
+                  collaborateur.getEmail(),
+                  collaborateur.getMotDePasse(),
+                  collaborateur.isAdministrateur(),
+                  collaborateur.getRole().getId()
+               );
+               collaborateurService.save(collab);
            }
 
             newAffectation.setDateDebut(affectation.dateDebut());
@@ -79,11 +128,15 @@ public class AffectationServiceImpl implements AffectationService {
         }
 
         // 2- Collaborateur affecté à un poste en cours pour un restaurant
-
-        // contrôl sur les date de début
+        // contrôl sur les date de début et fin
         // Un collaborateur peut posté seulement si la date de l'affectation est supérieur à celle en cours
-        if(affectationPosteEnCoursExist.getDateDebut().isAfter(affectation.dateDebut()) || affectationPosteEnCoursExist.getDateDebut().equals(affectation.dateDebut())){
+        if (affectationPosteEnCoursExist.getDateDebut().isAfter(affectation.dateDebut()) || 
+            affectationPosteEnCoursExist.getDateDebut().equals(affectation.dateDebut())) {
             throw new FunctionalException("Votre affectation souhaitée a une date de début égale ou antérieur a une affectation en cours");
+        }
+
+        if ( !affectation.dateFin().isBefore(affectation.dateDebut()) ) {
+            throw new FunctionalException("Votre affectation souhaitée a une date de fin antérieur à la date de début");
         }
 
         // On clôture l'affectation pour le poste en cours

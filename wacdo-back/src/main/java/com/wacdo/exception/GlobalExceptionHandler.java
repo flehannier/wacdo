@@ -6,6 +6,7 @@ import org.apache.coyote.BadRequestException;
 import org.hibernate.PropertyValueException;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -22,6 +23,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiError> handleFunctionalException(FunctionalException ex) {
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
+                    .contentType(MediaType.APPLICATION_JSON) 
                     .body(new ApiError(HttpStatus.BAD_REQUEST.value(), "Erreur fonctionnelle", ex.getMessage()));
     }
 
@@ -29,6 +31,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiError> handleTechnicalException(TechnicalException ex) {
         return ResponseEntity
                 .internalServerError()
+                .contentType(MediaType.APPLICATION_JSON) 
                 .body(new ApiError(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Erreur technique", ex.getMessage()));
     }
 
@@ -36,6 +39,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiError> handleNoSuchElementException(NoSuchElementException ex) {
         return ResponseEntity
                 .internalServerError()
+                .contentType(MediaType.APPLICATION_JSON) 
                 .body(new ApiError(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Aucun élément, entité retrouvé", ex.getMessage()));
     }
 
@@ -43,6 +47,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiError> handleInternalError(InternalError ex) {
         return ResponseEntity
                 .internalServerError()
+                .contentType(MediaType.APPLICATION_JSON) 
                 .body(new ApiError(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Erreur interne", ex.getMessage()));
     }
 
@@ -50,6 +55,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiError> handleEntityNotFoundException(EntityNotFoundException ex) {
         return ResponseEntity
                 .status(HttpStatus.UNPROCESSABLE_ENTITY)
+                .contentType(MediaType.APPLICATION_JSON) 
                 .body(new ApiError(HttpStatus.UNPROCESSABLE_ENTITY.value(), "Entité(s) non trouvée(s)", ex.getMessage()));
     }
 
@@ -57,6 +63,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiError> handleIntegrityConstraint(SQLIntegrityConstraintViolationException ex) {
         return ResponseEntity
                 .badRequest()
+                .contentType(MediaType.APPLICATION_JSON) 
                 .body(new ApiError(HttpStatus.BAD_REQUEST.value(), "Problème d'intégrité (sql)", ex.getMessage()));
     }
 
@@ -64,6 +71,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiError> handleBadRequest(BadRequestException ex) {
         return ResponseEntity
                 .badRequest()
+                .contentType(MediaType.APPLICATION_JSON) 
                 .body(new ApiError(HttpStatus.BAD_REQUEST.value(), "Mauvaise requête", ex.getMessage()));
     }
 
@@ -71,6 +79,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiError> handleBadCredential(BadCredentialsException ex) {
         return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
+                .contentType(MediaType.APPLICATION_JSON) 
                 .body(new ApiError(HttpStatus.UNAUTHORIZED.value(),  "Email ou mot de passe incorrect.", ex.getMessage()));
     }
 
@@ -83,13 +92,16 @@ public class GlobalExceptionHandler {
                 ex.getMessage()
         );
 
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(error);
     }
 
     @ExceptionHandler(PropertyValueException.class)
     public ResponseEntity<ApiError> handlePropertyValueException(PropertyValueException ex) {
         return ResponseEntity
                 .internalServerError()
+                .contentType(MediaType.APPLICATION_JSON) 
                 .body(new ApiError(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Erreur sur une propriété", ex.getMessage()));
     }
 
@@ -97,6 +109,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> handle(RuntimeException ex) {
         return ResponseEntity
                 .internalServerError()
+                .contentType(MediaType.APPLICATION_JSON) 
                 .body(new ApiError(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Erreur interne", ex.getMessage()));
     }
 
@@ -104,6 +117,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> handleAccessDeniedException(AccessDeniedException ex) {
         return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
+                .contentType(MediaType.APPLICATION_JSON) 
                 .body(new ApiError(HttpStatus.UNAUTHORIZED.value(), "Accès interdit", ex.getMessage()));
     }
 

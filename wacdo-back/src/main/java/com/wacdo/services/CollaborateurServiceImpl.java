@@ -1,6 +1,6 @@
 package com.wacdo.services;
 
-import com.wacdo.entities.Affectation;
+import com.wacdo.dto.CollaborateurRequest;
 import com.wacdo.entities.Collaborateur;
 import com.wacdo.entities.Role;
 import com.wacdo.exception.FunctionalException;
@@ -14,8 +14,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -47,36 +47,46 @@ public class CollaborateurServiceImpl implements CollaborateurService {
      */
     @Override
     @Transactional
-    public Collaborateur save(@NonNull Collaborateur collab) throws FunctionalException, TechnicalException {
+    public Collaborateur save(@NonNull CollaborateurRequest collab) throws FunctionalException, TechnicalException {
         Collaborateur entity;
 
-        if (collab.getId() != null) {
+        if (collab.id() != null) {
             // --- UPDATE ---
-            entity = collaborateurRepository.findById(collab.getId())
+            entity = collaborateurRepository.findById(collab.id())
                     .orElseThrow(() -> new FunctionalException("Collaborateur introuvable"));
 
         } else {
             // --- CREATE ---
-            if (collaborateurRepository.findByEmail(collab.getEmail()) != null) {
+            if (collaborateurRepository.findByEmail(collab.email()) != null) {
                 throw new FunctionalException("Email déjà connu");
             }
             entity = new Collaborateur();
         }
 
-        // Copier les champs
-        entity.setNom(collab.getNom());
-        entity.setPrenom(collab.getPrenom());
-        entity.setEmail(collab.getEmail());
+        boolean isAdmin = false;
+        List<Role> roles= roleRepository.findAll();
+        Optional<Role>  roleOptional; 
+        if(null != collab.roleId()) {
+            roleOptional = roles.stream()
+                        .filter(item -> item.getId().equals(collab.roleId())) // Utilise -> et compare les IDs de rôles
+                        .findFirst();
 
-        boolean isAdmin = collab.getRole() != null && ADMIN.equals(collab.getRole().getName());
+            isAdmin = collab.roleId() != null && ADMIN.equals(roleOptional.get().getName());
+        }
+
+        // Copier les champs
+        entity.setNom(collab.nom());
+        entity.setPrenom(collab.prenom());
+        entity.setEmail(collab.email());
+
         Role role = roleRepository.findByNameIgnoreCase(isAdmin ? ADMIN : USER);
         if (role == null) throw new FunctionalException("Rôle introuvable");
 
         entity.setAdministrateur(isAdmin);
         entity.setRole(role);
 
-        if (collab.getMotDePasse() != null && !collab.getMotDePasse().isBlank()) {
-            validateAndEncodePassword(collab.getMotDePasse(), entity);
+        if (collab.motDePasse() != null && !collab.motDePasse().isBlank()) {
+            validateAndEncodePassword(collab.motDePasse(), entity);
         }
 
         return collaborateurRepository.save(entity);

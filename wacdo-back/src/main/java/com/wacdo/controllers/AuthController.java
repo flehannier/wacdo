@@ -3,6 +3,9 @@ package com.wacdo.controllers;
 import com.wacdo.dto.AuthRequest;
 import com.wacdo.dto.AuthResponse;
 import com.wacdo.services.JwtService;
+
+import io.swagger.v3.oas.annotations.Operation;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -28,6 +31,10 @@ public class AuthController {
         this.authenticationManager = authenticationManager;
     }
 
+    @Operation(
+            summary = "Authentification",
+            description = "Authentification email/mdp"
+    )
     @PostMapping("/login")
     public AuthResponse login(@RequestBody AuthRequest request) throws RuntimeException{
         // authenticationManager appelera authenticate du providerManager qui appelera le provider DaoAuthenticationProvider
@@ -50,6 +57,10 @@ public class AuthController {
         return new AuthResponse(user.getUsername(), grantedAuthorities.getFirst(), token);
     }
 
+    @Operation(
+            summary = "Déconnection",
+            description = "Déconnection de l'utilisateur connecté"
+    )
     @PostMapping("/logout")
     public ResponseEntity<?> logout() {
         // Rien à faire côté serveur

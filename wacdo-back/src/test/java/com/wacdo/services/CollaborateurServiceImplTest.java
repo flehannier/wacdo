@@ -1,6 +1,7 @@
 package com.wacdo.services;
 
 import com.wacdo.WacdoApplication;
+import com.wacdo.dto.CollaborateurRequest;
 import com.wacdo.entities.Collaborateur;
 import com.wacdo.entities.Role;
 import com.wacdo.exception.FunctionalException;
@@ -53,8 +54,16 @@ class CollaborateurServiceImplTest {
 
         when(collaborateurRepository.save(any(Collaborateur.class)))
                 .thenAnswer(invocation -> invocation.getArgument(0));;
-
-        Collaborateur result = collaborateurService.save(collab);
+        CollaborateurRequest col = new CollaborateurRequest(
+                collab.getId(),
+                collab.getNom(),
+                collab.getPrenom(),
+                collab.getEmail(),
+                collab.getMotDePasse(),
+                collab.isAdministrateur(),
+                collab.getRole().getId()
+                );
+        Collaborateur result = collaborateurService.save(col);
 
         assertThat(result.getMotDePasse()).isEqualTo("encoded-password");
     }
@@ -71,9 +80,17 @@ class CollaborateurServiceImplTest {
         collab.setMotDePasse("123");
 
         when(roleRepository.findById(role.getId())).thenReturn(Optional.of(role));
-
+     CollaborateurRequest col = new CollaborateurRequest(
+                collab.getId(),
+                collab.getNom(),
+                collab.getPrenom(),
+                collab.getEmail(),
+                collab.getMotDePasse(),
+                collab.isAdministrateur(),
+                collab.getRole().getId()
+                );
         assertThatException()
-                .isThrownBy(() -> collaborateurService.save(collab))
+                .isThrownBy(() -> collaborateurService.save(col))
                 .isInstanceOf(FunctionalException.class)
                 .withMessageContaining("mot de passe");
     }
@@ -106,8 +123,16 @@ class CollaborateurServiceImplTest {
         update.setRole(role);
 
         when(roleRepository.findById(role.getId())).thenReturn(Optional.of(role));
-
-        Collaborateur result = collaborateurService.save(update);
+     CollaborateurRequest col = new CollaborateurRequest(
+                update.getId(),
+                update.getNom(),
+                update.getPrenom(),
+                update.getEmail(),
+                update.getMotDePasse(),
+                update.isAdministrateur(),
+                update.getRole().getId()
+                );
+        Collaborateur result = collaborateurService.save(col);
 
         assertThat(result).isNotNull();
         assertThat(result.getMotDePasse()).isEqualTo("encoded-old-password");
@@ -129,7 +154,17 @@ class CollaborateurServiceImplTest {
         when(collaborateurRepository.findById(99L))
                 .thenReturn(Optional.empty());
 
-        assertThatException().isThrownBy(() -> collaborateurService.save(update))
+                CollaborateurRequest col = new CollaborateurRequest(
+                update.getId(),
+                update.getNom(),
+                update.getPrenom(),
+                update.getEmail(),
+                update.getMotDePasse(),
+                update.isAdministrateur(),
+                update.getRole().getId()
+                );
+
+        assertThatException().isThrownBy(() -> collaborateurService.save(col))
                 .isInstanceOf(FunctionalException.class)
                 .withMessageContaining("Collaborateur introuvable");
     }
@@ -157,8 +192,16 @@ class CollaborateurServiceImplTest {
 
         when(collaborateurRepository.findById(99L))
                 .thenReturn(Optional.of(collaborateur));
-
-        Collaborateur result = collaborateurService.save(collaborateur);
+CollaborateurRequest col = new CollaborateurRequest(
+                collaborateur.getId(),
+                collaborateur.getNom(),
+                collaborateur.getPrenom(),
+                collaborateur.getEmail(),
+                collaborateur.getMotDePasse(),
+                collaborateur.isAdministrateur(),
+                collaborateur.getRole().getId()
+                );
+        Collaborateur result = collaborateurService.save(col);
 
         assertThat(result).isNotNull();
         assertThat(result.getRole().getName()).isEqualTo("ADMIN");

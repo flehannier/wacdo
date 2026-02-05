@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AffectationModel } from '../models/affectation-model';
+import { AffectationModel, AffectationRequest, AffectationResponse } from '../models/affectation-model';
 import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
@@ -25,7 +25,7 @@ export class AffectationService {
     return
   }
   
-  save(item: AffectationModel): Observable<AffectationModel>{
-    return this.http.post<AffectationModel>(environment.apiUrl + "/affectation", item);
+  save(item: AffectationRequest): Observable<AffectationResponse>{
+    return this.http.post<AffectationResponse>(environment.apiUrl + "/affectation", item);
   }
 }

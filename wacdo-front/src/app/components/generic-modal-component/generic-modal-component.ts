@@ -21,6 +21,7 @@ export class GenericModalComponent implements OnInit, OnChanges {
   @Input() action: ModalAction = { label: 'Enregistrer', callback: () => {} };
 
   @Output() close = new EventEmitter<void>();
+  @Output() isEdit = new EventEmitter<void>();
 
   form!: FormGroup;
   FieldsFormTypeEnum = FieldsFormTypeEnum;
@@ -37,13 +38,14 @@ export class GenericModalComponent implements OnInit, OnChanges {
       this.buildForm();
     }
     
-    // Patcher les valeurs si item change
-    if (changes['item'] && this.form) {
-      if (this.item) {
-        this.patchFormValues();
-      } else {
-        this.form.reset();
-      }
+    // 2. Si l'item arrive
+    if (changes['item'] && this.item) {
+      // On prévient le parent qu'on édite (il va modifier les fields)
+      this.isEdit.emit(); 
+      
+      // On attend un micro-tick pour laisser buildForm se terminer 
+      // si fields a changé en même temps
+      setTimeout(() => this.patchFormValues());
     }
   }
 
@@ -68,36 +70,51 @@ export class GenericModalComponent implements OnInit, OnChanges {
         validators.push(...field.validators);
       }
 
-      // Créer le control
-      formControls[field.key] = [
-        { value: '', disabled: field.disabled || false },
-        validators
-      ];
+      // Utilisation de l'instance FormControl pour plus de contrôle
+      formControls[field.key] = [{ value: '', disabled: field.disabled }, validators];
     });
 
     this.form = this.fb.group(formControls);
 
     // Patcher les valeurs si item existe
     if (this.item) {
+      
       this.patchFormValues();
     }
   }
 
+  // Helper pour nettoyer buildForm
+  private collectValidators(field: FormField) {
+    const validators = [...(field.validators || [])];
+    if (field.required) validators.push(Validators.required);
+    if (field.type === FieldsFormTypeEnum.EMAIL) validators.push(Validators.email);
+    return validators;
+  }
+
+  getValue(obj: any, path: string) {
+    if (!obj || !path) return '';
+    
+    // On découpe le chemin (ex: "restaurant.nom" devient ["restaurant", "nom"])
+    // Et on réduit l'objet étape par étape
+    return path.split('.').reduce((acc, part) => acc && acc[part], obj);
+  }
+
   patchFormValues() {
-    const formValues: any = {};
+      const patchData: any = {};
 
-    this.fields.forEach(field => {
-      let value = this.item[field.key];
+      this.fields.forEach(field => {
+        // Si la clé contient un point (ex: 'collaborateur.id')
+        if (field.key.includes('.')) {
+          const parts = field.key.split('.');
+          // On extrait la valeur de l'objet imbriqué : item['collaborateur']['id']
+          const value = parts.reduce((acc, part) => acc && acc[part], this.item);
+          patchData[field.key] = value;
+        } else {
+          patchData[field.key] = this.item[field.key];
+        }
+      });
 
-      // Gérer les objets (comme pour SELECT avec {id: ...})
-      if (field.type === FieldsFormTypeEnum.SELECT && value?.id) {
-        value = value.id;
-      }
-
-      formValues[field.key] = value || '';
-    });
-
-    this.form.patchValue(formValues);
+      this.form.patchValue(patchData);
   }
 
   closeModal() {
