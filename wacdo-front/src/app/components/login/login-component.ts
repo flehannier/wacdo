@@ -52,7 +52,7 @@ export class LoginComponent implements OnInit {
     this.authService.login(user).subscribe({
       next: (data) => {
         let jwt = (data.body as AuthResponse).accesToken;
-        console.log('Token : ' + jwt);
+       // console.log('Token : ' + jwt);
 
         if (jwt) {
           this.authService.saveToken(jwt, (data.body as AuthResponse).username, (data.body as AuthResponse).role);
