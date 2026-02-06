@@ -9,6 +9,24 @@ public class CollaborateurMapper {
      * @return CollaborateurDto
      */
     public static CollaborateurDto toDto(Collaborateur collaborateur) {
+        FonctionDto fonctionDto = null;
+        if(collaborateur.getAffectations() != null) {
+           fonctionDto = collaborateur.getAffectations()
+                    .stream()
+                    .map(aff -> aff.getFonction())
+                    .findFirst()
+                    .map(FonctionMapper::toDto)
+                    .orElse(null);
+        }
+        RestaurantDto restaurantDto = null; 
+         if(collaborateur.getAffectations() != null) {
+            restaurantDto = collaborateur.getAffectations()
+                    .stream()
+                    .map(affectation -> affectation.getRestaurant())
+                    .findFirst()
+                    .map(RestaurantMapper::toDto)
+                    .orElse(null);
+         }
         return new CollaborateurDto(
                 collaborateur.getId(),
                 collaborateur.getNom(),
@@ -17,19 +35,8 @@ public class CollaborateurMapper {
                 "",
                 collaborateur.isAdministrateur(),
                 RoleMapper.toDto(collaborateur.getRole()),
-                collaborateur.getAffectations()
-                    .stream()
-                    .map(affectation -> affectation.getFonction())
-                    .findFirst()
-                    .map(FonctionMapper::toDto)
-                    .orElse(null), // Returns null if the list was empty,
-                collaborateur.getAffectations()
-                    .stream()
-                    .map(affectation -> affectation.getRestaurant())
-                    .findFirst()
-                    .map(RestaurantMapper::toDto)
-                    .orElse(null)
-
+                fonctionDto,
+                restaurantDto
         );
     }
 }

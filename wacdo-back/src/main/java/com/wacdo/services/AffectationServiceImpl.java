@@ -92,10 +92,13 @@ public class AffectationServiceImpl implements AffectationService {
             throw new FunctionalException("Le collaborateur ou restaurant ou la fonction n'existe pas");
         }
 
-        Affectation affectationPosteEnCoursExist = collaborateur.getAffectations().stream()
-                .filter(a -> a.getDateFin() == null)
-                .findFirst()
-                .orElse(null);
+        Affectation affectationPosteEnCoursExist = null;
+        if(collaborateur.getAffectations() != null){
+            affectationPosteEnCoursExist = collaborateur.getAffectations().stream()
+                    .filter(a -> a.getDateFin() == null)
+                    .findFirst()
+                    .orElse(null);
+        }
 
         Affectation newAffectation = new Affectation();
 
@@ -103,7 +106,7 @@ public class AffectationServiceImpl implements AffectationService {
         if(affectationPosteEnCoursExist == null){
 
             //Mise à jours de la date qui correspond à sa toute première embauche
-           if(collaborateur.getAffectations().isEmpty()) {
+           if(collaborateur.getAffectations() == null || collaborateur.getAffectations().isEmpty()) {
                log.debug("Mise à jours de la date d'embauche");
                collaborateur.setDatePremiereEmbauche(affectation.dateDebut());
 

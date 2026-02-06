@@ -64,7 +64,7 @@ public class CollaborateurServiceImpl implements CollaborateurService {
         }
 
         boolean isAdmin = false;
-        List<Role> roles= roleRepository.findAll();
+        List<Role> roles = roleRepository.findAll();
         Optional<Role>  roleOptional; 
         if(null != collab.roleId()) {
             roleOptional = roles.stream()
