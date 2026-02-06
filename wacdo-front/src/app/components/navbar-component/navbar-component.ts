@@ -25,6 +25,7 @@ export class NavbarComponent {
   showModal = false;
   selectedItem: any = null;
   errors: string = '';
+  showMenu = false;
 
    modalAction: ModalAction = 
   {
@@ -77,6 +78,10 @@ export class NavbarComponent {
     this.selectedItem = null;
   }
   
+  toggleMenu(){
+    this.showMenu = !this.showMenu;
+  }
+
   openMobileMenu() {
     this.isMobileMenuOpen = true;
     document.body.classList.add('overflow-hidden');
