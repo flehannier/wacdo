@@ -80,12 +80,6 @@ export class CollaborateurComponent implements OnInit{
                               .filter((collab: CollaborateurModel) => collab.email != this.authService.getUsername() )
                               .map((collab: CollaborateurModel) => {
 
-          console.log('LISTE = '+ JSON.stringify( {
-            ...collab,
-            fonction: collab?.fonction,
-            restaurant: collab?.restaurant
-          }));
-          
           return {
             ...collab,
             fonction: collab?.fonction,
