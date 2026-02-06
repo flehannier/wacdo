@@ -73,6 +73,7 @@ export class NavbarComponent {
   }
 
   openProfileModal() {
+    this.showAvatarMenu = false;
     this.showProfileModal = true;
   }
 }
