@@ -60,9 +60,9 @@ export class ProfileComponent {
 
           this.formFields = [
             { key: 'id', type: FieldsFormTypeEnum.HIDDEN, disabled: true, required: true },
-            { key: 'nom', label: 'Nom', type: FieldsFormTypeEnum.TEXT, disabled: true, required: true },
-            { key: 'prenom', label: 'Prénom', type: FieldsFormTypeEnum.TEXT, disabled: true, required: true },
-            { key: 'email', label: 'Email', type: FieldsFormTypeEnum.EMAIL, disabled: true, required: true },
+            { key: 'nom', label: 'Nom', type: FieldsFormTypeEnum.TEXT, disabled: false, required: true },
+            { key: 'prenom', label: 'Prénom', type: FieldsFormTypeEnum.TEXT, disabled: false, required: true },
+            { key: 'email', label: 'Email', type: FieldsFormTypeEnum.EMAIL, disabled: false, required: true },
             { key: 'motDePasse', label: 'Mot de passe', type: FieldsFormTypeEnum.PASSWORD },
             {
               key: 'roleId',

@@ -15,10 +15,10 @@ import { FormField, FieldsFormTypeEnum, ModalAction } from '../../models/FieldsF
 export class GenericModalComponent implements OnInit, OnChanges {
   @Input() errors?: string | null;
   @Input() show: boolean = false;
-  @Input() title: string = 'Modal';
+  @Input() title: string = '';
   @Input() fields: FormField[] = [];
   @Input() item: any = null;
-  @Input() action: ModalAction = { label: 'Enregistrer', callback: () => {} };
+  @Input() action!: ModalAction;
 
   @Output() close = new EventEmitter<void>();
   @Output() isEdit = new EventEmitter<void>();
