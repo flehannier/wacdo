@@ -25,7 +25,7 @@ export class NavbarComponent {
   showModal = false;
   selectedItem: any = null;
   errors: string = '';
-  showMenu = false;
+  showAvatarMenu = false;
 
    modalAction: ModalAction = 
   {
@@ -78,9 +78,10 @@ export class NavbarComponent {
     this.selectedItem = null;
   }
   
-  toggleMenu(){
-    this.showMenu = !this.showMenu;
+  toggleAvatarMenu() {
+    this.showAvatarMenu = !this.showAvatarMenu;
   }
+
 
   openMobileMenu() {
     this.isMobileMenuOpen = true;

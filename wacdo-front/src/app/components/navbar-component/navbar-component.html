@@ -42,44 +42,48 @@
           </div>
         </div>
       </div>
+<!-- RIGHT : Avatar -->
+<div class="flex items-center relative">
+  <!-- Bouton avatar -->
+  <button
+    (click)="toggleAvatarMenu()"
+    class="flex items-center gap-2 rounded-full bg-white/10 px-3 py-1.5 hover:bg-white/20 transition"
+  >
+    <div class="w-8 h-8 bg-gradient-to-br from-blue-400 to-cyan-600 rounded-full flex items-center justify-center">
+      <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+      </svg>
+    </div>
+    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M19 9l-7 7-7-7"/>
+    </svg>
+  </button>
 
-      <!-- RIGHT : Avatar -->
-      <div class="flex items-center">
-        <div class="relative group">
-          <button class="flex items-center gap-2 rounded-full bg-white/10 px-3 py-1.5 hover:bg-white/20 transition">
-            <div class="w-8 h-8 bg-gradient-to-br from-blue-400 to-cyan-600 rounded-full flex items-center justify-center">
-              <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-              </svg>
-            </div>
-            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M19 9l-7 7-7-7"/>
-            </svg>
-          </button>
+  <!-- Dropdown avatar -->
+@if(showAvatarMenu){
 
-          <!-- Dropdown avatar -->
-          <div class="absolute right-0 mt-2 w-48 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5
-                      opacity-0 invisible group-hover:opacity-100 group-hover:visible transition">
-            <a class="block px-4 py-2 text-sm hover:bg-gray-100 cursor-pointer" (click)="loadProfil()">
-              Mon profil
-              <app-generic-modal-component 
-                [errors]="errors"
-                [show]="showModal"
-                [title]="modalTitle"
-                [fields]="formFields"
-                [item]="selectedItem"
-                [action]="modalAction"
-                (close)="closeModal()"
-            />
-            </a>
-            <a class="block px-4 py-2 text-sm hover:bg-gray-100 cursor-pointer" (click)="logout()">
-              Se déconnecter
-            </a>
-        </div>
-      </div>
-
+  <div 
+        class="absolute right-0 top-full mt-1 w-48 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 z-50">
+    <a class="block px-4 py-2 text-sm hover:bg-gray-100 cursor-pointer" (click)="loadProfil()">
+      Mon profil
+      <app-generic-modal-component 
+        [errors]="errors"
+        [show]="showModal"
+        [title]="modalTitle"
+        [fields]="formFields"
+        [item]="selectedItem"
+        [action]="modalAction"
+        (close)="closeModal()"
+      />
+    </a>
+    <a class="block px-4 py-2 text-sm hover:bg-gray-100 cursor-pointer" (click)="logout()">
+      Se déconnecter
+    </a>
+  </div>
+}  
+</div>
     </div>
   </div>
 
