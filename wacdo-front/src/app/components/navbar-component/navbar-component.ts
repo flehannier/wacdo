@@ -1,4 +1,4 @@
-import { Component, HostListener, Input } from '@angular/core';
+import { Component, ElementRef, HostListener, Input } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../services/auth-service';
 import { FieldsFormTypeEnum, FormField, ModalAction, SelectOption } from '../../models/FieldsForm';
@@ -33,7 +33,7 @@ export class NavbarComponent {
     color: 'primary',
     callback: (data) => this.collaborateurService.save(data)
   };
-  constructor(private fonctionService: FonctionService, private restaurantService: RestaurantService,private collaborateurService: CollaborateurService, private authService: AuthService, private router: Router){
+  constructor(private eRef: ElementRef,private fonctionService: FonctionService, private restaurantService: RestaurantService,private collaborateurService: CollaborateurService, private authService: AuthService, private router: Router){
   }
 
   loadProfil(){
@@ -82,6 +82,13 @@ export class NavbarComponent {
     this.showAvatarMenu = !this.showAvatarMenu;
   }
 
+  // 🔹 Fermer le menu si clic en dehors
+  @HostListener('document:click', ['$event'])
+  clickOutside(event: Event) {
+    if (!this.eRef.nativeElement.contains(event.target)) {
+      this.showAvatarMenu = false;
+    }
+  }
 
   openMobileMenu() {
     this.isMobileMenuOpen = true;
