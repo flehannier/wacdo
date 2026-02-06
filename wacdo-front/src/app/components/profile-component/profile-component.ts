@@ -22,7 +22,7 @@ export class ProfileComponent {
   modalTitle = 'Modifier son profile';
   formFields: FormField[] = []
   showModal = false;
-  selectedItem?: CollaborateurModel;
+  selectedItem?: any;
   errors: string = '';
 
   modalAction: ListAction = 
@@ -38,8 +38,24 @@ export class ProfileComponent {
 
   ngOnInit(){
     this.showModal = true;
-    
+        
     this.roleService.listRoles().subscribe(roles => {
+
+       this.collaborateurService.getByUsername(this.authService.getUsername())
+        .subscribe({
+            next: (data) => {
+              this.selectedItem = data;
+              
+              this.selectedItem = {
+                ... data,
+                roleId:  data.role?.id,
+              };
+            },
+            error: (err) => {
+              console.error('Erreur lors de la récupération du collaborateur', err);
+            }
+        });
+        
       const optionsRole: SelectOption[] = roles.map( (r) => ({ value: r.id, label: r.name }));
       this.formFields = [
           { key: 'id', label: 'Id', type: FieldsFormTypeEnum.HIDDEN, disabled: true, required: true, placeholder: '', validators: [Validators.required] },
@@ -47,19 +63,11 @@ export class ProfileComponent {
           { key: 'prenom', label: 'Prénom', type: FieldsFormTypeEnum.TEXT, disabled: true, required: true, placeholder: '',  validators: [Validators.required]  },
           { key: 'email', label: 'Email',  type: FieldsFormTypeEnum.EMAIL, disabled: true, required: true, placeholder: '',  validators: [Validators.email, Validators.required] },
           { key: 'motDePasse', label: 'Mot de passe',  type: FieldsFormTypeEnum.PASSWORD, disabled: false, required: false, placeholder: '' },
-          { key: 'role.id', label: 'Role', type: FieldsFormTypeEnum.SELECT, options: optionsRole ,disabled: false, required: true, placeholder: 'Choix d\'un role',  validators: [Validators.required]  },
+          { key: 'roleId', label: 'Role', type: FieldsFormTypeEnum.SELECT, options: optionsRole ,disabled: false, required: true, placeholder: 'Choix d\'un role',  validators: [Validators.required]  },
         ]
+        
     });
     
-    this.collaborateurService.getByUsername(this.authService.getUsername())
-    .subscribe({
-        next: (data) => {
-          this.selectedItem = data;
-        },
-        error: (err) => {
-          console.error('Erreur lors de la récupération du collaborateur', err);
-        }
-    });
   }
 
   update(item:any){
@@ -75,7 +83,7 @@ export class ProfileComponent {
         motDePasse: item.motDePasse, 
         datePremiereEmbauche: item.datePremiereEmbauche,         
         administrateur: item.administrateur,  
-        roleId: item['role.id']?.id                   
+        roleId: item.roleId                   
       }
 
       this.collaborateurService.save(request).subscribe({
@@ -89,7 +97,6 @@ export class ProfileComponent {
   }
 
   closeModal() {
-    this.showModal = false;
     this.selectedItem = undefined;
   }
 }

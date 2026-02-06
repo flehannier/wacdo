@@ -75,9 +75,9 @@ export class AffectationComponent {
         { key: 'id', label: 'Id', type: FieldsFormTypeEnum.HIDDEN, disabled: true, required: false, placeholder: '' },
         { key: 'dateDebut', label: 'Date début', type: FieldsFormTypeEnum.TEXT, disabled: false, required: true, placeholder: '', validators: [Validators.required] },
         { key: 'dateFin', label: 'Date fin', type: FieldsFormTypeEnum.TEXT, disabled: false, required: false, placeholder: '' },
-        { key: 'collaborateur.id', label: 'Collaborateur', type: FieldsFormTypeEnum.SELECT, options: optionsCollaborateur ,disabled: false, required: true, placeholder: 'Choix d\'un collaborateur',  validators: [Validators.required]  },
-        { key: 'fonction.id', label: 'Fonction', type: FieldsFormTypeEnum.SELECT, options: optionsFonction ,disabled: false, required: true, placeholder: 'Choix d\'une fonction',  validators: [Validators.required]  },
-        { key: 'restaurant.id', label: 'Restaurant', type: FieldsFormTypeEnum.SELECT, options: optionsRestaurant, disabled: false, required: true, placeholder: 'Choix d\'un restaurant',  validators: [Validators.required]  }
+        { key: 'collaborateurId', label: 'Collaborateur', type: FieldsFormTypeEnum.SELECT, options: optionsCollaborateur ,disabled: false, required: true, placeholder: 'Choix d\'un collaborateur',  validators: [Validators.required]  },
+        { key: 'fonctionId', label: 'Fonction', type: FieldsFormTypeEnum.SELECT, options: optionsFonction ,disabled: false, required: true, placeholder: 'Choix d\'une fonction',  validators: [Validators.required]  },
+        { key: 'restaurantId', label: 'Restaurant', type: FieldsFormTypeEnum.SELECT, options: optionsRestaurant, disabled: false, required: true, placeholder: 'Choix d\'un restaurant',  validators: [Validators.required]  }
         ]
       });
       
@@ -85,10 +85,8 @@ export class AffectationComponent {
   }
 
   isEdit() {
-    // .map() crée une nouvelle instance du tableau (Immuabilité)
     this.formFields = this.formFields.map(field => {
-      if (field.key === 'collaborateur.id') {
-        // On retourne une COPIE de l'objet avec disabled à true
+      if (field.key === 'collaborateurId') {
         return { ...field, disabled: true };
       }
       return field;
@@ -138,8 +136,12 @@ export class AffectationComponent {
         callback: (data) => this.createOrUpdate(data)
       };
       
-      // On sélectionne l'item (ceci va déclencher le ngOnChanges dans le Modal)
-      this.selectedItem = this.affectations.find((aff: AffectationModel) => aff.id === item.id) as AffectationModel;
+      this.selectedItem = {
+        ...this.affectations.find((aff: AffectationModel) => aff.id === item.id),
+        collaborateurId: item.collaborateur?.id,
+        fonctionId: item.fonction?.id,
+        restaurantId: item.restaurant?.id
+      };
   }
 
   onDelete(item: AffectationModel) {
@@ -166,14 +168,14 @@ export class AffectationComponent {
       }
 
       const request: AffectationRequest = {
-          id: item.id,
-          dateDebut: new Date(item.dateDebut),
-          dateFin:  item.dateFin?  new Date(item.dateFin) : undefined,
-          collaborateurId: item['collaborateur.id']?.id,
-          fonctionId: item['fonction.id']?.id,
-          restaurantId: item['restaurant.id']?.id
+        id: item.id,
+        dateDebut: new Date(item.dateDebut),
+        dateFin: item.dateFin ? new Date(item.dateFin) : undefined,
+        collaborateurId: item.collaborateurId,
+        fonctionId: item.fonctionId,
+        restaurantId: item.restaurantId
       };
-      
+            
       console.log('JSON envoyé :', JSON.stringify(request));
       
       this.affectationService.save(request).subscribe({
@@ -189,7 +191,6 @@ export class AffectationComponent {
   }
 
   closeModal() {
-    this.showModal = false;
     this.selectedItem = null;
   }
 }

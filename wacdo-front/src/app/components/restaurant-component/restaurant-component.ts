@@ -112,7 +112,6 @@ export class RestaurantComponent {
   }
 
   closeModal() {
-    this.showModal = false;
     this.selectedItem = undefined;
   }
 }

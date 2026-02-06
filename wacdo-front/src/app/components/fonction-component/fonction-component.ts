@@ -115,7 +115,6 @@ export class FonctionComponent {
   }
 
   closeModal() {
-    this.showModal = false;
     this.selectedItem = null;
   }
 }

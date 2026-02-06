@@ -25,7 +25,7 @@ export class CollaborateurComponent implements OnInit{
   modalTitle: string = 'Collaborateur';
   formFields: FormField[] = []
   showModal = false;
-  selectedItem?: CollaborateurModel;
+  selectedItem?: any;
   errors: string = '';
 
   columns: ListColumn[] = [
@@ -68,7 +68,7 @@ export class CollaborateurComponent implements OnInit{
           { key: 'prenom', label: 'Prénom', type: FieldsFormTypeEnum.TEXT, disabled: false, required: true, placeholder: '',  validators: [Validators.required]  },
           { key: 'email', label: 'Email',  type: FieldsFormTypeEnum.EMAIL, disabled: false, required: true, placeholder: '',  validators: [Validators.email, Validators.required] },
           { key: 'motDePasse', label: 'Mot de passe',  type: FieldsFormTypeEnum.PASSWORD, disabled: false, required: false, placeholder: '' },
-          { key: 'role.id', label: 'Role', type: FieldsFormTypeEnum.SELECT, options: optionsRole ,disabled: false, required: true, placeholder: 'Choix d\'un role',  validators: [Validators.required]  },
+          { key: 'roleId', label: 'Role', type: FieldsFormTypeEnum.SELECT, options: optionsRole ,disabled: false, required: true, placeholder: 'Choix d\'un role',  validators: [Validators.required]  },
         ]
     });
   }
@@ -108,8 +108,11 @@ export class CollaborateurComponent implements OnInit{
       color: 'primary',
       callback: (data) => this.createOrUpdate(data)
     };
-    
-    this.selectedItem = this.collaborateurs.find((collab: CollaborateurModel) => collab.id === item.id); 
+
+    this.selectedItem = {
+      ... this.collaborateurs.find((collab: CollaborateurModel) => collab.id === item.id),
+      roleId: item.role?.id,
+    };
   }
 
   onAddCollaborateur() {
@@ -152,7 +155,7 @@ export class CollaborateurComponent implements OnInit{
         motDePasse: item.motDePasse, 
         datePremiereEmbauche: item.datePremiereEmbauche,         
         administrateur: item.administrateur,  
-        roleId: item['role.id']?.id                   
+        roleId: item.roleId                   
       }
 
       this.collaborateurService.save(request).subscribe({
@@ -167,7 +170,6 @@ export class CollaborateurComponent implements OnInit{
   }
 
   closeModal() {
-    this.showModal = false;
     this.selectedItem = undefined;
   }
 }
