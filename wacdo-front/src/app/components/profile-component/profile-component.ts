@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CollaborateurModel, CollaborateurRequest } from '../../models/collaborateur-model';
 import { FieldsFormTypeEnum, FormField, SelectOption } from '../../models/FieldsForm';
 import { Validators } from '@angular/forms';
@@ -24,51 +24,59 @@ export class ProfileComponent {
   showModal = false;
   selectedItem?: any;
   errors: string = '';
+  @Input() show: boolean = true;
+  @Output() close = new EventEmitter<void>();
 
   modalAction: ListAction = 
   {
     label: 'Modifier',
     color: 'primary',
-    callback: (item: any) => this.update(item)
+    callback: (item: any) => {
+      if (!item) return;
+      this.update(item);
+    }
   };
     
 
   constructor(private authService: AuthService, private roleService: RoleService, private collaborateurService: CollaborateurService, private fonctionService: FonctionService, private restaurantService: RestaurantService){
   }
 
-  ngOnInit(){
-    this.showModal = true;
-        
+  ngOnInit() {
     this.roleService.listRoles().subscribe(roles => {
 
-       this.collaborateurService.getByUsername(this.authService.getUsername())
-        .subscribe({
-            next: (data) => {
-              this.selectedItem = data;
-              
-              this.selectedItem = {
-                ... data,
-                roleId:  data.role?.id,
-              };
-            },
-            error: (err) => {
-              console.error('Erreur lors de la récupération du collaborateur', err);
+      const optionsRole = roles.map(r => ({
+        value: r.id,
+        label: r.name
+      }));
+
+      this.collaborateurService
+        .getByUsername(this.authService.getUsername())
+        .subscribe(data => {
+
+          this.selectedItem = {
+            ...data,
+            roleId: data.role?.id
+          };
+
+          this.formFields = [
+            { key: 'id', type: FieldsFormTypeEnum.HIDDEN, disabled: true, required: true },
+            { key: 'nom', label: 'Nom', type: FieldsFormTypeEnum.TEXT, disabled: true, required: true },
+            { key: 'prenom', label: 'Prénom', type: FieldsFormTypeEnum.TEXT, disabled: true, required: true },
+            { key: 'email', label: 'Email', type: FieldsFormTypeEnum.EMAIL, disabled: true, required: true },
+            { key: 'motDePasse', label: 'Mot de passe', type: FieldsFormTypeEnum.PASSWORD },
+            {
+              key: 'roleId',
+              label: 'Role',
+              type: FieldsFormTypeEnum.SELECT,
+              options: optionsRole,
+              required: true,
+              placeholder: 'Choix d’un rôle'
             }
+          ];
         });
-        
-      const optionsRole: SelectOption[] = roles.map( (r) => ({ value: r.id, label: r.name }));
-      this.formFields = [
-          { key: 'id', label: 'Id', type: FieldsFormTypeEnum.HIDDEN, disabled: true, required: true, placeholder: '', validators: [Validators.required] },
-          { key: 'nom', label: 'Nom', type: FieldsFormTypeEnum.TEXT, disabled: true, required: true, placeholder: '', validators: [Validators.required] },
-          { key: 'prenom', label: 'Prénom', type: FieldsFormTypeEnum.TEXT, disabled: true, required: true, placeholder: '',  validators: [Validators.required]  },
-          { key: 'email', label: 'Email',  type: FieldsFormTypeEnum.EMAIL, disabled: true, required: true, placeholder: '',  validators: [Validators.email, Validators.required] },
-          { key: 'motDePasse', label: 'Mot de passe',  type: FieldsFormTypeEnum.PASSWORD, disabled: false, required: false, placeholder: '' },
-          { key: 'roleId', label: 'Role', type: FieldsFormTypeEnum.SELECT, options: optionsRole ,disabled: false, required: true, placeholder: 'Choix d\'un role',  validators: [Validators.required]  },
-        ]
-        
     });
-    
   }
+
 
   update(item:any){
       if(!item.motDePasse){
@@ -96,7 +104,14 @@ export class ProfileComponent {
       });
   }
 
+  ngOnChanges() {
+    if (this.show) {
+      this.showModal = true;
+    }
+  }
+
   closeModal() {
-    this.selectedItem = undefined;
+    this.showModal = false;
+    this.close.emit();
   }
 }

@@ -10,11 +10,13 @@ import { FonctionService } from '../../services/fonction-service';
 import { RestaurantService } from '../../services/restaurant-service';
 import { Validators } from '@angular/forms';
 import { RoleService } from '../../services/role-service';
+import { ProfileComponent } from '../profile-component/profile-component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   standalone: true,
   selector: 'app-navbar-component',
-  imports: [RouterLink, RouterLinkActive],
+  imports: [RouterLink, RouterLinkActive, ProfileComponent, CommonModule],
   templateUrl: './navbar-component.html',
   styleUrl: './navbar-component.css',
 })
@@ -27,6 +29,7 @@ export class NavbarComponent {
   selectedItem: any = null;
   errors: string = '';
   showAvatarMenu = false;
+  showProfileModal = false;
 
    modalAction: ModalAction = 
   {
@@ -68,4 +71,9 @@ export class NavbarComponent {
     this.isMobileMenuOpen = false;
     document.body.classList.remove('overflow-hidden');
   }
+
+  openProfileModal() {
+    this.showProfileModal = true;
+  }
 }
+

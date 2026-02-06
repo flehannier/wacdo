@@ -62,22 +62,25 @@
   </button>
 
   <!-- Dropdown avatar -->
-@if(showAvatarMenu){
+  @if(showAvatarMenu){
 
-  <div class="absolute right-0 top-full mt-1 w-48 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 z-50">
-    <a  class="block px-4 py-2 text-sm hover:bg-gray-100 cursor-pointer"  routerLink="/profile" >
-      Mon profil
-    </a>
-    <a class="block px-4 py-2 text-sm hover:bg-gray-100 cursor-pointer" (click)="logout()">
-      Se déconnecter
-    </a>
-  </div>
-}  
+    <div class="absolute right-0 top-full mt-1 w-48 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 z-50">
+      <button
+        type="button"
+        class="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
+        (click)="openProfileModal()">
+        Mon profil
+      </button>
+      <a class="block px-4 py-2 text-sm hover:bg-gray-100 cursor-pointer" (click)="logout()">
+        Se déconnecter
+      </a>
+    </div>
+  }  
 </div>
     </div>
   </div>
 
-<!-- ✅ MOBILE FULLSCREEN MENU (EN DEHORS DU NAV) -->
+<!-- MOBILE FULLSCREEN MENU (EN DEHORS DU NAV) -->
 @if (isMobileMenuOpen) {
   <div class="fixed inset-0 z-50 sm:hidden">
 
@@ -105,3 +108,10 @@
     </div>
   </div>
 }
+
+<!-- ici on inclut le modal comme enfant -->
+ @if(showProfileModal){
+  <app-profile-component
+    (close)="showProfileModal = false">
+  </app-profile-component>
+ }
