@@ -64,19 +64,9 @@
   <!-- Dropdown avatar -->
 @if(showAvatarMenu){
 
-  <div 
-        class="absolute right-0 top-full mt-1 w-48 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 z-50">
-    <a class="block px-4 py-2 text-sm hover:bg-gray-100 cursor-pointer" (click)="loadProfil()">
+  <div class="absolute right-0 top-full mt-1 w-48 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 z-50">
+    <a  class="block px-4 py-2 text-sm hover:bg-gray-100 cursor-pointer"  routerLink="/profile" >
       Mon profil
-      <app-generic-modal-component 
-        [errors]="errors"
-        [show]="showModal"
-        [title]="modalTitle"
-        [fields]="formFields"
-        [item]="selectedItem"
-        [action]="modalAction"
-        (close)="closeModal()"
-      />
     </a>
     <a class="block px-4 py-2 text-sm hover:bg-gray-100 cursor-pointer" (click)="logout()">
       Se déconnecter
