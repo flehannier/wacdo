@@ -21,7 +21,7 @@ spring:
     enabled: true
   jpa:
     hibernate:
-      ddl-auto: update   # update | validate | create | create-drop
+      ddl-auto: create   # update | validate | create | create-drop
     show-sql: true
     properties:
       hibernate:
