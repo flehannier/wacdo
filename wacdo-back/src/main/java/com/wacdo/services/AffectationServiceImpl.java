@@ -58,7 +58,7 @@ public class AffectationServiceImpl implements AffectationService {
         if ( !aff.getDateDebut().equals(affectation.dateDebut()) && affectation.dateDebut().isAfter(affectation.dateDebut()) ) {
             throw new FunctionalException("Votre affectation souhaitée a une date de début égale ou antérieur a une affectation en cours");
         }
-        if ( !affectation.dateFin().isBefore(affectation.dateDebut()) ) {
+        if (affectation.dateFin()!=null && !affectation.dateFin().isBefore(affectation.dateDebut()) ) {
             throw new FunctionalException("Votre affectation souhaitée a une date de fin antérieur à la date de début");
         }
 

@@ -84,7 +84,6 @@ export class RestaurantComponent {
   onEdit(item: RestaurantModel) {
     this.showModal = true;
     this.modalTitle = 'Modifier un restaurant';
-    console.log(this.restaurants);
     this.modalAction = 
     {
       label: 'Modifier',
@@ -93,9 +92,6 @@ export class RestaurantComponent {
     };
     
     this.selectedItem = this.restaurants.find((rest: RestaurantModel) => rest.id === item.id); 
-    
-
-    console.log('Modifier:', this.selectedItem);
   }
 
   save(item:RestaurantModel){

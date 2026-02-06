@@ -102,7 +102,6 @@ export class CollaborateurComponent implements OnInit{
   onEdit(item: CollaborateurModel) {
     this.showModal = true;
     this.modalTitle = 'Modifier un collaborateur';
-    console.log(this.collaborateurs);
     this.modalAction = 
     {
       label: 'Modifier',
@@ -111,9 +110,6 @@ export class CollaborateurComponent implements OnInit{
     };
     
     this.selectedItem = this.collaborateurs.find((collab: CollaborateurModel) => collab.id === item.id); 
-    
-
-    console.log('Modifier:', this.selectedItem);
   }
 
   onAddCollaborateur() {
@@ -134,7 +130,6 @@ export class CollaborateurComponent implements OnInit{
         this.load();
       },
       error: (err) => {
-        console.error('Erreur:', err);
         this.errors = err.error.message;
       }
    });

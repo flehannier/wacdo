@@ -72,9 +72,9 @@ export class AffectationComponent {
           const optionsRestaurant: SelectOption[] = restaurants.map(r => ({ value: r.id, label: r.nom }));
      
       this.formFields = [
-        { key: 'id', label: 'Id', type: FieldsFormTypeEnum.HIDDEN, disabled: true, required: true, placeholder: '', validators: [Validators.required] },
+        { key: 'id', label: 'Id', type: FieldsFormTypeEnum.HIDDEN, disabled: true, required: false, placeholder: '' },
         { key: 'dateDebut', label: 'Date début', type: FieldsFormTypeEnum.TEXT, disabled: false, required: true, placeholder: '', validators: [Validators.required] },
-        { key: 'dateFin', label: 'Date fin', type: FieldsFormTypeEnum.TEXT, disabled: false, required: false, placeholder: '',  validators: []  },
+        { key: 'dateFin', label: 'Date fin', type: FieldsFormTypeEnum.TEXT, disabled: false, required: false, placeholder: '' },
         { key: 'collaborateur.id', label: 'Collaborateur', type: FieldsFormTypeEnum.SELECT, options: optionsCollaborateur ,disabled: false, required: true, placeholder: 'Choix d\'un collaborateur',  validators: [Validators.required]  },
         { key: 'fonction.id', label: 'Fonction', type: FieldsFormTypeEnum.SELECT, options: optionsFonction ,disabled: false, required: true, placeholder: 'Choix d\'une fonction',  validators: [Validators.required]  },
         { key: 'restaurant.id', label: 'Restaurant', type: FieldsFormTypeEnum.SELECT, options: optionsRestaurant, disabled: false, required: true, placeholder: 'Choix d\'un restaurant',  validators: [Validators.required]  }
@@ -84,7 +84,7 @@ export class AffectationComponent {
     this.load();
   }
 
-    isEdit() {
+  isEdit() {
     // .map() crée une nouvelle instance du tableau (Immuabilité)
     this.formFields = this.formFields.map(field => {
       if (field.key === 'collaborateur.id') {
@@ -94,6 +94,7 @@ export class AffectationComponent {
       return field;
     });
   }
+
   load(){
     this.affectationService.listAffectations().subscribe({
       next: (data) => {
@@ -139,7 +140,6 @@ export class AffectationComponent {
       
       // On sélectionne l'item (ceci va déclencher le ngOnChanges dans le Modal)
       this.selectedItem = this.affectations.find((aff: AffectationModel) => aff.id === item.id) as AffectationModel;
-      console.log('Modifier:', this.selectedItem);
   }
 
   onDelete(item: AffectationModel) {

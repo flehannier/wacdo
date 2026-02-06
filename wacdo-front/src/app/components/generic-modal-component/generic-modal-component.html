@@ -171,9 +171,11 @@
               </ng-container>
 
               <!-- Message d'erreur -->
-              <p *ngIf="hasError(field.key)" class="mt-1 text-sm text-red-600">
-                {{ getErrorMessage(field.key) }}
-              </p>
+               @if(hasError(field.key)) {
+                <p class="mt-1 text-sm text-red-600">
+                  {{ getErrorMessage(field.key) }}
+                </p>
+               }
             </div>
           </ng-container>
         </div>

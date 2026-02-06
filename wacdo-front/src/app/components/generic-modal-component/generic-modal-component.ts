@@ -83,14 +83,6 @@ export class GenericModalComponent implements OnInit, OnChanges {
     }
   }
 
-  // Helper pour nettoyer buildForm
-  private collectValidators(field: FormField) {
-    const validators = [...(field.validators || [])];
-    if (field.required) validators.push(Validators.required);
-    if (field.type === FieldsFormTypeEnum.EMAIL) validators.push(Validators.email);
-    return validators;
-  }
-
   getValue(obj: any, path: string) {
     if (!obj || !path) return '';
     
