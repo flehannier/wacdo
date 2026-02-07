@@ -73,7 +73,7 @@ export class AffectationComponent {
      
       this.formFields = [
         { key: 'id', label: 'Id', type: FieldsFormTypeEnum.HIDDEN, disabled: true, required: false, placeholder: '' },
-        { key: 'dateDebut', label: 'Date début', type: FieldsFormTypeEnum.TEXT, disabled: false, required: true, placeholder: '', validators: [Validators.required] },
+        { key: 'dateDebut', label: 'Date début', type: FieldsFormTypeEnum.DATE, disabled: false, required: true, placeholder: '', validators: [Validators.required] },
         { key: 'dateFin', label: 'Date fin', type: FieldsFormTypeEnum.TEXT, disabled: false, required: false, placeholder: '' },
         { key: 'collaborateurId', label: 'Collaborateur', type: FieldsFormTypeEnum.SELECT, options: optionsCollaborateur ,disabled: false, required: true, placeholder: 'Choix d\'un collaborateur',  validators: [Validators.required]  },
         { key: 'fonctionId', label: 'Fonction', type: FieldsFormTypeEnum.SELECT, options: optionsFonction ,disabled: false, required: true, placeholder: 'Choix d\'une fonction',  validators: [Validators.required]  },
@@ -171,9 +171,9 @@ export class AffectationComponent {
         id: item.id,
         dateDebut: new Date(item.dateDebut),
         dateFin: item.dateFin ? new Date(item.dateFin) : undefined,
-        collaborateurId: item.collaborateurId,
-        fonctionId: item.fonctionId,
-        restaurantId: item.restaurantId
+        collaborateurId: item.collaborateurId.id,
+        fonctionId: item.fonctionId.id,
+        restaurantId: item.restaurantId.id
       };
             
       console.log('JSON envoyé :', JSON.stringify(request));

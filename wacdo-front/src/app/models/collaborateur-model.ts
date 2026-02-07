@@ -4,7 +4,7 @@ import { RestaurantModel } from "./restaurant-model"
 import { RoleModel } from "./role-model"
 
 export type CollaborateurModel = {
-    id: number
+    id?: number
     nom: string
     prenom: string
     email: string

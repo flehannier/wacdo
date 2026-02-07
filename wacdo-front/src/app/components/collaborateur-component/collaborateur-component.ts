@@ -122,14 +122,21 @@ export class CollaborateurComponent implements OnInit{
   }
 
   onDelete(item: CollaborateurModel) {
-   this.collaborateurService.delete(item.id)?.subscribe({
-      next: () => {
-        this.load();
-      },
-      error: (err) => {
-        this.errors = err.error.message;
-      }
-   });
+    if(!item.id){
+       this.errors = 'Aucun identifant de collaborateur passé en paramètre';
+      return false
+    }
+    this.collaborateurService.delete(item.id)?.subscribe({
+        next: () => {
+          this.load();
+          return true
+        },
+        error: (err) => {
+          this.errors = err.error.message;
+          return false
+        }
+    });
+    return true
   }
 
   onSearchChanged(term: string) {
@@ -141,17 +148,22 @@ export class CollaborateurComponent implements OnInit{
         delete item['motDePasse']
       }    
 
-      const request: CollaborateurRequest = {
-        id: item.id,
+      let request: CollaborateurRequest = {
         nom : item.nom,
         prenom: item.prenom,  
         email: item.email,
         motDePasse: item.motDePasse, 
         datePremiereEmbauche: item.datePremiereEmbauche,         
         administrateur: item.administrateur,  
-        roleId: item.roleId                   
+        roleId: item.roleId.id                   
       }
 
+      if(item.id){
+        request = {
+          ...request,
+          id: item.id
+        }
+      }
       this.collaborateurService.save(request).subscribe({
         next: () => {
           this.showModal = false;
