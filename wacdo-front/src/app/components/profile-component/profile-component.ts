@@ -27,7 +27,7 @@ export class ProfileComponent {
   @Input() show: boolean = true;
   @Output() close = new EventEmitter<void>();
 
-  modalAction: ListAction = 
+  modalAction: ListAction =
   {
     label: 'Modifier',
     color: 'primary',
@@ -36,7 +36,7 @@ export class ProfileComponent {
       this.update(item);
     }
   };
-    
+
 
   constructor(private authService: AuthService, private roleService: RoleService, private collaborateurService: CollaborateurService, private fonctionService: FonctionService, private restaurantService: RestaurantService){
   }
@@ -81,22 +81,22 @@ export class ProfileComponent {
   update(item:any){
       if(!item.motDePasse){
         delete item['motDePasse']
-      }    
+      }
 
       const request: CollaborateurRequest = {
         id: item.id,
         nom : item.nom,
-        prenom: item.prenom,  
+        prenom: item.prenom,
         email: item.email,
-        motDePasse: item.motDePasse, 
-        datePremiereEmbauche: item.datePremiereEmbauche,         
-        administrateur: item.administrateur,  
-        roleId: item.roleId                   
+        motDePasse: item.motDePasse,
+        datePremiereEmbauche: item.datePremiereEmbauche,
+        administrateur: item.administrateur,
+        roleId: item.roleId.id
       }
 
       this.collaborateurService.save(request).subscribe({
         next: () => {
-          this.showModal = false;
+          this.closeModal();
         },
         error: (err) => {
           this.errors = err.error.message;
