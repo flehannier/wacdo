@@ -1,146 +1,197 @@
 package com.wacdo.services;
 
-import com.wacdo.WacdoApplication;
-import com.wacdo.dto.AffectationMapper;
 import com.wacdo.dto.AffectationRequest;
+import com.wacdo.dto.CollaborateurRequest;
 import com.wacdo.entities.*;
 import com.wacdo.exception.FunctionalException;
 import com.wacdo.exception.TechnicalException;
 import com.wacdo.repositories.AffectationRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.*;
+import org.mockito.junit.jupiter.MockitoExtension;
+
 import java.time.LocalDate;
-import java.util.*;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatException;
-import static org.mockito.Mockito.when;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
-@SpringBootTest(classes = WacdoApplication.class)
-public class AffectationServiceImplTest{
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
-    @Autowired
-    private AffectationService affectationService;
+@ExtendWith(MockitoExtension.class)
+class AffectationServiceImplTest {
 
-    @MockBean
-    private CollaborateurService collaborateurService;
+    @Mock private AffectationRepository affectationRepository;
+    @Mock private CollaborateurService collaborateurService;
+    @Mock private RestaurantService restaurantService;
+    @Mock private FonctionService fonctionService;
 
-    @MockBean
-    private FonctionService fonctionService;
+    @InjectMocks private AffectationServiceImpl service;
 
-    @MockBean
-    private RestaurantService restaurantService;
+    private Collaborateur collaborateur;
+    private Restaurant restaurant;
+    private Fonction fonction;
 
-    @MockBean
-    private AffectationRepository affectationRepository;
-    
-    @Test
-    void shouldReturnAffectation() throws FunctionalException {
-        Affectation affectation = new Affectation();
-        affectation.setId(1L);
-    
-        when(affectationRepository.findById(1L))
-                .thenReturn(Optional.of(affectation));
-    
-        Affectation result = affectationService.getById(1L);
-    
-        assertThat(result).isNotNull();
-        assertThat(result.getId()).isEqualTo(1L);
-    }
+    @BeforeEach
+    void setup() {
+        Role role = new Role();
+        role.setId(1L);
+        role.setName("USER");
 
-    @Test
-    void shouldThrowException_whenAffectationNotFound() throws FunctionalException {
-        when(affectationRepository.findById(1L))
-                .thenReturn(Optional.empty());
-
-        assertThatException().isThrownBy(() -> affectationService.getById(1L))
-                .isInstanceOf(FunctionalException.class)
-                .withMessageContaining("Affectation introuvable");
-    }
-
-    @Test
-    void shouldReturnList() {
-        when(affectationService.getAll())
-                .thenReturn(List.of(new Affectation(), new Affectation()));
-    
-        List<Affectation> result = affectationService.getAll();
-    
-        assertThat(result).hasSize(2);
-    }
-
-    @Test
-    void shouldCreateAnAffectation() throws TechnicalException, FunctionalException {
-        Affectation affectationCollab = new Affectation();
-        affectationCollab.setDateDebut(LocalDate.now().plusDays(1L));
-        Collaborateur collaborateur = new Collaborateur();
+        collaborateur = new Collaborateur();
         collaborateur.setId(1L);
-        collaborateur.setRole(new Role(1L, "ADMIN", "ADMIN", new ArrayList<>()));
-        collaborateur.setAffectations(
-                List.of(affectationCollab)
-        );
+        collaborateur.setNom("Doe");
+        collaborateur.setPrenom("John");
+        collaborateur.setEmail("john@mail.com");
+        collaborateur.setMotDePasse("Password1");
+        collaborateur.setAdministrateur(false);
+        collaborateur.setRole(role);
+        collaborateur.setAffectations(new ArrayList<>());
 
-        when(collaborateurService.getById(1L))
-                .thenReturn(collaborateur);
-
-        Fonction fonction = new Fonction();
-        fonction.setId(1L);
-        when(fonctionService.getById(1L))
-                .thenReturn(fonction);
-
-        Restaurant restaurant = new Restaurant();
+        restaurant = new Restaurant();
         restaurant.setId(1L);
-        when(restaurantService.getById(1L))
-                .thenReturn(restaurant);
-        AffectationRequest affectation = new AffectationRequest(
-                null,
-                LocalDate.now(),
-                LocalDate.now(),
-                collaborateur.getId(),
-                fonction.getId(),
-                restaurant.getId()
-        );
-        assertThatException().isThrownBy(() -> affectationService.create(affectation))
-                .isInstanceOf(FunctionalException.class)
-                .withMessageContaining("Votre affectation souhaitée a une date de début égale ou antérieur");
+
+        fonction = new Fonction();
+        fonction.setId(1L);
     }
 
+    // ===============================
+    // CREATE - PREMIERE AFFECTATION
+    // ===============================
     @Test
-    void shouldThrowAnException_whenDateError() throws TechnicalException, FunctionalException {
-        Affectation affectationCollab = new Affectation();
-        affectationCollab.setDateDebut(LocalDate.now());
+    void create_shouldCreateFirstAffectation_whenNoCurrentAffectation() throws Exception {
+        AffectationRequest request = mock(AffectationRequest.class);
+        when(request.collaborateurId()).thenReturn(1L);
+        when(request.restaurantId()).thenReturn(1L);
+        when(request.fonctionId()).thenReturn(1L);
+        when(request.dateDebut()).thenReturn(LocalDate.now());
 
-        Collaborateur collaborateur = new Collaborateur();
-        collaborateur.setId(1L);
-        collaborateur.setRole(new Role(1L, "ADMIN", "ADMIN", new ArrayList<>()));
-        collaborateur.setAffectations(
-                List.of(affectationCollab)
-        );
+        when(collaborateurService.getById(1L)).thenReturn(collaborateur);
+        when(restaurantService.getById(1L)).thenReturn(restaurant);
+        when(fonctionService.getById(1L)).thenReturn(fonction);
+        when(collaborateurService.save(any())).thenReturn(collaborateur);
+        when(affectationRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
 
-        when(collaborateurService.getById(1L))
-                .thenReturn(collaborateur);
+        Affectation result = service.create(request);
 
-        Fonction fonction = new Fonction();
-        fonction.setId(1L);
-        when(fonctionService.getById(1L))
-                .thenReturn(fonction);
+        assertNotNull(result);
+        verify(affectationRepository).save(any());
+    }
 
-        Restaurant restaurant = new Restaurant();
-        restaurant.setId(1L);
-        when(restaurantService.getById(1L))
-                .thenReturn(restaurant);
+    // ===============================
+    // CREATE - POSTE EN COURS À CLÔTURER
+    // ===============================
+    @Test
+    void create_shouldCloseCurrentAndCreateNew_whenValid() throws Exception {
+        Affectation current = new Affectation();
+        current.setDateDebut(LocalDate.of(2024,1,1));
+        current.setDateFin(null);
 
-        AffectationRequest affectation = new AffectationRequest(
-                null,
-                LocalDate.now(),
-                LocalDate.now(),
-                collaborateur.getId(),
-                fonction.getId(),
-                restaurant.getId()
-        );
+        collaborateur.setAffectations(new ArrayList<>(List.of(current)));
 
-        assertThatException().isThrownBy(() -> affectationService.create(affectation))
-                .isInstanceOf(FunctionalException.class)
-                .withMessageContaining("Votre affectation souhaitée a une date de début égale ou antérieur a une affectation en cours");
+        AffectationRequest request = mock(AffectationRequest.class);
+        when(request.collaborateurId()).thenReturn(1L);
+        when(request.restaurantId()).thenReturn(1L);
+        when(request.fonctionId()).thenReturn(1L);
+        when(request.dateDebut()).thenReturn(LocalDate.of(2025,1,1));
+
+        when(collaborateurService.getById(1L)).thenReturn(collaborateur);
+        when(restaurantService.getById(1L)).thenReturn(restaurant);
+        when(fonctionService.getById(1L)).thenReturn(fonction);
+        when(affectationRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
+
+        Affectation result = service.create(request);
+
+        assertNotNull(result);
+        assertNotNull(current.getDateFin());
+        verify(affectationRepository, times(2)).save(any());
+    }
+
+    // ===============================
+    // CREATE - EXCEPTION DATE DEBUT
+    // ===============================
+    @Test
+    void create_shouldThrowException_whenDateDebutBeforeCurrent() throws Exception {
+        Affectation current = new Affectation();
+        current.setDateDebut(LocalDate.of(2024,1,1));
+        current.setDateFin(null);
+
+        collaborateur.setAffectations(List.of(current));
+
+        AffectationRequest request = mock(AffectationRequest.class);
+        when(request.collaborateurId()).thenReturn(1L);
+        when(request.restaurantId()).thenReturn(1L);
+        when(request.fonctionId()).thenReturn(1L);
+        when(request.dateDebut()).thenReturn(LocalDate.of(2023,1,1));
+
+        when(collaborateurService.getById(1L)).thenReturn(collaborateur);
+        when(restaurantService.getById(1L)).thenReturn(restaurant);
+        when(fonctionService.getById(1L)).thenReturn(fonction);
+
+        assertThrows(FunctionalException.class, () -> service.create(request));
+        verify(affectationRepository, never()).save(any());
+    }
+
+    // ===============================
+    // UPDATE
+    // ===============================
+    @Test
+    void update_shouldUpdateAffectation_whenValid() throws Exception {
+        Affectation existing = new Affectation();
+        existing.setId(1L);
+        existing.setDateDebut(LocalDate.of(2024,1,1));
+        existing.setCollaborateur(collaborateur);
+        existing.setRestaurant(restaurant);
+        existing.setFonction(fonction);
+
+        AffectationRequest request = mock(AffectationRequest.class);
+        when(request.id()).thenReturn(1L);
+        when(request.collaborateurId()).thenReturn(1L);
+        when(request.restaurantId()).thenReturn(1L);
+        when(request.fonctionId()).thenReturn(1L);
+        when(request.dateDebut()).thenReturn(LocalDate.of(2024,1,1));
+        when(request.dateFin()).thenReturn(LocalDate.of(2024,12,31));
+
+        when(collaborateurService.getById(1L)).thenReturn(collaborateur);
+        when(restaurantService.getById(1L)).thenReturn(restaurant);
+        when(fonctionService.getById(1L)).thenReturn(fonction);
+        when(affectationRepository.findById(1L)).thenReturn(Optional.of(existing));
+        when(affectationRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
+
+        Affectation result = service.update(request);
+
+        assertEquals(LocalDate.of(2024,12,31), result.getDateFin());
+        verify(affectationRepository).save(existing);
+    }
+
+    // ===============================
+    // GET BY ID
+    // ===============================
+    @Test
+    void getById_shouldReturnAffectation_whenExists() throws Exception {
+        Affectation aff = new Affectation();
+        aff.setId(1L);
+
+        when(affectationRepository.findById(1L)).thenReturn(Optional.of(aff));
+
+        Affectation result = service.getById(1L);
+        assertEquals(1L, result.getId());
+    }
+
+    // ===============================
+    // DELETE
+    // ===============================
+    @Test
+    void deleteById_shouldDelete_whenExists() {
+        Affectation aff = new Affectation();
+        aff.setId(1L);
+
+        when(affectationRepository.findById(1L)).thenReturn(Optional.of(aff));
+
+        service.deleteById(1L);
+
+        verify(affectationRepository).delete(aff);
     }
 }

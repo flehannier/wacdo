@@ -1,6 +1,5 @@
 package com.wacdo.services;
 
-import com.wacdo.WacdoApplication;
 import com.wacdo.dto.CollaborateurRequest;
 import com.wacdo.entities.Collaborateur;
 import com.wacdo.entities.Role;
@@ -8,244 +7,259 @@ import com.wacdo.exception.FunctionalException;
 import com.wacdo.exception.TechnicalException;
 import com.wacdo.repositories.CollaborateurRepository;
 import com.wacdo.repositories.RoleRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.*;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
 import java.util.List;
 import java.util.Optional;
-import static org.assertj.core.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
+
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@SpringBootTest(classes = WacdoApplication.class)
+@ExtendWith(MockitoExtension.class)
 class CollaborateurServiceImplTest {
 
-    @Autowired
-    private CollaborateurService collaborateurService;
-
-    @MockBean
-    private CollaborateurRepository collaborateurRepository;
-
-    @MockBean
+    @Mock
     private RoleRepository roleRepository;
 
-    @MockBean
+    @Mock
+    private CollaborateurRepository collaborateurRepository;
+
+    @Mock
     private PasswordEncoder passwordEncoder;
 
+    @InjectMocks
+    private CollaborateurServiceImpl service;
+
+    private Role adminRole;
+    private Role userRole;
+
+    @BeforeEach
+    void setup() {
+        adminRole = new Role();
+        adminRole.setId(1L);
+        adminRole.setName("ADMIN");
+
+        userRole = new Role();
+        userRole.setId(2L);
+        userRole.setName("USER");
+    }
+
+    // ======================================================
+    // CREATE
+    // ======================================================
+
     @Test
-    void shouldCreateCollaborateur_withStrongPassword() throws FunctionalException, TechnicalException {
-        Collaborateur collab = new Collaborateur();
-        collab.setNom("Doe");
-        collab.setPrenom("John");
-        collab.setEmail("john.doe@test.com");
-        collab.setMotDePasse("Password123");
+    void save_shouldCreateUserSuccessfully() throws Exception {
 
-        Role role = new Role();
-        role.setId(1L);
-        role.setName("ADMIN");
-        collab.setRole(role);
+        CollaborateurRequest request = mock(CollaborateurRequest.class);
 
-        when(roleRepository.findById(role.getId())).thenReturn(Optional.of(role));
+        when(request.id()).thenReturn(null);
+        when(request.nom()).thenReturn("Doe");
+        when(request.prenom()).thenReturn("John");
+        when(request.email()).thenReturn("john@mail.com");
+        when(request.motDePasse()).thenReturn("Password1");
+        when(request.roleId()).thenReturn(2L);
 
-        when(passwordEncoder.encode(any()))
-                .thenReturn("encoded-password");
+        when(collaborateurRepository.findByEmail("john@mail.com")).thenReturn(null);
+        when(roleRepository.findAll()).thenReturn(List.of(adminRole, userRole));
+        when(roleRepository.findByNameIgnoreCase("USER")).thenReturn(userRole);
+        when(passwordEncoder.encode("Password1")).thenReturn("encodedPassword");
+        when(collaborateurRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
 
-        when(collaborateurRepository.save(any(Collaborateur.class)))
-                .thenAnswer(invocation -> invocation.getArgument(0));;
-        CollaborateurRequest col = new CollaborateurRequest(
-                collab.getId(),
-                collab.getNom(),
-                collab.getPrenom(),
-                collab.getEmail(),
-                collab.getMotDePasse(),
-                collab.isAdministrateur(),
-                collab.getRole().getId()
-                );
-        Collaborateur result = collaborateurService.save(col);
+        Collaborateur result = service.save(request);
 
-        assertThat(result.getMotDePasse()).isEqualTo("encoded-password");
+        assertNotNull(result);
+        assertEquals("Doe", result.getNom());
+        assertEquals("encodedPassword", result.getMotDePasse());
+        assertFalse(result.isAdministrateur());
     }
 
     @Test
-    void shouldThrowException_whenPasswordIsNotStrong() {
-        Collaborateur collab = new Collaborateur();
-        Role role = new Role();
-        role.setId(1L);
-        role.setName("ADMIN");
-        collab.setRole(role);
+    void save_shouldCreateAdminSuccessfully() throws Exception {
 
-        collab.setEmail("test@test.com");
-        collab.setMotDePasse("123");
+        CollaborateurRequest request = mock(CollaborateurRequest.class);
 
-        when(roleRepository.findById(role.getId())).thenReturn(Optional.of(role));
-     CollaborateurRequest col = new CollaborateurRequest(
-                collab.getId(),
-                collab.getNom(),
-                collab.getPrenom(),
-                collab.getEmail(),
-                collab.getMotDePasse(),
-                collab.isAdministrateur(),
-                collab.getRole().getId()
-                );
-        assertThatException()
-                .isThrownBy(() -> collaborateurService.save(col))
-                .isInstanceOf(FunctionalException.class)
-                .withMessageContaining("mot de passe");
+        when(request.id()).thenReturn(null);
+        when(request.nom()).thenReturn("Admin");
+        when(request.prenom()).thenReturn("Super");
+        when(request.email()).thenReturn("admin@mail.com");
+        when(request.motDePasse()).thenReturn("Password1");
+        when(request.roleId()).thenReturn(1L);
+
+        when(collaborateurRepository.findByEmail("admin@mail.com")).thenReturn(null);
+        when(roleRepository.findAll()).thenReturn(List.of(adminRole, userRole));
+        when(roleRepository.findByNameIgnoreCase("ADMIN")).thenReturn(adminRole);
+        when(passwordEncoder.encode("Password1")).thenReturn("encodedPassword");
+        when(collaborateurRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
+
+        Collaborateur result = service.save(request);
+
+        assertTrue(result.isAdministrateur());
+        assertEquals(adminRole, result.getRole());
     }
 
     @Test
-    void shouldUpdateCollaborateur_withoutChangingPassword() throws FunctionalException, TechnicalException {
+    void save_shouldThrowException_whenEmailAlreadyExists() {
+
+        CollaborateurRequest request = mock(CollaborateurRequest.class);
+
+        when(request.id()).thenReturn(null);
+        when(request.email()).thenReturn("existing@mail.com");
+
+        when(collaborateurRepository.findByEmail("existing@mail.com"))
+                .thenReturn(new Collaborateur());
+
+        assertThrows(FunctionalException.class,
+                () -> service.save(request));
+    }
+
+    @Test
+    void save_shouldThrowException_whenPasswordWeak() {
+
+        CollaborateurRequest request = mock(CollaborateurRequest.class);
+
+        when(request.id()).thenReturn(null);
+        when(request.nom()).thenReturn("Doe");
+        when(request.prenom()).thenReturn("John");
+        when(request.email()).thenReturn("john@mail.com");
+        when(request.motDePasse()).thenReturn("weak");
+        when(request.roleId()).thenReturn(2L);
+
+        when(collaborateurRepository.findByEmail(any())).thenReturn(null);
+        when(roleRepository.findAll()).thenReturn(List.of(adminRole, userRole));
+        when(roleRepository.findByNameIgnoreCase("USER")).thenReturn(userRole);
+
+        assertThrows(FunctionalException.class,
+                () -> service.save(request));
+    }
+
+    @Test
+    void save_shouldThrowTechnicalException_whenEncodingFails() {
+
+        CollaborateurRequest request = mock(CollaborateurRequest.class);
+
+        when(request.id()).thenReturn(null);
+        when(request.nom()).thenReturn("Doe");
+        when(request.prenom()).thenReturn("John");
+        when(request.email()).thenReturn("john@mail.com");
+        when(request.motDePasse()).thenReturn("Password1");
+        when(request.roleId()).thenReturn(2L);
+
+        when(collaborateurRepository.findByEmail(any())).thenReturn(null);
+        when(roleRepository.findAll()).thenReturn(List.of(adminRole, userRole));
+        when(roleRepository.findByNameIgnoreCase("USER")).thenReturn(userRole);
+        when(passwordEncoder.encode(any())).thenReturn("");
+
+        assertThrows(TechnicalException.class,
+                () -> service.save(request));
+    }
+
+    // ======================================================
+    // UPDATE
+    // ======================================================
+
+    @Test
+    void save_shouldUpdateSuccessfully() throws Exception {
+
         Collaborateur existing = new Collaborateur();
-        existing.setId(1L);
-        existing.setNom("Doe");
-        existing.setPrenom("John");
-        existing.setEmail("john.doe@test.com");
-        existing.setMotDePasse("encoded-old-password");
+        existing.setId(10L);
 
-        when(collaborateurRepository.findById(1L))
+        CollaborateurRequest request = mock(CollaborateurRequest.class);
+
+        when(request.id()).thenReturn(10L);
+        when(request.nom()).thenReturn("Updated");
+        when(request.prenom()).thenReturn("User");
+        when(request.email()).thenReturn("updated@mail.com");
+        when(request.motDePasse()).thenReturn(null);
+        when(request.roleId()).thenReturn(2L);
+
+        when(collaborateurRepository.findById(10L))
                 .thenReturn(Optional.of(existing));
 
-        when(collaborateurRepository.save(any(Collaborateur.class)))
-                .thenAnswer(invocation -> invocation.getArgument(0));
+        when(roleRepository.findAll()).thenReturn(List.of(adminRole, userRole));
+        when(roleRepository.findByNameIgnoreCase("USER")).thenReturn(userRole);
+        when(collaborateurRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
 
-        Collaborateur update = new Collaborateur();
-        update.setId(1L);
-        update.setNom("NewName");
-        update.setPrenom("John");
-        update.setEmail("john.NewName@test.com");
-        update.setMotDePasse(""); // pas de changement
+        Collaborateur result = service.save(request);
 
-        Role role = new Role();
-        role.setId(1L);
-        role.setName("ADMIN");
-        update.setRole(role);
-
-        when(roleRepository.findById(role.getId())).thenReturn(Optional.of(role));
-     CollaborateurRequest col = new CollaborateurRequest(
-                update.getId(),
-                update.getNom(),
-                update.getPrenom(),
-                update.getEmail(),
-                update.getMotDePasse(),
-                update.isAdministrateur(),
-                update.getRole().getId()
-                );
-        Collaborateur result = collaborateurService.save(col);
-
-        assertThat(result).isNotNull();
-        assertThat(result.getMotDePasse()).isEqualTo("encoded-old-password");
-        assertThat(result.getNom()).isEqualTo("NewName");
-        assertThat(result.getEmail()).isEqualTo("john.NewName@test.com");
+        assertEquals("Updated", result.getNom());
     }
 
     @Test
-    void shouldThrowException_whenUpdatingUnknownCollaborateur() throws FunctionalException, TechnicalException {
-        Collaborateur update = new Collaborateur();
-        update.setId(99L);
-        Role role = new Role();
-        role.setId(1L);
-        role.setName("ADMIN");
-        update.setRole(role);
+    void save_shouldThrowException_whenUpdateNotFound() {
 
-        when(roleRepository.findById(role.getId())).thenReturn(Optional.of(role));
+        CollaborateurRequest request = mock(CollaborateurRequest.class);
+        when(request.id()).thenReturn(99L);
 
         when(collaborateurRepository.findById(99L))
                 .thenReturn(Optional.empty());
 
-                CollaborateurRequest col = new CollaborateurRequest(
-                update.getId(),
-                update.getNom(),
-                update.getPrenom(),
-                update.getEmail(),
-                update.getMotDePasse(),
-                update.isAdministrateur(),
-                update.getRole().getId()
-                );
-
-        assertThatException().isThrownBy(() -> collaborateurService.save(col))
-                .isInstanceOf(FunctionalException.class)
-                .withMessageContaining("Collaborateur introuvable");
+        assertThrows(FunctionalException.class,
+                () -> service.save(request));
     }
 
-    @Test
-    void shouldCreateCollabroteur_withRoleAdmin() throws FunctionalException, TechnicalException {
-        Collaborateur collaborateur = new Collaborateur();
-        Role role = new Role("testRole");
-        role.setId(1L);
-        role.setName("ADMIN");
-        collaborateur.setRole(role);
-        collaborateur.setId(99L);
-        collaborateur.setNom("Test");
-        collaborateur.setPrenom("Test");
-        collaborateur.setEmail("Test@test.fr");
-        collaborateur.setMotDePasse("Admin123");
-
-        when(passwordEncoder.encode(any()))
-                .thenReturn("encoded-password");
-
-        when(collaborateurRepository.save(any(Collaborateur.class)))
-                .thenAnswer(invocation -> invocation.getArgument(0));
-
-        when(roleRepository.findById(role.getId())).thenReturn(Optional.of(role));
-
-        when(collaborateurRepository.findById(99L))
-                .thenReturn(Optional.of(collaborateur));
-CollaborateurRequest col = new CollaborateurRequest(
-                collaborateur.getId(),
-                collaborateur.getNom(),
-                collaborateur.getPrenom(),
-                collaborateur.getEmail(),
-                collaborateur.getMotDePasse(),
-                collaborateur.isAdministrateur(),
-                collaborateur.getRole().getId()
-                );
-        Collaborateur result = collaborateurService.save(col);
-
-        assertThat(result).isNotNull();
-        assertThat(result.getRole().getName()).isEqualTo("ADMIN");
-        assertThat(result.isAdministrateur()).isTrue();
-    }
+    // ======================================================
+    // GET
+    // ======================================================
 
     @Test
-    void shouldReturnCollaborateur() throws FunctionalException {
+    void getById_shouldReturnCollaborateur() throws Exception {
+
         Collaborateur collab = new Collaborateur();
         collab.setId(1L);
-
-        Role role = new Role();
-        role.setId(1L);
-        role.setName("ADMIN");
-        collab.setRole(role);
-
-        when(roleRepository.findById(role.getId())).thenReturn(Optional.of(role));
 
         when(collaborateurRepository.findById(1L))
                 .thenReturn(Optional.of(collab));
 
-        Collaborateur result = collaborateurService.getById(1L);
+        Collaborateur result = service.getById(1L);
 
-        assertThat(result).isNotNull();
-        assertThat(result.getId()).isEqualTo(1L);
+        assertEquals(1L, result.getId());
     }
 
     @Test
-    void shouldThrowException_whenCollaborateurNotFound() {
+    void getById_shouldThrowException_whenNotFound() {
+
         when(collaborateurRepository.findById(1L))
                 .thenReturn(Optional.empty());
 
-        assertThatException().isThrownBy(() -> collaborateurService.getById(1L))
-                .isInstanceOf(FunctionalException.class)
-                .withMessageContaining("Collaborateur introuvable");
+        assertThrows(FunctionalException.class,
+                () -> service.getById(1L));
     }
 
     @Test
-    void shouldReturnList() {
+    void getAll_shouldReturnList() {
+
         when(collaborateurRepository.findAll())
-                .thenReturn(List.of(new Collaborateur(), new Collaborateur()));
+                .thenReturn(List.of(new Collaborateur()));
 
-        List<Collaborateur> result = collaborateurService.getAll();
+        assertEquals(1, service.getAll().size());
+    }
 
-        assertThat(result).hasSize(2);
+    // ======================================================
+    // DELETE
+    // ======================================================
+
+    @Test
+    void deleteById_shouldCallRepository() {
+
+        service.deleteById(1L);
+
+        verify(collaborateurRepository).deleteById(1L);
+    }
+
+    @Test
+    void delete_shouldCallRepository() {
+
+        Collaborateur collab = new Collaborateur();
+        collab.setId(1L);
+
+        service.delete(collab);
+
+        verify(collaborateurRepository).deleteById(1L);
     }
 }

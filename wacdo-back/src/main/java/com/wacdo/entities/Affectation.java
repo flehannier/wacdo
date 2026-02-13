@@ -25,8 +25,8 @@ public class Affectation {
 
     private LocalDate dateFin;
 
-    @ManyToOne()
-    @JoinColumn(name = "collaborateur_id")
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "collaborateur_id", nullable = false)
     @JsonIgnore
     private Collaborateur collaborateur;
 

@@ -1,5 +1,6 @@
 package com.wacdo.services;
 
+import com.wacdo.dto.AffectationDto;
 import com.wacdo.dto.AffectationRequest;
 import com.wacdo.entities.Affectation;
 import com.wacdo.exception.FunctionalException;
@@ -12,6 +13,6 @@ public interface AffectationService {
     Affectation create(@NonNull AffectationRequest affectation) throws FunctionalException, TechnicalException;
     Affectation update(@NonNull AffectationRequest affectation) throws FunctionalException, TechnicalException;
     Affectation getById(@NonNull Long id) throws FunctionalException;
-    List<Affectation> getAll();
+    List<AffectationDto> getAll();
     void deleteById(@NonNull Long id);
 }

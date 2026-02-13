@@ -44,8 +44,10 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     @Override
-    public Restaurant getById(@NonNull Long id) throws FunctionalException {
-        return restaurantRepository.findById(id).orElseThrow(() -> new FunctionalException("Restaurant introuvable"));
+    public Restaurant getById(Long id) throws FunctionalException {
+        return restaurantRepository.findById(id)
+                .orElseThrow(() ->
+                        new FunctionalException("Restaurant introuvable avec id : " + id));
     }
 
     @Override

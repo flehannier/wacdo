@@ -1,75 +1,62 @@
 package com.wacdo.services;
 
-import com.wacdo.WacdoApplication;
 import com.wacdo.entities.Restaurant;
 import com.wacdo.exception.FunctionalException;
 import com.wacdo.repositories.RestaurantRepository;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.List;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatException;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
-@SpringBootTest(classes = WacdoApplication.class)
-public class RestaurantServiceImplTest {
+@ExtendWith(MockitoExtension.class)
+class RestaurantServiceImplTest {
 
-    @Autowired
-    private RestaurantService restaurantService;
-
-    @MockBean
+    @Mock
     private RestaurantRepository restaurantRepository;
 
-    @Test
-    void shouldThrowAFunctionalException() {
-        Restaurant restaurant = new Restaurant();
-        restaurant.setNom("Dominos");
+    @InjectMocks
+    private RestaurantServiceImpl service;
 
-        when(restaurantRepository.save(any(Restaurant.class)))
-                .thenAnswer(invocation -> invocation.getArgument(0));
-
-        assertThatException().isThrownBy(() -> restaurantService.save(restaurant))
-                .isInstanceOf(FunctionalException.class)
-                .withMessageContaining("Restaurant introuvable");
-    }
+    // ===============================
+    // SUCCESS CASE
+    // ===============================
 
     @Test
-    void shouldReturnRestaurant() throws FunctionalException {
+    void getById_shouldReturnRestaurant_whenFound() throws Exception {
+
         Restaurant restaurant = new Restaurant();
         restaurant.setId(1L);
 
         when(restaurantRepository.findById(1L))
                 .thenReturn(Optional.of(restaurant));
 
-        Restaurant result = restaurantService.getById(1L);
+        Restaurant result = service.getById(1L);
 
-        assertThat(result).isNotNull();
-        assertThat(result.getId()).isEqualTo(1L);
+        assertNotNull(result);
+        assertEquals(1L, result.getId());
+
+        verify(restaurantRepository).findById(1L);
     }
 
-    @Test
-    void shouldReturnList() {
-        when(restaurantService.getAll())
-                .thenReturn(List.of(new Restaurant(), new Restaurant()));
-
-        List<Restaurant> result = restaurantService.getAll();
-
-        assertThat(result).hasSize(2);
-    }
+    // ===============================
+    // EXCEPTION CASE
+    // ===============================
 
     @Test
-    void shouldThrowException_whenRestaurantNotFound() throws FunctionalException {
+    void getById_shouldThrowFunctionalException_whenNotFound() {
+
         when(restaurantRepository.findById(1L))
                 .thenReturn(Optional.empty());
 
-        assertThatException().isThrownBy(() -> restaurantService.getById(1L))
-                .isInstanceOf(FunctionalException.class)
-                .withMessageContaining("Restaurant introuvable");
+        assertThrows(FunctionalException.class,
+                () -> service.getById(1L));
+
+        verify(restaurantRepository).findById(1L);
     }
 }

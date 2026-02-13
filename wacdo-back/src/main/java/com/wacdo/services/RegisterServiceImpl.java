@@ -22,23 +22,25 @@ public class RegisterServiceImpl implements RegisterService {
     }
 
     @Override
-    public Collaborateur register(@NonNull RegisterRequest request) throws FunctionalException, TechnicalException {
-        Collaborateur collaborateur = new Collaborateur();
+    public Collaborateur register(@NonNull RegisterRequest request)
+            throws FunctionalException, TechnicalException {
 
-        collaborateur.setEmail(request.getEmail());
-        collaborateur.setNom(request.getNom());
-        collaborateur.setPrenom(request.getPrenom());
-        collaborateur.setMotDePasse(request.getMotDePasse());
+        Role defaultRole = roleService.findByNameIgnoreCase("USER");
+
+        if (defaultRole == null) {
+            throw new FunctionalException("Rôle USER introuvable");
+        }
 
         CollaborateurRequest collab = new CollaborateurRequest(
-            collaborateur.getId(),
-            collaborateur.getNom(),
-            collaborateur.getPrenom(),
-            collaborateur.getEmail(),
-            collaborateur.getMotDePasse(),
-            collaborateur.isAdministrateur(),
-            collaborateur.getRole().getId()
+                null,
+                request.getNom(),
+                request.getPrenom(),
+                request.getEmail(),
+                request.getMotDePasse(),
+                false,
+                defaultRole.getId()
         );
+
         return collaborateurService.save(collab);
     }
 }

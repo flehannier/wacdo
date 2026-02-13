@@ -1,6 +1,7 @@
 package com.wacdo.services;
 
 import com.wacdo.dto.AffectationDto;
+import com.wacdo.dto.AffectationMapper;
 import com.wacdo.dto.AffectationRequest;
 import com.wacdo.dto.CollaborateurRequest;
 import com.wacdo.entities.Affectation;
@@ -15,6 +16,7 @@ import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.beans.Transient;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -58,8 +60,9 @@ public class AffectationServiceImpl implements AffectationService {
         if ( !aff.getDateDebut().equals(affectation.dateDebut()) && affectation.dateDebut().isAfter(affectation.dateDebut()) ) {
             throw new FunctionalException("Votre affectation souhaitée a une date de début égale ou antérieur a une affectation en cours");
         }
-        if (affectation.dateFin()!=null && !affectation.dateFin().isBefore(affectation.dateDebut()) ) {
-            throw new FunctionalException("Votre affectation souhaitée a une date de fin antérieur à la date de début");
+
+        if (null != affectation.dateFin() && affectation.dateFin().isBefore(affectation.dateDebut())) {
+            throw new FunctionalException("Votre affectation souhaitée a une date de fin antérieure à la date de début");
         }
 
         aff.setId(affectation.id());
@@ -138,8 +141,8 @@ public class AffectationServiceImpl implements AffectationService {
             throw new FunctionalException("Votre affectation souhaitée a une date de début égale ou antérieur a une affectation en cours");
         }
 
-        if ( !affectation.dateFin().isBefore(affectation.dateDebut()) ) {
-            throw new FunctionalException("Votre affectation souhaitée a une date de fin antérieur à la date de début");
+        if (null != affectation.dateFin() && affectation.dateFin().isBefore(affectation.dateDebut())) {
+            throw new FunctionalException("Votre affectation souhaitée a une date de fin antérieure à la date de début");
         }
 
         // On clôture l'affectation pour le poste en cours
@@ -160,12 +163,19 @@ public class AffectationServiceImpl implements AffectationService {
     }
 
     @Override
-    public List<Affectation> getAll() {
-        return affectationRepository.findAll();
+    public List<AffectationDto> getAll() {
+        List<AffectationDto> list = affectationRepository.findAll().stream()
+            .map(AffectationMapper::toDto)
+            .toList();
+
+        return list;
     }
 
     @Override
+    @Transactional
     public void deleteById(@NonNull Long id) {
-        affectationRepository.deleteById(id);
+        Affectation affectation = affectationRepository.findById(id)
+        .orElseThrow(() -> new RuntimeException("Affectation introuvable"));
+        affectationRepository.delete(affectation);
     }
 }

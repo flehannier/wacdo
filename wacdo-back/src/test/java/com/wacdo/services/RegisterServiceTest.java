@@ -1,76 +1,136 @@
 package com.wacdo.services;
 
-import com.wacdo.WacdoApplication;
+import com.wacdo.dto.CollaborateurRequest;
 import com.wacdo.dto.RegisterRequest;
 import com.wacdo.entities.Collaborateur;
 import com.wacdo.entities.Role;
 import com.wacdo.exception.FunctionalException;
-import com.wacdo.repositories.CollaborateurRepository;
-import com.wacdo.repositories.RoleRepository;
+import com.wacdo.exception.TechnicalException;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.web.servlet.MockMvc;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-@AutoConfigureMockMvc
-@SpringBootTest(classes = WacdoApplication.class)
-class RegisterServiceTest {
+@ExtendWith(MockitoExtension.class)
+class RegisterServiceImplTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+    @Mock
+    private CollaborateurService collaborateurService;
 
-    @Autowired
-    private RegisterService registerService;
-
-    @MockBean
+    @Mock
     private RoleService roleService;
 
-    @MockBean
-    private CollaborateurRepository collaborateurRepository;
-
-    @MockBean
-    private RoleRepository roleRepository;
+    @InjectMocks
+    private RegisterServiceImpl registerService;
 
     @Test
-    void shouldRegisterUser() throws Exception {
-        RegisterRequest registerRequest = new RegisterRequest();
-        registerRequest.setNom("Collaborateur");
-        registerRequest.setPrenom("Prenom");
-        registerRequest.setEmail("test@email.com");
-        registerRequest.setMotDePasse("MotDePasse1");
+    void register_shouldCreateUserWithDefaultUserRole() throws Exception {
 
-        Role role = new Role();
-        role.setId(1L);
-        role.setName("USER");
+        // GIVEN
+        RegisterRequest request = new RegisterRequest();
+        request.setNom("Doe");
+        request.setPrenom("John");
+        request.setEmail("john@mail.com");
+        request.setMotDePasse("Password1");
 
-        when(roleService.findByNameIgnoreCase("USER"))
-                .thenReturn(role);
+        Role userRole = new Role();
+        userRole.setId(2L);
+        userRole.setName("USER");
 
-        when(roleRepository.findByNameIgnoreCase("USER"))
-                .thenReturn(role);
+        when(roleService.findByNameIgnoreCase("USER")).thenReturn(userRole);
 
-        when(collaborateurRepository.save(any(Collaborateur.class)))
-                .thenAnswer(invocation -> invocation.getArgument(0));
+        Collaborateur saved = new Collaborateur();
+        saved.setId(1L);
 
-        when(roleRepository.findById(1L))
-                .thenReturn(Optional.of(role));
+        when(collaborateurService.save(any(CollaborateurRequest.class)))
+                .thenReturn(saved);
 
-        Collaborateur col = registerService.register(registerRequest);
+        // WHEN
+        Collaborateur result = registerService.register(request);
 
-        assertThat(col).isNotNull();
-        assertThat(col.getNom()).isEqualTo("Collaborateur");
-        assertThat(col.getPrenom()).isEqualTo("Prenom");
-        assertThat(col.getEmail()).isEqualTo("test@email.com");
-        assertThat(col.getRole().getName()).isEqualTo("USER");
-        assertThat(col.isAdministrateur()).isFalse();
-        assertThat(col.getMotDePasse()).isNotBlank(); // password encodé
+        // THEN
+        assertNotNull(result);
+        assertEquals(1L, result.getId());
+
+        ArgumentCaptor<CollaborateurRequest> captor =
+                ArgumentCaptor.forClass(CollaborateurRequest.class);
+
+        verify(collaborateurService).save(captor.capture());
+
+        CollaborateurRequest sentRequest = captor.getValue();
+
+        assertEquals("Doe", sentRequest.nom());
+        assertEquals("John", sentRequest.prenom());
+        assertEquals("john@mail.com", sentRequest.email());
+        assertEquals("Password1", sentRequest.motDePasse());
+        assertEquals(2L, sentRequest.roleId());
+    }
+
+    @Test
+    void register_shouldThrowFunctionalException_whenUserRoleNotFound() throws TechnicalException, FunctionalException {
+
+        // GIVEN
+        RegisterRequest request = new RegisterRequest();
+        request.setNom("Doe");
+        request.setPrenom("John");
+        request.setEmail("john@mail.com");
+        request.setMotDePasse("Password1");
+
+        when(roleService.findByNameIgnoreCase("USER")).thenReturn(null);
+
+        // WHEN / THEN
+        assertThrows(FunctionalException.class,
+                () -> registerService.register(request));
+
+        verify(collaborateurService, never()).save(any());
+    }
+
+    @Test
+    void register_shouldPropagateFunctionalException_fromCollaborateurService() throws Exception {
+
+        RegisterRequest request = new RegisterRequest();
+        request.setNom("Doe");
+        request.setPrenom("John");
+        request.setEmail("john@mail.com");
+        request.setMotDePasse("Password1");
+
+        Role userRole = new Role();
+        userRole.setId(2L);
+        userRole.setName("USER");
+
+        when(roleService.findByNameIgnoreCase("USER")).thenReturn(userRole);
+
+        when(collaborateurService.save(any()))
+                .thenThrow(new FunctionalException("Erreur métier"));
+
+        assertThrows(FunctionalException.class,
+                () -> registerService.register(request));
+    }
+
+    @Test
+    void register_shouldPropagateTechnicalException_fromCollaborateurService() throws Exception {
+
+        RegisterRequest request = new RegisterRequest();
+        request.setNom("Doe");
+        request.setPrenom("John");
+        request.setEmail("john@mail.com");
+        request.setMotDePasse("Password1");
+
+        Role userRole = new Role();
+        userRole.setId(2L);
+        userRole.setName("USER");
+
+        when(roleService.findByNameIgnoreCase("USER")).thenReturn(userRole);
+
+        when(collaborateurService.save(any()))
+                .thenThrow(new TechnicalException("Erreur technique"));
+
+        assertThrows(TechnicalException.class,
+                () -> registerService.register(request));
     }
 }

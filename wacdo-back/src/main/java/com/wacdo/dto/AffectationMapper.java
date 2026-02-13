@@ -18,16 +18,16 @@ public class AffectationMapper {
                 a.getId(),
                 a.getDateDebut(),
                 a.getDateFin(),
-                new CollaborateurSimpleDto(
+                a.getCollaborateur() != null ?  new CollaborateurSimpleDto(
                         a.getCollaborateur().getId(),
                         a.getCollaborateur().getNom(),
                         a.getCollaborateur().getPrenom(),
                         a.getCollaborateur().getEmail(),
                         a.getCollaborateur().isAdministrateur(),
                         a.getCollaborateur().getRole().getName()
-                ),
-                new RestaurantDto(a.getRestaurant().getId(), a.getRestaurant().getNom()),
-                new FonctionDto(a.getFonction().getId(), a.getFonction().getIntitule())
+                ) : null,
+                a.getRestaurant() != null ? new RestaurantDto(a.getRestaurant().getId(), a.getRestaurant().getNom()) : null,
+                a.getFonction() != null ?  new FonctionDto(a.getFonction().getId(), a.getFonction().getIntitule()) : null
         );
     }
 }

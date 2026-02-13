@@ -30,9 +30,7 @@ public class AffectationController {
     @GetMapping()
     @PreAuthorize("hasRole('ADMIN')")
     List<AffectationDto> getAll() {
-        return affectationService.getAll().stream()
-                .map(AffectationMapper::toDto)
-                .toList();
+        return affectationService.getAll();
     }
 
     @Operation(
