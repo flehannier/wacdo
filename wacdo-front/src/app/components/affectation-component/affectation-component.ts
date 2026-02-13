@@ -2,12 +2,12 @@ import { Component } from '@angular/core';
 import { GenericListComponent } from "../generic-list-component/generic-list-component";
 import { ListAction, ListColumn } from '../../models/list-model';
 import { AffectationModel, AffectationRequest } from '../../models/affectation-model';
-import { AffectationService } from '../../services/affectation-service';
+import { AffectationService } from '../../services/affectation.service';
 import { GenericModalComponent } from '../generic-modal-component/generic-modal-component';
 import { FieldsFormTypeEnum, FormField, SelectOption } from '../../models/FieldsForm';
-import { FonctionService } from '../../services/fonction-service';
-import { RestaurantService } from '../../services/restaurant-service';
-import { CollaborateurService } from '../../services/collaborateur-service';
+import { FonctionService } from '../../services/fonction.service';
+import { RestaurantService } from '../../services/restaurant.service';
+import { CollaborateurService } from '../../services/collaborateur.service';
 import { forkJoin } from 'rxjs';
 import { Validators } from '@angular/forms';
 
@@ -49,7 +49,7 @@ export class AffectationComponent {
     }
   ];
 
-  modalAction: ListAction = 
+  modalAction: ListAction =
     {
       label: 'Ajouter',
       color: 'primary',
@@ -66,11 +66,11 @@ export class AffectationComponent {
           fonctions: this.fonctionService.listFonctions(),
           restaurants: this.restaurantService.listRestaurants()
         }).subscribe(({ collaborauers, fonctions, restaurants }) => {
-    
+
           const optionsCollaborateur: SelectOption[] = collaborauers.map(f => ({ value: f.id, label: f.nom }));
           const optionsFonction: SelectOption[] = fonctions.map(f => ({ value: f.id, label: f.intitule }));
           const optionsRestaurant: SelectOption[] = restaurants.map(r => ({ value: r.id, label: r.nom }));
-     
+
       this.formFields = [
         { key: 'id', label: 'Id', type: FieldsFormTypeEnum.HIDDEN, disabled: true, required: false, placeholder: '' },
         { key: 'dateDebut', label: 'Date début', type: FieldsFormTypeEnum.DATE, disabled: false, required: true, placeholder: '', validators: [Validators.required] },
@@ -80,7 +80,7 @@ export class AffectationComponent {
         { key: 'restaurantId', label: 'Restaurant', type: FieldsFormTypeEnum.SELECT, options: optionsRestaurant, disabled: false, required: true, placeholder: 'Choix d\'un restaurant',  validators: [Validators.required]  }
         ]
       });
-      
+
     this.load();
   }
 
@@ -106,13 +106,13 @@ export class AffectationComponent {
 
   onAddAffectation() {
      this.formFields = this.formFields.map(f => ({
-        ...f, 
+        ...f,
         // On active l'ID ET le collaborateur en mode édition
         disabled: f.key === 'id' || f.key === 'collaborateur.id' ? false : f.disabled
       }));
       this.showModal = true;
       this.selectedItem = null;
-      this.modalAction = 
+      this.modalAction =
       {
         label: 'Ajouter',
         color: 'primary',
@@ -120,12 +120,12 @@ export class AffectationComponent {
       };
   }
 
-  onEdit(item: any) {  
+  onEdit(item: any) {
       // On crée une nouvelle référence du tableau pour que le Modal détecte le changement
       this.formFields = this.formFields.map(f => ({
-        ...f, 
+        ...f,
         // On désactive l'ID ET le collaborateur en mode édition
-        disabled: f.key === 'id' || f.key === 'collaborateur.id' 
+        disabled: f.key === 'id' || f.key === 'collaborateur.id'
       }));
 
       this.showModal = true;
@@ -135,7 +135,7 @@ export class AffectationComponent {
         color: 'primary',
         callback: (data) => this.createOrUpdate(data)
       };
-      
+
       this.selectedItem = {
         ...this.affectations.find((aff: AffectationModel) => aff.id === item.id),
         collaborateurId: item.collaborateur?.id,
@@ -175,9 +175,9 @@ export class AffectationComponent {
         fonctionId: item.fonctionId.id,
         restaurantId: item.restaurantId.id
       };
-            
+
       console.log('JSON envoyé :', JSON.stringify(request));
-      
+
       this.affectationService.save(request).subscribe({
         next: () => {
           this.showModal = false;

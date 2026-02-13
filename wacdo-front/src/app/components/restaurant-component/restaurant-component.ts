@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import { GenericListComponent } from '../generic-list-component/generic-list-component';
 import { GenericModalComponent } from '../generic-modal-component/generic-modal-component';
 import { ListAction, ListColumn } from '../../models/list-model';
-import { AuthService } from '../../services/auth-service';
-import { RestaurantService } from '../../services/restaurant-service';
+import { AuthService } from '../../services/auth.service';
+import { RestaurantService } from '../../services/restaurant.service';
 import { FieldsFormTypeEnum, FormField } from '../../models/FieldsForm';
 import { RestaurantModel } from '../../models/restaurant-model';
 import { Validators } from '@angular/forms';
@@ -44,9 +44,9 @@ export class RestaurantComponent {
 
   constructor(private authService: AuthService, private restaurantService: RestaurantService){
   }
-  
+
   ngOnInit(){
-    
+
     this.load();
 
     this.formFields = [
@@ -73,29 +73,29 @@ export class RestaurantComponent {
     this.showModal = true;
     this.modalTitle = 'Ajouter un restaurant';
     this.selectedItem = undefined;
-    this.modalAction = 
+    this.modalAction =
     {
       label: 'Ajouter',
       color: 'primary',
       callback: (data) => this.save(data)
     };
   }
-  
+
   onEdit(item: RestaurantModel) {
     this.showModal = true;
     this.modalTitle = 'Modifier un restaurant';
-    this.modalAction = 
+    this.modalAction =
     {
       label: 'Modifier',
       color: 'primary',
       callback: (data) => this.save(data)
     };
-    
-    this.selectedItem = this.restaurants.find((rest: RestaurantModel) => rest.id === item.id); 
+
+    this.selectedItem = this.restaurants.find((rest: RestaurantModel) => rest.id === item.id);
   }
 
   save(item:RestaurantModel){
-      
+
       this.restaurantService.save(item).subscribe({
         next: () => {
           this.showModal = false;

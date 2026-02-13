@@ -1,15 +1,15 @@
 import { Component, ElementRef, HostListener, Input } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
-import { AuthService } from '../../services/auth-service';
+import { AuthService } from '../../services/auth.service';
 import { FieldsFormTypeEnum, FormField, ModalAction, SelectOption } from '../../models/FieldsForm';
-import { CollaborateurService } from '../../services/collaborateur-service';
+import { CollaborateurService } from '../../services/collaborateur.service';
 import { CollaborateurModel } from '../../models/collaborateur-model';
 import { GenericModalComponent } from '../generic-modal-component/generic-modal-component';
 import { forkJoin } from 'rxjs';
-import { FonctionService } from '../../services/fonction-service';
-import { RestaurantService } from '../../services/restaurant-service';
+import { FonctionService } from '../../services/fonction.service';
+import { RestaurantService } from '../../services/restaurant.service';
 import { Validators } from '@angular/forms';
-import { RoleService } from '../../services/role-service';
+import { RoleService } from '../../services/role.service';
 import { ProfileComponent } from '../profile-component/profile-component';
 import { CommonModule } from '@angular/common';
 
@@ -31,7 +31,7 @@ export class NavbarComponent {
   showAvatarMenu = false;
   showProfileModal = false;
 
-   modalAction: ModalAction = 
+   modalAction: ModalAction =
   {
     label: 'Modifier',
     color: 'primary',
@@ -49,7 +49,7 @@ export class NavbarComponent {
     this.showModal = false;
     this.selectedItem = null;
   }
-  
+
   toggleAvatarMenu() {
     this.showAvatarMenu = !this.showAvatarMenu;
   }

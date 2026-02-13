@@ -1,7 +1,7 @@
 import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { NavbarComponent } from './components/navbar-component/navbar-component';
-import { AuthService } from './services/auth-service';
+import { AuthService } from './services/auth.service';
 import { CommonModule } from '@angular/common';
 import { Role } from './constants/roles';
 

@@ -1,16 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { GenericListComponent} from "../generic-list-component/generic-list-component";
 import { CollaborateurModel, CollaborateurRequest} from '../../models/collaborateur-model';
-import { CollaborateurService } from '../../services/collaborateur-service';
+import { CollaborateurService } from '../../services/collaborateur.service';
 import { ListAction, ListColumn } from '../../models/list-model';
 import { FieldsFormTypeEnum, FormField, SelectOption } from '../../models/FieldsForm';
 import { Validators } from '@angular/forms';
-import { FonctionService } from '../../services/fonction-service';
-import { RestaurantService } from '../../services/restaurant-service';
+import { FonctionService } from '../../services/fonction.service';
+import { RestaurantService } from '../../services/restaurant.service';
 import { forkJoin } from 'rxjs';
 import { GenericModalComponent } from '../generic-modal-component/generic-modal-component';
-import { AuthService } from '../../services/auth-service';
-import { RoleService } from '../../services/role-service';
+import { AuthService } from '../../services/auth.service';
+import { RoleService } from '../../services/role.service';
 
 @Component({
   selector: 'app-collaborateur-component',
@@ -57,9 +57,9 @@ export class CollaborateurComponent implements OnInit{
   }
 
   ngOnInit(){
-    
+
     this.load();
-    
+
     this.roleService.listRoles().subscribe((roles ) => {
       const optionsRole: SelectOption[] = roles.map(r => ({ value: r.id, label: r.name }));
       this.formFields = [
@@ -96,7 +96,7 @@ export class CollaborateurComponent implements OnInit{
   onEdit(item: CollaborateurModel) {
     this.showModal = true;
     this.modalTitle = 'Modifier un collaborateur';
-    this.modalAction = 
+    this.modalAction =
     {
       label: 'Modifier',
       color: 'primary',
@@ -113,7 +113,7 @@ export class CollaborateurComponent implements OnInit{
     this.showModal = true;
     this.modalTitle = 'Ajouter un collaborateur';
     this.selectedItem = undefined;
-    this.modalAction = 
+    this.modalAction =
     {
       label: 'Ajouter',
       color: 'primary',
@@ -146,16 +146,16 @@ export class CollaborateurComponent implements OnInit{
   createOrUpdate(item:any){
       if(!item.motDePasse){
         delete item['motDePasse']
-      }    
+      }
 
       let request: CollaborateurRequest = {
         nom : item.nom,
-        prenom: item.prenom,  
+        prenom: item.prenom,
         email: item.email,
-        motDePasse: item.motDePasse, 
-        datePremiereEmbauche: item.datePremiereEmbauche,         
-        administrateur: item.administrateur,  
-        roleId: item.roleId.id                   
+        motDePasse: item.motDePasse,
+        datePremiereEmbauche: item.datePremiereEmbauche,
+        administrateur: item.administrateur,
+        roleId: item.roleId.id
       }
 
       if(item.id){

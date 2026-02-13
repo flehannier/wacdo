@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { GenericListComponent } from "../generic-list-component/generic-list-component";
 import { FonctionModel } from '../../models/fonction-model';
-import { FonctionService } from '../../services/fonction-service';
+import { FonctionService } from '../../services/fonction.service';
 import { ListAction, ListColumn } from '../../models/list-model';
 import { FieldsFormTypeEnum, FormField } from '../../models/FieldsForm';
 import { GenericModalComponent } from '../generic-modal-component/generic-modal-component';
@@ -36,7 +36,7 @@ export class FonctionComponent {
     }
   ];
 
-  modalAction: ListAction = 
+  modalAction: ListAction =
   {
     label: 'Ajouter',
     color: 'primary',
@@ -48,12 +48,12 @@ export class FonctionComponent {
   }
 
   ngOnInit(){
-    
+
     this.formFields = [
       { key: 'id', label: 'Id', type: FieldsFormTypeEnum.HIDDEN, disabled: true, required: true, placeholder: '', validators: [Validators.required] },
       { key: 'intitule', label: 'Intitule', type: FieldsFormTypeEnum.TEXT, disabled: false, required: true, placeholder: '',  validators: [Validators.required]  },
       ]
-    
+
     this.load();
   }
 
@@ -72,7 +72,7 @@ export class FonctionComponent {
   onAddFonction() {
     this.showModal = true;
     this.modalTitle = 'Ajouter une fonction';
-    this.modalAction = 
+    this.modalAction =
     {
       label: 'Ajouter',
       color: 'primary',
@@ -80,18 +80,18 @@ export class FonctionComponent {
     };
   }
 
-  onEdit(item: any) { 
+  onEdit(item: any) {
     this.showModal = true;
     this.modalTitle = 'Modifier une fonction';
-    this.modalAction = 
+    this.modalAction =
     {
       label: 'Modifier',
       color: 'primary',
       callback: (data) => this.createOrUpdate(data)
     };
-    
-    this.selectedItem = this.fonctions.find((aff: FonctionModel) => aff.id === item.id) as FonctionModel; 
-    
+
+    this.selectedItem = this.fonctions.find((aff: FonctionModel) => aff.id === item.id) as FonctionModel;
+
     console.log('Modifier:', this.selectedItem);
   }
 

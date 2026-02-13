@@ -3,11 +3,11 @@ import { CollaborateurModel, CollaborateurRequest } from '../../models/collabora
 import { FieldsFormTypeEnum, FormField, SelectOption } from '../../models/FieldsForm';
 import { Validators } from '@angular/forms';
 import { ListAction, ListColumn } from '../../models/list-model';
-import { AuthService } from '../../services/auth-service';
-import { RoleService } from '../../services/role-service';
-import { CollaborateurService } from '../../services/collaborateur-service';
-import { FonctionService } from '../../services/fonction-service';
-import { RestaurantService } from '../../services/restaurant-service';
+import { AuthService } from '../../services/auth.service';
+import { RoleService } from '../../services/role.service';
+import { CollaborateurService } from '../../services/collaborateur.service';
+import { FonctionService } from '../../services/fonction.service';
+import { RestaurantService } from '../../services/restaurant.service';
 import { GenericModalComponent } from '../generic-modal-component/generic-modal-component';
 
 @Component({

@@ -2,7 +2,8 @@ import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ListAction } from '../../models/list-model';
-import { FormField, FieldsFormTypeEnum, ModalAction } from '../../models/FieldsForm';
+import { FormField, FieldsFormTypeEnum} from '../../models/FieldsForm';
+import type { ModalAction } from '../../models/FieldsForm';
 
 @Component({
   selector: 'app-generic-modal-component',
@@ -37,20 +38,20 @@ export class GenericModalComponent implements OnInit, OnChanges {
     if (changes['fields'] && !changes['fields'].firstChange) {
       this.buildForm();
     }
-    
+
     // 2. Si l'item arrive
     if (changes['item'] && this.item) {
       // On prévient le parent qu'on édite (il va modifier les fields)
-      this.isEdit.emit(); 
-      
-      // On attend un micro-tick pour laisser buildForm se terminer 
+      this.isEdit.emit();
+
+      // On attend un micro-tick pour laisser buildForm se terminer
       // si fields a changé en même temps
       setTimeout(() => this.patchFormValues());
     }
   }
 
   buildForm() {
-    
+
     const formControls: any = {};
 
     this.fields.forEach(field => {
@@ -78,14 +79,14 @@ export class GenericModalComponent implements OnInit, OnChanges {
 
     // Patcher les valeurs si item existe
     if (this.item) {
-      
+
       this.patchFormValues();
     }
   }
 
   getValue(obj: any, path: string) {
     if (!obj || !path) return '';
-    
+
     // On découpe le chemin (ex: "restaurant.nom" devient ["restaurant", "nom"])
     // Et on réduit l'objet étape par étape
     return path.split('.').reduce((acc, part) => acc && acc[part], obj);
