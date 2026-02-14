@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface CollaborateurService{
     Collaborateur save(CollaborateurRequest collab) throws FunctionalException, TechnicalException;
-    void deleteById(@NonNull Long id);
+    void deleteById(@NonNull Long id) throws FunctionalException;
     void delete(@NonNull Collaborateur collaborateur);
     Collaborateur getById(@NonNull Long id) throws FunctionalException;
     Collaborateur getByEmail(@NonNull  String email) throws FunctionalException;

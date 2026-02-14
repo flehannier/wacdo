@@ -10,4 +10,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface AffectationRepository extends JpaRepository<Affectation, Long> {
     List<Affectation> findByCollaborateurId(Long id);
+    List<Affectation>  findByFonctionId(Long restaurantId);
+    List<Affectation>  findByRestaurantId(Long restaurantId);
 }

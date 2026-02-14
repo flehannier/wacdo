@@ -1,5 +1,5 @@
  <app-generic-list-component
-      title="Fonction"
+      title="Fonctions"
       [data]="fonctions"
       [columns]="columns"
       [actions]="actions"
@@ -9,8 +9,9 @@
       (addClicked)="onAddFonction()"
       (searchChanged)="onSearchChanged($event)"
     />
-    
-  <app-generic-modal-component 
+
+  <app-generic-modal-component
+      [showMessage]="messageShow"
       [show]="showModal"
       [title]="modalTitle"
       [fields]="formFields"
@@ -18,3 +19,4 @@
       [action]="modalAction"
       (close)="closeModal()"
     />
+

@@ -21,4 +21,12 @@ export class RestaurantService {
   save(item: RestaurantModel): Observable<RestaurantModel>{
     return this.http.post<RestaurantModel>(environment.apiUrl + "/restaurant", item);
   }
+
+  delete(id: number): Observable<RestaurantModel> | undefined{
+      const isConfirmed = confirm("Etes-vous certain de vouloir supprimer le restaurant");
+      if(isConfirmed){
+        return this.http.delete<RestaurantModel>(environment.apiUrl + "/restaurant/" + id);
+      }
+      return
+  }
 }

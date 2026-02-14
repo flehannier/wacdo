@@ -64,4 +64,5 @@ public class Collaborateur {
 
     @ManyToOne(fetch = FetchType.EAGER)
     private Role role;
+
 }

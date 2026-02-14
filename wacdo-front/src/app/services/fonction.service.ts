@@ -21,4 +21,12 @@ export class FonctionService {
   save(item: FonctionModel): Observable<FonctionModel>{
     return this.http.post<FonctionModel>(environment.apiUrl + "/fonction", item);
   }
+  
+  delete(id: number): Observable<FonctionModel> | undefined{
+      const isConfirmed = confirm("Etes-vous certain de vouloir supprimer la fonction");
+      if(isConfirmed){
+        return this.http.delete<FonctionModel>(environment.apiUrl + "/fonction/" + id);
+      }
+      return
+  }
 }

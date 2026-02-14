@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { GenericListComponent } from "../generic-list-component/generic-list-component";
 import { ListAction, ListColumn } from '../../models/list-model';
 import { AffectationModel, AffectationRequest } from '../../models/affectation-model';
@@ -20,15 +20,15 @@ import { Validators } from '@angular/forms';
 })
 export class AffectationComponent {
   item?: AffectationModel;
-  modalTitle: string = 'Affectation';
+  modalTitle: string = 'Ajouter une affectation';
   formFields: FormField[] = []
   showModal = false;
   selectedItem: any = null;
   affectations: AffectationModel[] = [];
   errors: string = '';
+  @Input() messageShow: boolean = false;
 
   columns: ListColumn[] = [
-    { key: 'id', label: 'Id', sortable: true },
     { key: 'dateDebut', label: 'Date de début', sortable: true },
     { key: 'dateFin', label: 'Date de fin', sortable: true },
     { key: 'collaborateur.nom', label: 'Collaborateur', sortable: true, width: '250px' },
@@ -57,10 +57,10 @@ export class AffectationComponent {
     };
 
   constructor(private affectationService: AffectationService,private collaborauerService: CollaborateurService, private fonctionService: FonctionService, private restaurantService: RestaurantService){
-
   }
 
-  ngOnInit(){
+  async ngOnInit(){
+   this.messageShow = false;
     forkJoin({
           collaborauers: this.collaborauerService.listCollaborateurs(),
           fonctions: this.fonctionService.listFonctions(),
@@ -81,7 +81,7 @@ export class AffectationComponent {
         ]
       });
 
-    this.load();
+    await this.load();
   }
 
   isEdit() {
@@ -93,10 +93,11 @@ export class AffectationComponent {
     });
   }
 
-  load(){
+  async load(){
     this.affectationService.listAffectations().subscribe({
       next: (data) => {
         this.affectations = data
+        this.showModal = false;
       },
       error: (error) => {
         console.error('Erreur:', error);
@@ -118,23 +119,12 @@ export class AffectationComponent {
         color: 'primary',
         callback: (data) => this.createOrUpdate(data)
       };
+
+     // Forcer la réinitialisation complète du formulaire
+     this.formFields = this.formFields.map(f => ({ ...f, disabled: false }));
   }
 
   onEdit(item: any) {
-      // On crée une nouvelle référence du tableau pour que le Modal détecte le changement
-      this.formFields = this.formFields.map(f => ({
-        ...f,
-        // On désactive l'ID ET le collaborateur en mode édition
-        disabled: f.key === 'id' || f.key === 'collaborateur.id'
-      }));
-
-      this.showModal = true;
-      this.modalTitle = 'Modifier une affectation';
-      this.modalAction = {
-        label: 'Modifier',
-        color: 'primary',
-        callback: (data) => this.createOrUpdate(data)
-      };
 
       this.selectedItem = {
         ...this.affectations.find((aff: AffectationModel) => aff.id === item.id),
@@ -142,55 +132,74 @@ export class AffectationComponent {
         fonctionId: item.fonction?.id,
         restaurantId: item.restaurant?.id
       };
+
+      // On crée une nouvelle référence du tableau pour que le Modal détecte le changement
+      this.formFields = this.formFields.map(f => ({
+        ...f,
+        // On désactive l'ID ET le collaborateur en mode édition
+        disabled: f.key === 'id' || f.key === 'collaborateur.id'
+      }));
+
+      this.modalTitle = 'Modifier une affectation';
+      this.modalAction = {
+        label: 'Modifier',
+        color: 'primary',
+        callback: (data) => this.createOrUpdate(data)
+      };
+
+      this.showModal = true;
   }
 
-  onDelete(item: AffectationModel) {
-   this.affectationService.delete(item.id)?.subscribe({
-      next: () => {
-        this.load();
-      },
-      error: (err) => {
-        console.error('Erreur:', err);
-          this.errors = err.error.message;
-      }
-   });
+   onDelete(item: AffectationModel) {
+     this.affectationService.delete(item.id)?.subscribe({
+        next: async () => {
+           this.selectedItem =  {};
+           this.load() ;
+        },
+        error: (err) => {
+          console.error('Erreur:', err);
+            this.errors = err.error.message;
+        }
+     });
   }
 
   onSearchChanged(term: string) {
     console.log('Recherche:', term);
   }
 
-
   createOrUpdate(item: any){
-      item.dateDebut = new Date(item.dateDebut);
-      if(item.dateFin) {
-       item.dateFin = new Date(item.dateFin);
+    item.dateDebut = new Date(item.dateDebut);
+    if(item.dateFin) {
+     item.dateFin = new Date(item.dateFin);
+    }
+
+    const request: AffectationRequest = {
+      id: item.id,
+      dateDebut: new Date(item.dateDebut),
+      dateFin: item.dateFin ? new Date(item.dateFin) : undefined,
+      collaborateurId: item.collaborateurId.id,
+      fonctionId: item.fonctionId.id,
+      restaurantId: item.restaurantId.id
+    };
+
+    console.log('JSON envoyé :', JSON.stringify(request));
+
+    this.affectationService.save(request).subscribe({
+      next: async () => {
+        this.messageShow = true;
+       setTimeout(() => { this.closeModal() }, 2000);
+      },
+      error: (err) => {
+        this.errors = err.error?.message || "Une erreur est survenue lors de l'enregistrement";
+        console.error('Erreur API :', err);
       }
-
-      const request: AffectationRequest = {
-        id: item.id,
-        dateDebut: new Date(item.dateDebut),
-        dateFin: item.dateFin ? new Date(item.dateFin) : undefined,
-        collaborateurId: item.collaborateurId.id,
-        fonctionId: item.fonctionId.id,
-        restaurantId: item.restaurantId.id
-      };
-
-      console.log('JSON envoyé :', JSON.stringify(request));
-
-      this.affectationService.save(request).subscribe({
-        next: () => {
-          this.showModal = false;
-          this.load();
-        },
-        error: (err) => {
-          this.errors = err.error?.message || "Une erreur est survenue lors de l'enregistrement";
-          console.error('Erreur API :', err);
-        }
-      });
+    });
   }
 
   closeModal() {
-    this.selectedItem = null;
+    this.messageShow = false;
+    this.selectedItem =  {};
+    this.showModal = false;
+    this.load();
   }
 }

@@ -1,4 +1,4 @@
- <app-generic-list-component
+<app-generic-list-component
       title="Affectations"
       [data]="affectations"
       [columns]="columns"
@@ -9,8 +9,9 @@
       (addClicked)="onAddAffectation()"
       (searchChanged)="onSearchChanged($event)"
     />
-    
-  <app-generic-modal-component 
+
+  <app-generic-modal-component
+      [showMessage]="messageShow"
       [errors]="errors"
       [show]="showModal"
       [title]="modalTitle"

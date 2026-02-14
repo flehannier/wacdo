@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output, Input} from '@angular/core';
 import { GenericListComponent } from "../generic-list-component/generic-list-component";
 import { FonctionModel } from '../../models/fonction-model';
 import { FonctionService } from '../../services/fonction.service';
@@ -22,9 +22,9 @@ export class FonctionComponent {
   selectedItem: any = null;
   fonctions: FonctionModel[] = [];
   errors: string = '';
+  @Input() messageShow: boolean = false;
 
   columns: ListColumn[] = [
-    { key: 'id', label: 'Id', sortable: true },
     { key: 'intitule', label: 'Intitule', sortable: true }
   ];
 
@@ -33,6 +33,11 @@ export class FonctionComponent {
       label: 'Modifier',
       color: 'primary',
       callback: (item) => this.onEdit(item)
+    },
+    {
+      label: 'Supprimer',
+      color: 'danger',
+      callback: (item) => this.onDelete(item)
     }
   ];
 
@@ -48,10 +53,9 @@ export class FonctionComponent {
   }
 
   ngOnInit(){
-
     this.formFields = [
       { key: 'id', label: 'Id', type: FieldsFormTypeEnum.HIDDEN, disabled: true, required: true, placeholder: '', validators: [Validators.required] },
-      { key: 'intitule', label: 'Intitule', type: FieldsFormTypeEnum.TEXT, disabled: false, required: true, placeholder: '',  validators: [Validators.required]  },
+      { key: 'intitule', label: 'Intitulé', type: FieldsFormTypeEnum.TEXT, disabled: false, required: true, placeholder: '',  validators: [Validators.required]  },
       ]
 
     this.load();
@@ -71,6 +75,7 @@ export class FonctionComponent {
 
   onAddFonction() {
     this.showModal = true;
+    this.selectedItem = null;
     this.modalTitle = 'Ajouter une fonction';
     this.modalAction =
     {
@@ -81,7 +86,7 @@ export class FonctionComponent {
   }
 
   onEdit(item: any) {
-    this.showModal = true;
+    this.selectedItem = this.fonctions.find((aff: FonctionModel) => aff.id === item.id) as FonctionModel;
     this.modalTitle = 'Modifier une fonction';
     this.modalAction =
     {
@@ -90,20 +95,33 @@ export class FonctionComponent {
       callback: (data) => this.createOrUpdate(data)
     };
 
-    this.selectedItem = this.fonctions.find((aff: FonctionModel) => aff.id === item.id) as FonctionModel;
-
-    console.log('Modifier:', this.selectedItem);
+    this.showModal = true;
   }
 
-  onDelete(item: any) {
-    console.log('Supprimer:', item);
+  onDelete(item: FonctionModel) {
+    if(!item.id){
+       this.errors = 'Aucun identifant de fonction passé en paramètre';
+      return false
+    }
+    this.fonctionService.delete(item.id)?.subscribe({
+        next: () => {
+         this.selectedItem =  {};
+         this.load();
+          return true
+        },
+        error: (err) => {
+          this.errors = err.error.message;
+          return false
+        }
+    });
+    return true
   }
 
   createOrUpdate(item:any){
     this.fonctionService.save(item).subscribe({
        next: () => {
-          this.showModal = false;
-          this.load();
+          this.messageShow = true;
+          setTimeout(() => { this.closeModal() }, 2000);
         },
         error: (err) => {
           this.errors = err.error.message;
@@ -115,6 +133,9 @@ export class FonctionComponent {
   }
 
   closeModal() {
+    this.messageShow = false;
     this.selectedItem = null;
+    this.showModal= false;
+    this.load();
   }
 }

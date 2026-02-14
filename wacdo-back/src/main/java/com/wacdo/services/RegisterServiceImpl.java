@@ -7,6 +7,9 @@ import com.wacdo.entities.Role;
 import com.wacdo.exception.FunctionalException;
 import com.wacdo.exception.TechnicalException;
 import lombok.NonNull;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,6 +18,8 @@ public class RegisterServiceImpl implements RegisterService {
     private final CollaborateurService collaborateurService;
 
     private final RoleService roleService;
+
+    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(8);
 
     public RegisterServiceImpl(CollaborateurService collaborateurService, RoleService roleService) {
         this.collaborateurService = collaborateurService;
@@ -40,6 +45,10 @@ public class RegisterServiceImpl implements RegisterService {
                 false,
                 defaultRole.getId()
         );
+
+        // Hacher le mot de passe avant de le sauvegarder
+        String hashedPassword = passwordEncoder.encode(collab.getMotDePasse());
+        collab.setMotDePasse(hashedPassword);
 
         return collaborateurService.save(collab);
     }

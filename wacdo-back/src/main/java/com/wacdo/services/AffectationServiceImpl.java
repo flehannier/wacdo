@@ -172,10 +172,32 @@ public class AffectationServiceImpl implements AffectationService {
     }
 
     @Override
-    @Transactional
     public void deleteById(@NonNull Long id) {
+
         Affectation affectation = affectationRepository.findById(id)
-        .orElseThrow(() -> new RuntimeException("Affectation introuvable"));
-        affectationRepository.delete(affectation);
+                .orElseThrow(() -> new RuntimeException("Affectation introuvable"));
+
+        affectation.getCollaborateur().getAffectations().remove(affectation);
+        affectation.getFonction().getAffectations().remove(affectation);
+        affectation.getRestaurant().getAffectations().remove(affectation);
+
+        affectationRepository.deleteById(affectation.getId());
     }
+
+    @Override
+    public List<Affectation> findByRestauantId(Long restaurantId) throws FunctionalException {
+        return affectationRepository.findByRestaurantId(restaurantId);
+    }
+
+    @Override
+    public List<Affectation> findByFonctionId(Long fonctionId) throws FunctionalException {
+        return affectationRepository.findByFonctionId(fonctionId);
+    }
+
+    @Override
+    public List<Affectation> findByCollaborateurId(Long collaborateurId) throws FunctionalException {
+        return affectationRepository.findByCollaborateurId(collaborateurId);
+    }
+
+
 }

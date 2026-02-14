@@ -2,9 +2,12 @@ package com.wacdo.services;
 
 import com.wacdo.dto.CollaborateurRequest;
 import com.wacdo.entities.Collaborateur;
+import com.wacdo.entities.Fonction;
+import com.wacdo.entities.Restaurant;
 import com.wacdo.entities.Role;
 import com.wacdo.exception.FunctionalException;
 import com.wacdo.exception.TechnicalException;
+import com.wacdo.repositories.AffectationRepository;
 import com.wacdo.repositories.CollaborateurRepository;
 import com.wacdo.repositories.RoleRepository;
 import jakarta.transaction.Transactional;
@@ -23,6 +26,8 @@ public class CollaborateurServiceImpl implements CollaborateurService {
 
     private final RoleRepository roleRepository;
     private final CollaborateurRepository collaborateurRepository;
+    private final AffectationRepository affectationRepository;
+
     private final PasswordEncoder passwordEncoder;
     private final String ADMIN = "ADMIN";
     private final String USER = "USER";
@@ -32,10 +37,11 @@ public class CollaborateurServiceImpl implements CollaborateurService {
     private static final Pattern PASSWORD_PATTERN = Pattern.compile("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{8,}$");
 
     public CollaborateurServiceImpl(RoleRepository roleRepository, CollaborateurRepository collaborateurRepository,
-            PasswordEncoder passwordEncoder) {
+                                    PasswordEncoder passwordEncoder, AffectationRepository affectationRepository) {
         this.roleRepository = roleRepository;
         this.collaborateurRepository = collaborateurRepository;
         this.passwordEncoder = passwordEncoder;
+        this.affectationRepository = affectationRepository;
     }
 
     /**
@@ -50,14 +56,14 @@ public class CollaborateurServiceImpl implements CollaborateurService {
     public Collaborateur save(@NonNull CollaborateurRequest collab) throws FunctionalException, TechnicalException {
         Collaborateur entity;
 
-        if (collab.id() != null) {
+        if (collab.getId() != null) {
             // --- UPDATE ---
-            entity = collaborateurRepository.findById(collab.id())
+            entity = collaborateurRepository.findById(collab.getId())
                     .orElseThrow(() -> new FunctionalException("Collaborateur introuvable"));
 
         } else {
             // --- CREATE ---
-            if (collaborateurRepository.findByEmail(collab.email()) != null) {
+            if (collaborateurRepository.findByEmail(collab.getEmail()) != null) {
                 throw new FunctionalException("Email déjà connu");
             }
             entity = new Collaborateur();
@@ -66,18 +72,18 @@ public class CollaborateurServiceImpl implements CollaborateurService {
         boolean isAdmin = false;
         List<Role> roles = roleRepository.findAll();
         Optional<Role>  roleOptional; 
-        if(null != collab.roleId()) {
+        if(null != collab.getRoleId()) {
             roleOptional = roles.stream()
-                        .filter(item -> item.getId().equals(collab.roleId())) // Utilise -> et compare les IDs de rôles
+                        .filter(item -> item.getId().equals(collab.getRoleId())) // Utilise -> et compare les IDs de rôles
                         .findFirst();
 
-            isAdmin = collab.roleId() != null && ADMIN.equals(roleOptional.get().getName());
+            isAdmin = collab.getRoleId() != null && ADMIN.equals(roleOptional.get().getName());
         }
 
         // Copier les champs
-        entity.setNom(collab.nom());
-        entity.setPrenom(collab.prenom());
-        entity.setEmail(collab.email());
+        entity.setNom(collab.getNom());
+        entity.setPrenom(collab.getPrenom());
+        entity.setEmail(collab.getEmail());
 
         Role role = roleRepository.findByNameIgnoreCase(isAdmin ? ADMIN : USER);
         if (role == null) throw new FunctionalException("Rôle introuvable");
@@ -85,8 +91,8 @@ public class CollaborateurServiceImpl implements CollaborateurService {
         entity.setAdministrateur(isAdmin);
         entity.setRole(role);
 
-        if (collab.motDePasse() != null && !collab.motDePasse().isBlank()) {
-            validateAndEncodePassword(collab.motDePasse(), entity);
+        if (collab.getMotDePasse() != null && !collab.getMotDePasse().isBlank()) {
+            validateAndEncodePassword(collab.getMotDePasse(), entity);
         }
 
         return collaborateurRepository.save(entity);
@@ -127,9 +133,29 @@ public class CollaborateurServiceImpl implements CollaborateurService {
      * @param id
      */
     @Override
-    public void deleteById(@NonNull Long id){
-        collaborateurRepository.deleteById(id);
+    public void deleteById(@NonNull Long id) throws FunctionalException {
+        try {
+
+            affectationRepository.findByRestaurantId(id).forEach(
+                    a -> {
+                        Collaborateur c = a.getCollaborateur();
+                        c.getAffectations().remove(a);
+
+                        Fonction f = a.getFonction();
+                        f.getAffectations().remove(a);
+
+                        Restaurant r = a.getRestaurant();
+                        r.getAffectations().remove(a);
+
+                        affectationRepository.deleteById(a.getId());
+                    }
+            );
+            collaborateurRepository.deleteById(id);
+        } catch (Exception e) {
+            throw new FunctionalException("Suppression d\'un collaborateur impossible, liaison avec une affectation.");
+        }
     }
+
 
     /**
      * Suppression d'un collaborateur

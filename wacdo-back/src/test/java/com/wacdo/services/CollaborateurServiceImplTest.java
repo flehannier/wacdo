@@ -58,12 +58,12 @@ class CollaborateurServiceImplTest {
 
         CollaborateurRequest request = mock(CollaborateurRequest.class);
 
-        when(request.id()).thenReturn(null);
-        when(request.nom()).thenReturn("Doe");
-        when(request.prenom()).thenReturn("John");
-        when(request.email()).thenReturn("john@mail.com");
-        when(request.motDePasse()).thenReturn("Password1");
-        when(request.roleId()).thenReturn(2L);
+        when(request.getId()).thenReturn(null);
+        when(request.getNom()).thenReturn("Doe");
+        when(request.getPrenom()).thenReturn("John");
+        when(request.getEmail()).thenReturn("john@mail.com");
+        when(request.getMotDePasse()).thenReturn("Password1");
+        when(request.getRoleId()).thenReturn(2L);
 
         when(collaborateurRepository.findByEmail("john@mail.com")).thenReturn(null);
         when(roleRepository.findAll()).thenReturn(List.of(adminRole, userRole));
@@ -84,12 +84,12 @@ class CollaborateurServiceImplTest {
 
         CollaborateurRequest request = mock(CollaborateurRequest.class);
 
-        when(request.id()).thenReturn(null);
-        when(request.nom()).thenReturn("Admin");
-        when(request.prenom()).thenReturn("Super");
-        when(request.email()).thenReturn("admin@mail.com");
-        when(request.motDePasse()).thenReturn("Password1");
-        when(request.roleId()).thenReturn(1L);
+        when(request.getId()).thenReturn(null);
+        when(request.getNom()).thenReturn("Admin");
+        when(request.getPrenom()).thenReturn("Super");
+        when(request.getEmail()).thenReturn("admin@mail.com");
+        when(request.getMotDePasse()).thenReturn("Password1");
+        when(request.getRoleId()).thenReturn(1L);
 
         when(collaborateurRepository.findByEmail("admin@mail.com")).thenReturn(null);
         when(roleRepository.findAll()).thenReturn(List.of(adminRole, userRole));
@@ -108,8 +108,8 @@ class CollaborateurServiceImplTest {
 
         CollaborateurRequest request = mock(CollaborateurRequest.class);
 
-        when(request.id()).thenReturn(null);
-        when(request.email()).thenReturn("existing@mail.com");
+        when(request.getId()).thenReturn(null);
+        when(request.getEmail()).thenReturn("existing@mail.com");
 
         when(collaborateurRepository.findByEmail("existing@mail.com"))
                 .thenReturn(new Collaborateur());
@@ -123,12 +123,12 @@ class CollaborateurServiceImplTest {
 
         CollaborateurRequest request = mock(CollaborateurRequest.class);
 
-        when(request.id()).thenReturn(null);
-        when(request.nom()).thenReturn("Doe");
-        when(request.prenom()).thenReturn("John");
-        when(request.email()).thenReturn("john@mail.com");
-        when(request.motDePasse()).thenReturn("weak");
-        when(request.roleId()).thenReturn(2L);
+        when(request.getId()).thenReturn(null);
+        when(request.getNom()).thenReturn("Doe");
+        when(request.getPrenom()).thenReturn("John");
+        when(request.getEmail()).thenReturn("john@mail.com");
+        when(request.getMotDePasse()).thenReturn("weak");
+        when(request.getRoleId()).thenReturn(2L);
 
         when(collaborateurRepository.findByEmail(any())).thenReturn(null);
         when(roleRepository.findAll()).thenReturn(List.of(adminRole, userRole));
@@ -143,12 +143,12 @@ class CollaborateurServiceImplTest {
 
         CollaborateurRequest request = mock(CollaborateurRequest.class);
 
-        when(request.id()).thenReturn(null);
-        when(request.nom()).thenReturn("Doe");
-        when(request.prenom()).thenReturn("John");
-        when(request.email()).thenReturn("john@mail.com");
-        when(request.motDePasse()).thenReturn("Password1");
-        when(request.roleId()).thenReturn(2L);
+        when(request.getId()).thenReturn(null);
+        when(request.getNom()).thenReturn("Doe");
+        when(request.getPrenom()).thenReturn("John");
+        when(request.getEmail()).thenReturn("john@mail.com");
+        when(request.getMotDePasse()).thenReturn("Password1");
+        when(request.getRoleId()).thenReturn(2L);
 
         when(collaborateurRepository.findByEmail(any())).thenReturn(null);
         when(roleRepository.findAll()).thenReturn(List.of(adminRole, userRole));
@@ -171,12 +171,12 @@ class CollaborateurServiceImplTest {
 
         CollaborateurRequest request = mock(CollaborateurRequest.class);
 
-        when(request.id()).thenReturn(10L);
-        when(request.nom()).thenReturn("Updated");
-        when(request.prenom()).thenReturn("User");
-        when(request.email()).thenReturn("updated@mail.com");
-        when(request.motDePasse()).thenReturn(null);
-        when(request.roleId()).thenReturn(2L);
+        when(request.getId()).thenReturn(10L);
+        when(request.getNom()).thenReturn("Updated");
+        when(request.getPrenom()).thenReturn("User");
+        when(request.getEmail()).thenReturn("updated@mail.com");
+        when(request.getMotDePasse()).thenReturn(null);
+        when(request.getRoleId()).thenReturn(2L);
 
         when(collaborateurRepository.findById(10L))
                 .thenReturn(Optional.of(existing));
@@ -194,7 +194,7 @@ class CollaborateurServiceImplTest {
     void save_shouldThrowException_whenUpdateNotFound() {
 
         CollaborateurRequest request = mock(CollaborateurRequest.class);
-        when(request.id()).thenReturn(99L);
+        when(request.getId()).thenReturn(99L);
 
         when(collaborateurRepository.findById(99L))
                 .thenReturn(Optional.empty());
@@ -245,7 +245,7 @@ class CollaborateurServiceImplTest {
     // ======================================================
 
     @Test
-    void deleteById_shouldCallRepository() {
+    void deleteById_shouldCallRepository() throws FunctionalException {
 
         service.deleteById(1L);
 

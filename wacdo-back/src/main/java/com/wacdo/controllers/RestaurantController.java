@@ -58,7 +58,7 @@ public class RestaurantController {
     )
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public void deleteById(@Nonnull @PathVariable("id") Long id){
+    public void deleteById(@Nonnull @PathVariable("id") Long id)  throws FunctionalException {
         restaurantService.deleteById(id);
     }
 }

@@ -14,7 +14,7 @@ import { Role } from './constants/roles';
 })
 export class App {
 
-  protected readonly title = signal('wacdo-front');
+  protected readonly title = signal('Wacdo - gestion des collaborateurs');
 
   constructor(public authService: AuthService) {
   }

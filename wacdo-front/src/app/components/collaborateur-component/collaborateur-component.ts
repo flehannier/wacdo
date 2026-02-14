@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { GenericListComponent} from "../generic-list-component/generic-list-component";
 import { CollaborateurModel, CollaborateurRequest} from '../../models/collaborateur-model';
 import { CollaborateurService } from '../../services/collaborateur.service';
@@ -7,7 +7,6 @@ import { FieldsFormTypeEnum, FormField, SelectOption } from '../../models/Fields
 import { Validators } from '@angular/forms';
 import { FonctionService } from '../../services/fonction.service';
 import { RestaurantService } from '../../services/restaurant.service';
-import { forkJoin } from 'rxjs';
 import { GenericModalComponent } from '../generic-modal-component/generic-modal-component';
 import { AuthService } from '../../services/auth.service';
 import { RoleService } from '../../services/role.service';
@@ -27,9 +26,9 @@ export class CollaborateurComponent implements OnInit{
   showModal = false;
   selectedItem?: any;
   errors: string = '';
+  @Input() messageShow: boolean = false;
 
   columns: ListColumn[] = [
-    { key: 'id', label: 'Id', sortable: true },
     { key: 'nom', label: 'Nom', sortable: true },
     { key: 'prenom', label: 'Prénom', sortable: true },
     { key: 'email', label: 'Email', sortable: true, width: '250px' },
@@ -58,8 +57,6 @@ export class CollaborateurComponent implements OnInit{
 
   ngOnInit(){
 
-    this.load();
-
     this.roleService.listRoles().subscribe((roles ) => {
       const optionsRole: SelectOption[] = roles.map(r => ({ value: r.id, label: r.name }));
       this.formFields = [
@@ -68,9 +65,11 @@ export class CollaborateurComponent implements OnInit{
           { key: 'prenom', label: 'Prénom', type: FieldsFormTypeEnum.TEXT, disabled: false, required: true, placeholder: '',  validators: [Validators.required]  },
           { key: 'email', label: 'Email',  type: FieldsFormTypeEnum.EMAIL, disabled: false, required: true, placeholder: '',  validators: [Validators.email, Validators.required] },
           { key: 'motDePasse', label: 'Mot de passe',  type: FieldsFormTypeEnum.PASSWORD, disabled: false, required: false, placeholder: '' },
-          { key: 'roleId', label: 'Role', type: FieldsFormTypeEnum.SELECT, options: optionsRole ,disabled: false, required: true, placeholder: 'Choix d\'un role',  validators: [Validators.required]  },
+          { key: 'roleId', label: 'Rôle', type: FieldsFormTypeEnum.SELECT, options: optionsRole ,disabled: false, required: true, placeholder: 'Choix d\'un role',  validators: [Validators.required]  },
         ]
     });
+
+    this.load();
   }
 
   load(){
@@ -94,7 +93,10 @@ export class CollaborateurComponent implements OnInit{
   }
 
   onEdit(item: CollaborateurModel) {
-    this.showModal = true;
+    this.selectedItem = {
+      ... this.collaborateurs.find((collab: CollaborateurModel) => collab.id === item.id),
+      roleId: item.role?.id,
+    };
     this.modalTitle = 'Modifier un collaborateur';
     this.modalAction =
     {
@@ -103,16 +105,13 @@ export class CollaborateurComponent implements OnInit{
       callback: (data) => this.createOrUpdate(data)
     };
 
-    this.selectedItem = {
-      ... this.collaborateurs.find((collab: CollaborateurModel) => collab.id === item.id),
-      roleId: item.role?.id,
-    };
+    this.showModal = true;
   }
 
   onAddCollaborateur() {
     this.showModal = true;
+    this.selectedItem = null;
     this.modalTitle = 'Ajouter un collaborateur';
-    this.selectedItem = undefined;
     this.modalAction =
     {
       label: 'Ajouter',
@@ -128,7 +127,8 @@ export class CollaborateurComponent implements OnInit{
     }
     this.collaborateurService.delete(item.id)?.subscribe({
         next: () => {
-          this.load();
+          this.selectedItem =  {};
+          this.load()
           return true
         },
         error: (err) => {
@@ -144,38 +144,41 @@ export class CollaborateurComponent implements OnInit{
   }
 
   createOrUpdate(item:any){
-      if(!item.motDePasse){
-        delete item['motDePasse']
-      }
+    if(!item.motDePasse){
+      delete item['motDePasse']
+    }
 
-      let request: CollaborateurRequest = {
-        nom : item.nom,
-        prenom: item.prenom,
-        email: item.email,
-        motDePasse: item.motDePasse,
-        datePremiereEmbauche: item.datePremiereEmbauche,
-        administrateur: item.administrateur,
-        roleId: item.roleId.id
-      }
+    let request: CollaborateurRequest = {
+      nom : item.nom,
+      prenom: item.prenom,
+      email: item.email,
+      motDePasse: item.motDePasse,
+      datePremiereEmbauche: item.datePremiereEmbauche,
+      administrateur: item.administrateur,
+      roleId: item.roleId.id
+    }
 
-      if(item.id){
-        request = {
-          ...request,
-          id: item.id
-        }
+    if(item.id){
+      request = {
+        ...request,
+        id: item.id
       }
-      this.collaborateurService.save(request).subscribe({
-        next: () => {
-          this.showModal = false;
-          this.load();
-        },
-        error: (err) => {
-          this.errors = err.error.message;
-        }
-      });
+    }
+    this.collaborateurService.save(request).subscribe({
+      next: () => {
+        this.messageShow = true;
+        setTimeout(() => { this.closeModal() }, 2000);
+      },
+      error: (err) => {
+        this.errors = err.error.message;
+      }
+    });
   }
 
   closeModal() {
-    this.selectedItem = undefined;
+    this.messageShow = false;
+    this.showModal= false;
+    this.selectedItem =  {};
+    this.load();
   }
 }

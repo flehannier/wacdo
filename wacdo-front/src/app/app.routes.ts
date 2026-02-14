@@ -7,6 +7,7 @@ import { FonctionComponent } from './components/fonction-component/fonction-comp
 import { AffectationComponent } from './components/affectation-component/affectation-component';
 import { RestaurantComponent } from './components/restaurant-component/restaurant-component';
 import { ProfileComponent } from './components/profile-component/profile-component';
+import { RegisterComponent } from './components/register/register-component';
 
 export const routes: Routes = [
     { path: "login", component: LoginComponent },
@@ -16,5 +17,6 @@ export const routes: Routes = [
     { path: 'affectation', component: AffectationComponent, canActivate: [AuthGuard] },
     { path: 'accueil', component: AccueilComponent, canActivate: [AuthGuard] },
     { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
+    { path: 'register', component: RegisterComponent},
     { path: '**', redirectTo: 'accueil' }
 ];

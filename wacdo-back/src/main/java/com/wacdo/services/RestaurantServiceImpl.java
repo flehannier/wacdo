@@ -1,8 +1,10 @@
 package com.wacdo.services;
 
 import com.wacdo.entities.Collaborateur;
+import com.wacdo.entities.Fonction;
 import com.wacdo.entities.Restaurant;
 import com.wacdo.exception.FunctionalException;
+import com.wacdo.repositories.AffectationRepository;
 import com.wacdo.repositories.RestaurantRepository;
 import jakarta.transaction.Transactional;
 import lombok.NonNull;
@@ -14,9 +16,11 @@ import java.util.List;
 public class RestaurantServiceImpl implements RestaurantService {
 
     private final RestaurantRepository restaurantRepository;
+    private final AffectationRepository affectationRepository;
 
-    public RestaurantServiceImpl(RestaurantRepository restaurantRepository) {
+    public RestaurantServiceImpl(RestaurantRepository restaurantRepository, AffectationRepository affectationRepository) {
         this.restaurantRepository = restaurantRepository;
+        this.affectationRepository =  affectationRepository;
     }
 
     @Override
@@ -39,8 +43,27 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     @Override
-    public void deleteById(@NonNull Long id) {
-        restaurantRepository.deleteById(id);
+    public void deleteById(@NonNull Long id) throws FunctionalException {
+        try {
+
+            affectationRepository.findByRestaurantId(id).forEach(
+                    a -> {
+                            Collaborateur c = a.getCollaborateur();
+                            c.getAffectations().remove(a);
+
+                            Fonction f = a.getFonction();
+                                f.getAffectations().remove(a);
+
+                            Restaurant r = a.getRestaurant();
+                            r.getAffectations().remove(a);
+
+                             affectationRepository.deleteById(a.getId());
+                    }
+            );
+            restaurantRepository.deleteById(id);
+        } catch (Exception e) {
+            throw  new FunctionalException("Suppression du restaurant impossible, liaison avec une affectation.");
+        }
     }
 
     @Override

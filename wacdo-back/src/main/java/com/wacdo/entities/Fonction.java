@@ -3,6 +3,8 @@ package com.wacdo.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.List;
 
@@ -22,5 +24,6 @@ public class Fonction {
     @OneToMany(mappedBy = "fonction")
     @Column(nullable = true, unique = true)
     @JsonIgnore //Evite de boucler
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Affectation> affectations;
 }

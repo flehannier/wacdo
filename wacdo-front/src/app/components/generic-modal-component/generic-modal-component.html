@@ -1,7 +1,7 @@
-
 @if(show){
   <div class="fixed top-0 left-0 right-0 bottom-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-50">
     <div class="relative w-full max-w-xl md:max-w-2xl bg-white rounded-lg shadow max-h-[90vh] overflow-y-auto mx-4 md:mx-0">
+
       <!-- Modal header -->
       <div class="sticky top-0 flex items-center justify-between p-4 border-b rounded-t bg-white">
         <h3 class="text-xl font-semibold text-gray-900">
@@ -20,35 +20,47 @@
           <div class="bg-orange-100 border-l-4 border-orange-500 text-orange-700 p-2 mx-2" role="alert">
               <p class="font-bold">{{errors}}</p>
           </div>
+      } @else {
+        <ng-container *ngIf="showMessage">
+          <div class="mx-5 my-5 bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded-lg">
+
+              <ng-container *ngIf="isEditMode; else notEdit">
+                <p>La modification a bien été prise en compte</p>
+              </ng-container>
+
+              <ng-template #notEdit>
+                <p>L'ajout à bien été pris en compte</p>
+              </ng-template>
+          </div>
+        </ng-container>
       }
-      
       <!-- Modal body avec FormGroup -->
-      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <form  *ngIf="!showMessage" [formGroup]="form" (ngSubmit)="onSubmit()">
         <div class="mx-auto max-w-2xl space-y-6 rounded-xl bg-white p-8">
           <ng-container *ngFor="let field of fields">
             <div class="space-y-2">
-              
+
               <!-- Label -->
               @if(field.type !== FieldsFormTypeEnum.HIDDEN){
-                <label 
-                  [for]="field.key" 
+                <label
+                  [for]="field.key"
                   class="flex items-center text-sm font-semibold text-gray-700">
                   {{ field.label || field.key }}
                   <span *ngIf="field.required" class="ml-1 text-red-600">*</span>
                 </label>
               }
               <ng-container>
-                
+
                 <!-- Champs selon le type -->
                 @switch (field.type) {
                     <!-- Input TEXT -->
                     @case (FieldsFormTypeEnum.TEXT) {
-                      <input 
-                        [id]="field.key" 
-                        type="text" 
+                      <input
+                        [id]="field.key"
+                        type="text"
                         [formControlName]="field.key"
                         [class.border-red-500]="hasError(field.key)"
-                        class="w-full rounded-lg border-2 px-4 py-3 text-gray-900 transition duration-200 
+                        class="w-full rounded-lg border-2 px-4 py-3 text-gray-900 transition duration-200
                           border-gray-200 bg-white
                           hover:border-gray-300
                           focus:border-sky-500 focus:outline-none focus:ring-4 focus:ring-sky-500/20
@@ -58,21 +70,21 @@
                     }
                     @case (FieldsFormTypeEnum.HIDDEN) {
                         <!-- Input HIDDEN -->
-                        <input 
-                          [id]="field.key" 
-                          type="hidden" 
+                        <input
+                          [id]="field.key"
+                          type="hidden"
                           [formControlName]="field.key"
                         />
                     }
 
                     @case (FieldsFormTypeEnum.EMAIL) {
                         <!-- Input EMAIL -->
-                        <input 
-                          [id]="field.key" 
-                          type="email" 
+                        <input
+                          [id]="field.key"
+                          type="email"
                           [formControlName]="field.key"
                           [class.border-red-500]="hasError(field.key)"
-                          class="w-full rounded-lg border-2 px-4 py-3 text-gray-900 transition duration-200 
+                          class="w-full rounded-lg border-2 px-4 py-3 text-gray-900 transition duration-200
                             border-gray-200 bg-white
                             hover:border-gray-300
                             focus:border-sky-500 focus:outline-none focus:ring-4 focus:ring-sky-500/20
@@ -83,12 +95,12 @@
 
                     @case (FieldsFormTypeEnum.PASSWORD) {
                       <!-- Input PASSWORD -->
-                      <input 
-                        [id]="field.key" 
-                        type="password" 
+                      <input
+                        [id]="field.key"
+                        type="password"
                         [formControlName]="field.key"
                         [class.border-red-500]="hasError(field.key)"
-                        class="w-full rounded-lg border-2 px-4 py-3 text-gray-900 transition duration-200 
+                        class="w-full rounded-lg border-2 px-4 py-3 text-gray-900 transition duration-200
                           border-gray-200 bg-white
                           hover:border-gray-300
                           focus:border-sky-500 focus:outline-none focus:ring-4 focus:ring-sky-500/20
@@ -96,30 +108,30 @@
                         [placeholder]="field.placeholder || ''"
                       />
                     }
-                    
+
                     @case (FieldsFormTypeEnum.DATE) {
                         <!-- Input DATE -->
-                        <input 
-                          [id]="field.key" 
-                          type="date" 
+                        <input
+                          [id]="field.key"
+                          type="date"
                           [formControlName]="field.key"
                           [class.border-red-500]="hasError(field.key)"
-                          class="w-full rounded-lg border-2 px-4 py-3 text-gray-900 transition duration-200 
+                          class="w-full rounded-lg border-2 px-4 py-3 text-gray-900 transition duration-200
                             border-gray-200 bg-white
                             hover:border-gray-300
                             focus:border-sky-500 focus:outline-none focus:ring-4 focus:ring-sky-500/20
                             disabled:cursor-not-allowed disabled:bg-gray-100 disabled:text-gray-500"
                         />
                     }
-                    
+
                     @case (FieldsFormTypeEnum.NUMBER) {
                        <!-- Input NUMBER -->
-                      <input 
-                        [id]="field.key" 
-                        type="number" 
+                      <input
+                        [id]="field.key"
+                        type="number"
                         [formControlName]="field.key"
                         [class.border-red-500]="hasError(field.key)"
-                        class="w-full rounded-lg border-2 px-4 py-3 text-gray-900 transition duration-200 
+                        class="w-full rounded-lg border-2 px-4 py-3 text-gray-900 transition duration-200
                           border-gray-200 bg-white
                           hover:border-gray-300
                           focus:border-sky-500 focus:outline-none focus:ring-4 focus:ring-sky-500/20
@@ -127,16 +139,16 @@
                         [placeholder]="field.placeholder || ''"
                       />
                     }
-                
-              
+
+
                     @case (FieldsFormTypeEnum.TEXTAREA) {
                       <!-- TEXTAREA -->
-                      <textarea 
-                        [id]="field.key" 
+                      <textarea
+                        [id]="field.key"
                         [formControlName]="field.key"
                         [class.border-red-500]="hasError(field.key)"
                         rows="4"
-                        class="w-full rounded-lg border-2 px-4 py-3 text-gray-900 transition duration-200 
+                        class="w-full rounded-lg border-2 px-4 py-3 text-gray-900 transition duration-200
                           border-gray-200 bg-white
                           hover:border-gray-300
                           focus:border-sky-500 focus:outline-none focus:ring-4 focus:ring-sky-500/20
@@ -145,18 +157,18 @@
                       ></textarea>
                     }
 
-                    
+
                     @case (FieldsFormTypeEnum.SELECT) {
                           <!-- SELECT -->
-                          <select 
+                          <select
                             [id]="field.key"
                             [formControlName]="field.key"
                             [class.border-red-500]="hasError(field.key)"
-                            class="block w-full rounded-lg border-2 px-4 py-3 text-gray-900 transition duration-200 
+                            class="block w-full rounded-lg border-2 px-4 py-3 text-gray-900 transition duration-200
                               border-gray-200 bg-white
                               hover:border-gray-300
                               focus:border-sky-500 focus:outline-none focus:ring-4 focus:ring-sky-500/20
-                              disabled:cursor-not-allowed disabled:bg-gray-100 disabled:text-gray-500"                              
+                              disabled:cursor-not-allowed disabled:bg-gray-100 disabled:text-gray-500"
                           >
                             @if(field.placeholder){
                               <option  value="">{{ field.placeholder }}</option>
@@ -167,7 +179,7 @@
                           </select>
                     }
                 }
-               
+
               </ng-container>
 
               <!-- Message d'erreur -->
@@ -179,7 +191,7 @@
             </div>
           </ng-container>
         </div>
-        
+
         <!-- Footer avec boutons -->
         <div class="sticky bottom-0 border-t border-gray-200 bg-gray-50 px-6 py-4 rounded-b-xl">
           <div class="flex items-center justify-end gap-3">

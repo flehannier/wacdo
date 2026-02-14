@@ -1,4 +1,4 @@
- <app-generic-list-component
+<app-generic-list-component
       title="Collaborateurs"
       [data]="collaborateurs"
       [columns]="columns"
@@ -10,8 +10,9 @@
       (addClicked)="onAddCollaborateur()"
       (searchChanged)="onSearchChanged($event)"
   />
-  
-  <app-generic-modal-component 
+
+  <app-generic-modal-component
+      [showMessage]="messageShow"
       [errors]="errors"
       [show]="showModal"
       [title]="modalTitle"

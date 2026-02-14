@@ -26,6 +26,7 @@ export class ProfileComponent {
   errors: string = '';
   @Input() show: boolean = true;
   @Output() close = new EventEmitter<void>();
+  @Input() messageShow: boolean = false;
 
   modalAction: ListAction =
   {
@@ -37,46 +38,44 @@ export class ProfileComponent {
     }
   };
 
-
   constructor(private authService: AuthService, private roleService: RoleService, private collaborateurService: CollaborateurService, private fonctionService: FonctionService, private restaurantService: RestaurantService){
   }
 
   ngOnInit() {
     this.roleService.listRoles().subscribe(roles => {
 
-      const optionsRole = roles.map(r => ({
-        value: r.id,
-        label: r.name
-      }));
+    const optionsRole = roles.map(r => ({
+      value: r.id,
+      label: r.name
+    }));
 
-      this.collaborateurService
-        .getByUsername(this.authService.getUsername())
-        .subscribe(data => {
+    this.collaborateurService
+      .getByUsername(this.authService.getUsername())
+      .subscribe(data => {
 
-          this.selectedItem = {
-            ...data,
-            roleId: data.role?.id
-          };
+        this.selectedItem = {
+          ...data,
+          roleId: data.role?.id
+        };
 
-          this.formFields = [
-            { key: 'id', type: FieldsFormTypeEnum.HIDDEN, disabled: true, required: true },
-            { key: 'nom', label: 'Nom', type: FieldsFormTypeEnum.TEXT, disabled: false, required: true },
-            { key: 'prenom', label: 'Prénom', type: FieldsFormTypeEnum.TEXT, disabled: false, required: true },
-            { key: 'email', label: 'Email', type: FieldsFormTypeEnum.EMAIL, disabled: false, required: true },
-            { key: 'motDePasse', label: 'Mot de passe', type: FieldsFormTypeEnum.PASSWORD },
-            {
-              key: 'roleId',
-              label: 'Role',
-              type: FieldsFormTypeEnum.SELECT,
-              options: optionsRole,
-              required: true,
-              placeholder: 'Choix d’un rôle'
-            }
-          ];
-        });
+        this.formFields = [
+          { key: 'id', type: FieldsFormTypeEnum.HIDDEN, disabled: true, required: true },
+          { key: 'nom', label: 'Nom', type: FieldsFormTypeEnum.TEXT, disabled: false, required: true },
+          { key: 'prenom', label: 'Prénom', type: FieldsFormTypeEnum.TEXT, disabled: false, required: true },
+          { key: 'email', label: 'Email', type: FieldsFormTypeEnum.EMAIL, disabled: false, required: true },
+          { key: 'motDePasse', label: 'Mot de passe', type: FieldsFormTypeEnum.PASSWORD },
+          {
+            key: 'roleId',
+            label: 'Role',
+            type: FieldsFormTypeEnum.SELECT,
+            options: optionsRole,
+            required: true,
+            placeholder: 'Choix d’un rôle'
+          }
+        ];
+      });
     });
   }
-
 
   update(item:any){
       if(!item.motDePasse){
@@ -96,7 +95,8 @@ export class ProfileComponent {
 
       this.collaborateurService.save(request).subscribe({
         next: () => {
-          this.closeModal();
+          this.messageShow = true;
+          setTimeout(() => this.closeModal(), 2000);
         },
         error: (err) => {
           this.errors = err.error.message;
@@ -111,6 +111,7 @@ export class ProfileComponent {
   }
 
   closeModal() {
+    this.messageShow = false;
     this.showModal = false;
     this.close.emit();
   }

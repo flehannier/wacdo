@@ -1,5 +1,5 @@
- <app-generic-list-component
-      title="Restaurant"
+<app-generic-list-component
+      title="Restaurants"
       [data]="restaurants"
       [columns]="columns"
       [actions]="actionsList"
@@ -10,8 +10,9 @@
       (addClicked)="onAddRestaurant()"
       (searchChanged)="onSearchChanged($event)"
   />
-  
-  <app-generic-modal-component 
+
+  <app-generic-modal-component
+      [showMessage]="messageShow"
       [errors]="errors"
       [show]="showModal"
       [title]="modalTitle"

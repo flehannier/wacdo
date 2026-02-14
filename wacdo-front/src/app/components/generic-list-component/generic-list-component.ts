@@ -86,12 +86,12 @@ export class GenericListComponent<T> {
       if (prev === null || prev === undefined) {
         return undefined;
       }
-      
+
       // Si prev est un tableau, prendre le dernier élément
       if (Array.isArray(prev)) {
         return prev.length > 0 ? prev[prev.length - 1]?.[curr] : undefined;
       }
-      
+
       return prev[curr];
     }, obj);
   }

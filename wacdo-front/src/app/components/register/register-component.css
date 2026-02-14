@@ -1,0 +1,17 @@
+.spinner-wrapper{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.invalid-feedback {
+  display: block;
+  width: 100%;
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
+  color: #dc3545;
+}
+
+.is-invalid {
+  border-color: #dc3545;
+}

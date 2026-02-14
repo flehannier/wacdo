@@ -18,7 +18,7 @@ export class AffectationService {
   }
 
   delete(id: number): Observable<AffectationModel> | undefined{
-    const isConfirmed = confirm("Est-vous certain de vouloir supprimer l'affectation");
+    const isConfirmed = confirm("Etes-vous certain de vouloir supprimer l'affectation");
     if(isConfirmed){
      return this.http.delete<AffectationModel>(environment.apiUrl + "/affectation/" + id);
     }

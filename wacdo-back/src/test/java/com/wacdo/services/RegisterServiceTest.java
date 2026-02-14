@@ -64,11 +64,10 @@ class RegisterServiceImplTest {
 
         CollaborateurRequest sentRequest = captor.getValue();
 
-        assertEquals("Doe", sentRequest.nom());
-        assertEquals("John", sentRequest.prenom());
-        assertEquals("john@mail.com", sentRequest.email());
-        assertEquals("Password1", sentRequest.motDePasse());
-        assertEquals(2L, sentRequest.roleId());
+        assertEquals("Doe", sentRequest.getNom());
+        assertEquals("John", sentRequest.getPrenom());
+        assertEquals("john@mail.com", sentRequest.getEmail());
+        assertEquals(2L, sentRequest.getRoleId());
     }
 
     @Test

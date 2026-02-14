@@ -10,5 +10,5 @@ public interface FonctionService {
     Fonction save(@NonNull Fonction fct);
     Fonction getById(@NonNull Long id) throws FunctionalException;
     List<Fonction> getAll();
-    void deleteById(@NonNull Long id);
+    void deleteById(@NonNull Long id)   throws  FunctionalException;
 }

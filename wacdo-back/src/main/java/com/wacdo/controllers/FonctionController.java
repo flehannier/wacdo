@@ -58,7 +58,7 @@ public class FonctionController {
     )
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public void deleteById(@Nonnull @PathVariable("id") Long id){
+    public void deleteById(@Nonnull @PathVariable("id") Long id)  throws FunctionalException {
         fonctionService.deleteById(id);
     }
 }

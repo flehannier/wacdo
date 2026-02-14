@@ -20,9 +20,10 @@ export class GenericModalComponent implements OnInit, OnChanges {
   @Input() fields: FormField[] = [];
   @Input() item: any = null;
   @Input() action!: ModalAction;
-
   @Output() close = new EventEmitter<void>();
   @Output() isEdit = new EventEmitter<void>();
+  @Input() showMessage: boolean = false;
+  isEditMode = false;
 
   form!: FormGroup;
   FieldsFormTypeEnum = FieldsFormTypeEnum;
@@ -30,28 +31,28 @@ export class GenericModalComponent implements OnInit, OnChanges {
   constructor(private fb: FormBuilder) {}
 
   ngOnInit() {
+    this.errors = null;
     this.buildForm();
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    // Reconstruire le formulaire si les fields changent
-    if (changes['fields'] && !changes['fields'].firstChange) {
-      this.buildForm();
-    }
-
-    // 2. Si l'item arrive
-    if (changes['item'] && this.item) {
-      // On prévient le parent qu'on édite (il va modifier les fields)
-      this.isEdit.emit();
-
-      // On attend un micro-tick pour laisser buildForm se terminer
-      // si fields a changé en même temps
-      setTimeout(() => this.patchFormValues());
+    if (changes['item']) {
+      if (this.item && this.item.id) {
+        console.log('✅ MODE ÉDITION ACTIVÉ - ID:', this.item.id);
+        this.isEditMode = true;
+        this.isEdit.emit();
+        setTimeout(() => this.patchFormValues(), 0);
+      } else {
+        console.log('➕ MODE CRÉATION ACTIVÉ');
+        this.isEditMode = false;
+        if (this.form) {
+          this.form.reset();
+        }
+      }
     }
   }
 
   buildForm() {
-
     const formControls: any = {};
 
     this.fields.forEach(field => {
@@ -79,7 +80,6 @@ export class GenericModalComponent implements OnInit, OnChanges {
 
     // Patcher les valeurs si item existe
     if (this.item) {
-
       this.patchFormValues();
     }
   }
@@ -93,26 +93,27 @@ export class GenericModalComponent implements OnInit, OnChanges {
   }
 
   patchFormValues() {
-      const patchData: any = {};
+    const patchData: any = {};
 
-      this.fields.forEach(field => {
-        // Si la clé contient un point (ex: 'collaborateur.id')
-        if (field.key.includes('.')) {
-          const parts = field.key.split('.');
-          // On extrait la valeur de l'objet imbriqué : item['collaborateur']['id']
-          const value = parts.reduce((acc, part) => acc && acc[part], this.item);
-          patchData[field.key] = value;
-        } else {
-          patchData[field.key] = this.item[field.key];
-        }
-      });
+    this.fields.forEach(field => {
+      // Si la clé contient un point (ex: 'collaborateur.id')
+      if (field.key.includes('.')) {
+        const parts = field.key.split('.');
+        // On extrait la valeur de l'objet imbriqué : item['collaborateur']['id']
+        const value = parts.reduce((acc, part) => acc && acc[part], this.item);
+        patchData[field.key] = value;
+      } else {
+        patchData[field.key] = this.item[field.key];
+      }
+    });
 
-      this.form.patchValue(patchData);
+    this.form.patchValue(patchData);
   }
 
   closeModal() {
     this.show=false;
     this.errors = null;
+    this.item = null;
     this.form.reset();
     this.close.emit();
   }
@@ -120,6 +121,7 @@ export class GenericModalComponent implements OnInit, OnChanges {
   onSubmit() {
     if (this.form.valid) {
       const formData = this.getFormData();
+      this.form.reset();
       this.action.callback(formData);
     } else {
       // Marquer tous les champs comme touchés pour afficher les erreurs

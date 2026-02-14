@@ -7,7 +7,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 @Component({
   standalone: true,
   selector: 'app-login',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule,],
   templateUrl: './login-component.html',
   styleUrl: './login-component.css',
 })
@@ -15,7 +15,11 @@ export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
   errors?: string;
 
-  constructor(private authService: AuthService, private router: Router, private route: ActivatedRoute, private formBuilder: FormBuilder) {
+  constructor(
+    private authService: AuthService, 
+    private router: Router, 
+    private route: ActivatedRoute, 
+    private formBuilder: FormBuilder) {
 
   }
 
@@ -67,5 +71,9 @@ export class LoginComponent implements OnInit {
 
   onReset() {
     this.loginForm.reset();
+  }
+
+  goToRegister(): void {
+    this.router.navigate(['/register']);
   }
 }
