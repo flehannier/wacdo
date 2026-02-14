@@ -19,7 +19,7 @@ import { GenericModalComponent } from '../generic-modal-component/generic-modal-
 })
 export class ProfileComponent {
   item?: CollaborateurModel;
-  modalTitle = 'Modifier son profile';
+  modalTitle = 'Modifier son profil';
   formFields: FormField[] = []
   showModal = false;
   selectedItem?: any;
