@@ -103,18 +103,20 @@ export class FonctionComponent {
        this.errors = 'Aucun identifant de fonction passé en paramètre';
       return false
     }
+
     this.fonctionService.delete(item.id)?.subscribe({
         next: () => {
-         this.selectedItem =  {};
-         this.errors = "";
-         this.load();
-          return true
+           this.selectedItem =  {};
+           this.errors = "";
+           this.load();
+           return true
         },
         error: (err) => {
-          this.errors = err.error.message;
-          return false
+           this.errors = err.error.message;
+           return false
         }
     });
+
     return true
   }
 
