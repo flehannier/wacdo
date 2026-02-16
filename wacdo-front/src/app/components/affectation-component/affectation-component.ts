@@ -84,20 +84,10 @@ export class AffectationComponent {
     await this.load();
   }
 
-  isEdit() {
-    this.formFields = this.formFields.map(field => {
-      if (field.key === 'collaborateurId') {
-        return { ...field, disabled: true };
-      }
-      return field;
-    });
-  }
-
   async load(){
     this.affectationService.listAffectations().subscribe({
       next: (data) => {
         this.affectations = data
-        this.showModal = false;
       },
       error: (error) => {
         console.error('Erreur:', error);
@@ -119,9 +109,6 @@ export class AffectationComponent {
         color: 'primary',
         callback: (data) => this.createOrUpdate(data)
       };
-
-     // Forcer la réinitialisation complète du formulaire
-     this.formFields = this.formFields.map(f => ({ ...f, disabled: false }));
   }
 
   onEdit(item: any) {
