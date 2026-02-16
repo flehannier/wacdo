@@ -36,7 +36,9 @@ export class GenericModalComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['item']) {
+    if (changes['fields'] && !changes['fields'].firstChange) {
+          this.buildForm();
+    }
       if (this.item && this.item.id) {
         console.log('✅ MODE ÉDITION ACTIVÉ - ID:', this.item.id);
         this.isEditMode = true;
@@ -49,7 +51,6 @@ export class GenericModalComponent implements OnInit, OnChanges {
           this.form.reset();
         }
       }
-    }
   }
 
   buildForm() {
@@ -111,17 +112,14 @@ export class GenericModalComponent implements OnInit, OnChanges {
   }
 
   closeModal() {
-    this.show=false;
     this.errors = null;
     this.item = null;
-    this.form.reset();
     this.close.emit();
   }
 
   onSubmit() {
     if (this.form.valid) {
       const formData = this.getFormData();
-      this.form.reset();
       this.action.callback(formData);
     } else {
       // Marquer tous les champs comme touchés pour afficher les erreurs

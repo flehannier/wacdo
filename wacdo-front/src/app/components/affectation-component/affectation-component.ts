@@ -186,6 +186,7 @@ export class AffectationComponent {
 
     this.affectationService.save(request).subscribe({
       next: async () => {
+        this.errors = "";
         this.messageShow = true;
        setTimeout(() => { this.closeModal() }, 2000);
       },

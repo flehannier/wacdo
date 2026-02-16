@@ -51,9 +51,6 @@ export class RestaurantComponent {
   }
 
   ngOnInit(){
-
-    this.load();
-
     this.formFields = [
       { key: 'id', label: 'Id', type: FieldsFormTypeEnum.HIDDEN, disabled: true, required: true, placeholder: '', validators: [Validators.required] },
       { key: 'nom', label: 'Nom', type: FieldsFormTypeEnum.TEXT, disabled: false, required: true, placeholder: '', validators: [Validators.required] },
@@ -61,6 +58,7 @@ export class RestaurantComponent {
       { key: 'codePostal', label: 'Code postal',  type: FieldsFormTypeEnum.TEXT, disabled: false, required: true, placeholder: '',  validators: [Validators.required, Validators.required] },
       { key: 'ville', label: 'Ville',  type: FieldsFormTypeEnum.TEXT, disabled: false, required: false, placeholder: '' },
     ]
+    this.load();
   }
 
   load(){
@@ -103,9 +101,6 @@ export class RestaurantComponent {
       color: 'primary',
       callback: (data) => this.save(data)
     };
-
-    // Forcer la réinitialisation complète du formulaire
-    this.formFields = this.formFields.map(f => ({ ...f, disabled: false }));
   }
 
   onEdit(item: RestaurantModel) {
@@ -124,6 +119,7 @@ export class RestaurantComponent {
   save(item:RestaurantModel){
     this.restaurantService.save(item).subscribe({
       next: () => {
+        this.errors = "";
         this.messageShow = true;
         setTimeout(() => { this.closeModal() }, 2000);
       },

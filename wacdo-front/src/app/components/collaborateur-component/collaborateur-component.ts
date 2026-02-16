@@ -167,6 +167,7 @@ export class CollaborateurComponent implements OnInit{
     this.collaborateurService.save(request).subscribe({
       next: () => {
         this.messageShow = true;
+        this.errors = "";
         setTimeout(() => { this.closeModal() }, 2000);
       },
       error: (err) => {

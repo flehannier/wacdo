@@ -106,6 +106,7 @@ export class FonctionComponent {
     this.fonctionService.delete(item.id)?.subscribe({
         next: () => {
          this.selectedItem =  {};
+         this.errors = "";
          this.load();
           return true
         },
@@ -134,7 +135,7 @@ export class FonctionComponent {
 
   closeModal() {
     this.messageShow = false;
-    this.selectedItem = null;
+    this.selectedItem =  {};
     this.showModal= false;
     this.load();
   }
