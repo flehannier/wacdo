@@ -36,8 +36,8 @@ export class RegisterComponent implements OnInit {
         email: this.fb.control<string>('', [Validators.required, Validators.email]),
         motDePasse: this.fb.control<string>('', [Validators.required, Validators.minLength(8)]),
         confirmMotDePasse: this.fb.control<string>('', [Validators.required]),
-        nom: this.fb.control<string>('', [Validators.required]),
-        prenom: this.fb.control<string>('', [Validators.required]),
+        nom: this.fb.control<string>('', [Validators.required, Validators.minLength(3)]),
+        prenom: this.fb.control<string>('', [Validators.required, Validators.minLength(3)]),
       }, { validators: this.passwordMatchValidator });
   }
 
@@ -89,7 +89,7 @@ export class RegisterComponent implements OnInit {
 
     if (this.registerForm.invalid) {
       this.errorMessage = "Formulaire invalide"
-      
+
       return;
     }
 
@@ -139,7 +139,7 @@ export class RegisterComponent implements OnInit {
   get f() {
     return this.registerForm.controls;
   }
-  
+
   goToLogin(): void {
     this.router.navigate(['/login']);
   }
