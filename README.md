@@ -1,4 +1,4 @@
-Wacdo est une application basée sur la gestion des collaborateurs
+Wacdo est une application basée sur la gestion des collaborateurs, de leur affectation au sein d'un restaurant.
 
 ## Base de donnée Mysql
 Script base de données dans le dossier bdd
