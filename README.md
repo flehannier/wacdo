@@ -1,4 +1,4 @@
-2# bdd
+# bdd Mysql
 Script base de données dans le dossier bdd
 Créer une base de données en local: wacdo
 importer le fichier sql
