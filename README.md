@@ -21,4 +21,4 @@ https://wacdo.neofit.fr/api/swagger-ui/index.html
 - npm start
 
 ## Docker
-docker-compose up -d
+- docker compose up -d
