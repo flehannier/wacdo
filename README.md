@@ -16,7 +16,9 @@ https://wacdo.neofit.fr/api/swagger-ui/index.html
 - cd wacdo-back
 - mvn spring-boot:run -DskipTests
 
-
 ## Wacdo-front
 - cd wacdo-front
 - npm start
+
+## Docker
+docker-compose up -d
