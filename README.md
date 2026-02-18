@@ -3,7 +3,7 @@ Script base de données dans le dossier bdd
 Créer une base de données en local: wacdo
 importer le fichier sql
  
-- Compte admin:
+**Compte admin: **
 identifiant: test@wacdo.com / mot de passe: Admin123
 
 # swagger-ui
