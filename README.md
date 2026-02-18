@@ -10,7 +10,7 @@ identifiant: test@wacdo.com et mot de passe: Admin123
 https://wacdo.neofit.fr/api/swagger-ui/index.html
 
 # wacdo-back
-mvn spring-boot:run -DskioTests
+mvn spring-boot:run -DskipTests
 
 
 # wacdo-front
