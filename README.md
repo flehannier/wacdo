@@ -1,7 +1,7 @@
 # bdd Mysql
 Script base de données dans le dossier bdd
-Créer une base de données en local: wacdo
-importer le fichier sql
+- Créer une base de données en local: wacdo
+- importer le fichier sql
  
 # compte admin
 - identifiant: test@wacdo.com
