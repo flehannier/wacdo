@@ -1,9 +1,9 @@
-# SWAGGER
+# swagger-ui
 https://wacdo.neofit.fr/api/swagger-ui/index.html
 
-# BACK
+# wacdo-back
 mvn spring-boot:run
 
 
-# FRONT
+# wacdo-front
 npm start
