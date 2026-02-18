@@ -1,3 +1,5 @@
+Wacdo est une application basée sur la gestion des collaborateurs
+
 # bdd Mysql
 Script base de données dans le dossier bdd
 - Créer une base de données en local: wacdo
