@@ -1,20 +1,20 @@
 Wacdo est une application basée sur la gestion des collaborateurs
 
-# bdd Mysql
+## bdd Mysql
 Script base de données dans le dossier bdd
 - Créer une base de données en local: wacdo
 - importer le fichier sql
  
-# compte admin
+## compte admin
 - identifiant: test@wacdo.com
 - mot de passe: Admin123
 
-# swagger-ui
+## swagger-ui
 https://wacdo.neofit.fr/api/swagger-ui/index.html
 
-# wacdo-back
+## wacdo-back
 mvn spring-boot:run -DskipTests
 
 
-# wacdo-front
+## wacdo-front
 npm start
