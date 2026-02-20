@@ -18,6 +18,7 @@ https://wacdo.neofit.fr/api/swagger-ui/index.html
 
 ## Wacdo-front
 - cd wacdo-front
+- npm install
 - npm start
 
 ## Docker
