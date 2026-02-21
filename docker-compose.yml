@@ -1,26 +1,26 @@
 services:
-  #mysql:
- #   image: mysql:8.0.36
- #   container_name: bdd-commune
-  #  restart: unless-stopped
-  #  ports:
-  #    - "3308:3306"
-  #  environment:
-  #    MYSQL_ROOT_PASSWORD: Mysql@081280$
-  #    MYSQL_DATABASE: wacdo
-  #    MYSQL_USER: wacdo
-  #    MYSQL_PASSWORD: Wacdo@081280$
-  #    MYSQL_ROOT_HOST: '%'
-  #  healthcheck:
-  #    test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pMysql@081280$"]
-  #    interval: 5s
-  #    retries: 10
-  #    start_period: 10s
- #   volumes:
-  #    - mysql_data:/var/lib/mysql
-  ##    - ./init-db:/docker-entrypoint-initdb.d  # scripts SQL d'initialisation
-  #  networks:
-  #    - app-network
+  mysql:
+    image: mysql:8.0.36
+    container_name: bdd-commune
+    restart: unless-stopped
+    #ports:
+    #  - "3308:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: Mysql@081280$
+      MYSQL_DATABASE: wacdo
+      MYSQL_USER: wacdo
+      MYSQL_PASSWORD: Wacdo@081280$
+      MYSQL_ROOT_HOST: '%'
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pMysql@081280$"]
+      interval: 5s
+      retries: 10
+      start_period: 10s
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./init-db:/docker-entrypoint-initdb.d  # scripts SQL d'initialisation
+    networks:
+      - app-network
 
   backend:
     build:
@@ -53,3 +53,4 @@ volumes:
 networks:
   app-network:
     external: true
+
